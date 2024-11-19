@@ -1451,7 +1451,6 @@ namespace pksdriver {
     //% blockId=getcolor block="getbuttonB1" subcategory="Edu Kit"
     //% group="button"
     //% weight=70
-
     export function getbuttonB1() :boolean{
         
         let button = checkbutton();
@@ -1465,7 +1464,6 @@ namespace pksdriver {
     //% blockId=getcolor block="getbuttonB2" subcategory="Edu Kit"
     //% group="button"
     //% weight=70
-
     export function getbuttonB2() :boolean{
         let button = checkbutton();
         let C = (2 & button);
@@ -1478,7 +1476,6 @@ namespace pksdriver {
     //% blockId=getcolor block="getbuttonB3" subcategory="Edu Kit"
     //% group="button"
     //% weight=70
-
     export function getbuttonB3() :boolean{
         let button = checkbutton();
         let C = (4 & button);
