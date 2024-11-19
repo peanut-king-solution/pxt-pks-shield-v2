@@ -109,7 +109,7 @@ namespace pksdriver {
         // 50hz
         let v_us = (degree * 1800 / 180 + 600) // 0.6ms ~ 2.4ms
         let value = v_us * 4096 / 20000
-        setPwm(index + 7, 0, value)
+        setPwm(index -1 , 0, value)
     }
 
     /**
@@ -1420,5 +1420,46 @@ namespace pksdriver {
             return color_t.purple
         }return null
 
+    }
+
+    export function checkbutton() :number{
+        let buttonvalue = pins.analogReadPin(AnalogPin.P0);
+        let button = 0;
+        if (buttonvalue > 900){
+            button = 0 ;
+        }else if (buttonvalue <= 900 && buttonvalue>750){
+            button = 1 ;
+        }else if (buttonvalue <= 750 && buttonvalue>650){
+            button = 2 ;
+        }else if (buttonvalue <= 650 && buttonvalue>550){
+            button = 3 ;
+        }else if (buttonvalue <= 550 && buttonvalue>480){
+            button = 4 ;
+        }else if (buttonvalue <= 480 && buttonvalue>430){
+            button = 5 ;
+        }else if (buttonvalue <= 430 && buttonvalue>390){
+            button = 6 ;
+        }else if (buttonvalue <= 390 ){
+            button = 7 ;
+        }
+        return button
+    }
+
+
+    export function getbuttonA() :boolean{
+        
+        let button = checkbutton();
+        let C = (1 & button);
+        return C == 1 ;
+    }
+    export function getbuttonB() :boolean{
+        let button = checkbutton();
+        let C = (2 & button);
+        return C == 1 ;
+    }
+    export function getbuttonC() :boolean{
+        let button = checkbutton();
+        let C = (4 & button);
+        return C == 1 ;
     }
 }
