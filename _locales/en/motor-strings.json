@@ -1,0 +1,8 @@
+{
+    "motor.Dir.CW|block": "CW",
+    "motor.Dir.CCW|block": "CCW",
+    "motor.servo|block": "servo|%index|angle|%degree",
+    "motor.MotorRun|block": "motor|%index|direction|%Dir|speed|%speed",
+    "motor.motorStop|block": "motor stop|%index",
+    "motor.motorStopAll|block": "stop all motor"
+}

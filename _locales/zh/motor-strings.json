@@ -1,0 +1,8 @@
+{
+    "motor.Dir.CW|block": "正轉",
+    "motor.Dir.CCW|block": "反轉",
+    "motor.servo|block": "伺服摩打|%index|角度|%degree",
+    "motor.MotorRun|block": "摩打|%index|方向|%Dir|速度|%speed",
+    "motor.motorStop|block": "摩打 停止|%index",
+    "motor.motorStopAll|block": "停止所有摩打"
+}
