@@ -1445,19 +1445,41 @@ namespace pksdriver {
         return button
     }
 
+    /**
+    * function get button B1 
+    */
+    //% blockId=getcolor block="getbuttonB1" subcategory="Edu Kit"
+    //% group="button"
+    //% weight=70
 
-    export function getbuttonA() :boolean{
+    export function getbuttonB1() :boolean{
         
         let button = checkbutton();
         let C = (1 & button);
         return C == 1 ;
     }
-    export function getbuttonB() :boolean{
+
+    /**
+    * function get button B2 
+    */
+    //% blockId=getcolor block="getbuttonB2" subcategory="Edu Kit"
+    //% group="button"
+    //% weight=70
+
+    export function getbuttonB2() :boolean{
         let button = checkbutton();
         let C = (2 & button);
         return C == 1 ;
     }
-    export function getbuttonC() :boolean{
+
+    /**
+    * function get button B3 
+    */
+    //% blockId=getcolor block="getbuttonB3" subcategory="Edu Kit"
+    //% group="button"
+    //% weight=70
+
+    export function getbuttonB3() :boolean{
         let button = checkbutton();
         let C = (4 & button);
         return C == 1 ;
