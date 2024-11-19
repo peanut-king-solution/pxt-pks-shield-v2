@@ -1448,7 +1448,7 @@ namespace pksdriver {
     /**
     * function get button B1 
     */
-    //% blockId=getcolor block="getbuttonB1" subcategory="Edu Kit"
+    //% blockId=getbuttonB1 block="getbuttonB1" subcategory="Edu Kit"
     //% group="button"
     //% weight=70
     export function getbuttonB1() :boolean{
@@ -1461,7 +1461,7 @@ namespace pksdriver {
     /**
     * function get button B2 
     */
-    //% blockId=getcolor block="getbuttonB2" subcategory="Edu Kit"
+    //% blockId=getbuttonB2 block="getbuttonB2" subcategory="Edu Kit"
     //% group="button"
     //% weight=70
     export function getbuttonB2() :boolean{
@@ -1473,7 +1473,7 @@ namespace pksdriver {
     /**
     * function get button B3 
     */
-    //% blockId=getcolor block="getbuttonB3" subcategory="Edu Kit"
+    //% blockId=getbuttonB3 block="getbuttonB3" subcategory="Edu Kit"
     //% group="button"
     //% weight=70
     export function getbuttonB3() :boolean{
