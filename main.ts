@@ -1463,7 +1463,7 @@ namespace pksdriver {
     //% blockId=getbuttonB1 block="get button $Buttoncheck" subcategory="Edu Kit"
     //% group="Button"
     //% weight=70
-    export function getbuttonB1(Buttoncheck:Buttoncheck) :boolean{
+    export function getbuttonB1(Buttoncheck:Button) :boolean{
         
         let button = checkbutton(Buttoncheck);
         let C = (1 & button);
