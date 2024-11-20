@@ -1472,7 +1472,7 @@ namespace pksdriver {
 
     /**
     * function get button B2 
-    */
+    
     //% blockId=getbuttonB2 block="get button B2" subcategory="Edu Kit"
     //% group="Button"
     //% weight=70
@@ -1480,11 +1480,11 @@ namespace pksdriver {
         let button = checkbutton();
         let C = (2 & button);
         return C == 1 ;
-    }
+    }*/
 
     /**
     * function get button B3 
-    */
+    
     //% blockId=getbuttonB3 block="get button B3" subcategory="Edu Kit"
     //% group="Button"
     //% weight=70
@@ -1492,5 +1492,5 @@ namespace pksdriver {
         let button = checkbutton();
         let C = (4 & button);
         return C == 1 ;
-    }
+    }*/
 }
