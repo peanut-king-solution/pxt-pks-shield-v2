@@ -1422,9 +1422,19 @@ namespace pksdriver {
 
     }
 
-    export function checkbutton() :number{
+    export enum Button{
+        //% block="B1"
+        B1,
+        //% block="B2"
+        B2,
+        //% block="B3"
+        B3
+    }
+
+    export function checkbutton(Buttoncheck:Button) :number{
         let buttonvalue = pins.analogReadPin(AnalogPin.P0);
         let button = 0;
+        let x = 0b001;
         if (buttonvalue > 900){
             button = 0 ;
         }else if (buttonvalue <= 900 && buttonvalue>750){
@@ -1442,18 +1452,20 @@ namespace pksdriver {
         }else if (buttonvalue <= 390 ){
             button = 7 ;
         }
-        return button
+
+        
+        return button & (x << Buttoncheck)
     }
 
     /**
     * function get button B1 
     */
-    //% blockId=getbuttonB1 block="getbuttonB1" subcategory="Edu Kit"
-    //% group="button"
+    //% blockId=getbuttonB1 block="get button $Buttoncheck" subcategory="Edu Kit"
+    //% group="Button"
     //% weight=70
-    export function getbuttonB1() :boolean{
+    export function getbuttonB1(Buttoncheck:Buttoncheck) :boolean{
         
-        let button = checkbutton();
+        let button = checkbutton(Buttoncheck);
         let C = (1 & button);
         return C == 1 ;
     }
@@ -1461,8 +1473,8 @@ namespace pksdriver {
     /**
     * function get button B2 
     */
-    //% blockId=getbuttonB2 block="getbuttonB2" subcategory="Edu Kit"
-    //% group="button"
+    //% blockId=getbuttonB2 block="get button B2" subcategory="Edu Kit"
+    //% group="Button"
     //% weight=70
     export function getbuttonB2() :boolean{
         let button = checkbutton();
@@ -1473,8 +1485,8 @@ namespace pksdriver {
     /**
     * function get button B3 
     */
-    //% blockId=getbuttonB3 block="getbuttonB3" subcategory="Edu Kit"
-    //% group="button"
+    //% blockId=getbuttonB3 block="get button B3" subcategory="Edu Kit"
+    //% group="Button"
     //% weight=70
     export function getbuttonB3() :boolean{
         let button = checkbutton();
