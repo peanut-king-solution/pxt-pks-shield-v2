@@ -1431,6 +1431,13 @@ namespace pksdriver {
         B3
     }
 
+    /**
+    * function get button  
+    */
+    //% blockId=testbutton block="test button $Buttoncheck" subcategory="Edu Kit"
+    //% group="Button"
+    //% weight=70
+
     export function checkbutton(Buttoncheck:Button) :number{
         let buttonvalue = pins.analogReadPin(AnalogPin.P0);
         let button = 0;
@@ -1454,7 +1461,8 @@ namespace pksdriver {
         }
 
         
-        return button & (x << Buttoncheck)
+        return button ;
+
     }
 
     /**
