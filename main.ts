@@ -1432,7 +1432,7 @@ namespace pksdriver {
     }
 
     /**
-    * function get button  
+    * function test button  
     */
     //% blockId=testbutton block="test button $Buttoncheck" subcategory="Edu Kit"
     //% group="Button"
