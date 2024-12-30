@@ -1443,13 +1443,13 @@ namespace pksdriver {
         let button = 0;
         let x = 0;
         if (Buttoncheck == Button.B1){
-            x = 0b001
+            x = 0b001;
         }
         else if (Buttoncheck == Button.B2) {
-            x = 0b010
+            x = 0b010;
         }
         else if (Buttoncheck == Button.B3) {
-            x = 0b100
+            x = 0b100;
         }
         if (buttonvalue > 800) {
             button = 0 ;
