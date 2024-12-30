@@ -1442,21 +1442,21 @@ namespace pksdriver {
         let buttonvalue = pins.analogReadPin(AnalogPin.P0);
         let button = 0;
         let x = 0b001;
-        if (buttonvalue > 900){
+        if (buttonvalue > 800){
             button = 0 ;
-        }else if (buttonvalue <= 900 && buttonvalue>750){
+        }else if (buttonvalue <= 800 && buttonvalue>675){
             button = 1 ;
-        }else if (buttonvalue <= 750 && buttonvalue>650){
+        }else if (buttonvalue <= 675 && buttonvalue>580){
             button = 2 ;
-        }else if (buttonvalue <= 650 && buttonvalue>550){
+        }else if (buttonvalue <= 580 && buttonvalue>510){
             button = 3 ;
-        }else if (buttonvalue <= 550 && buttonvalue>480){
+        }else if (buttonvalue <= 510 && buttonvalue>450){
             button = 4 ;
-        }else if (buttonvalue <= 480 && buttonvalue>430){
+        }else if (buttonvalue <= 450 && buttonvalue>410){
             button = 5 ;
-        }else if (buttonvalue <= 430 && buttonvalue>390){
+        }else if (buttonvalue <= 410 && buttonvalue>373){
             button = 6 ;
-        }else if (buttonvalue <= 390 ){
+        }else if (buttonvalue <= 373 ){
             button = 7 ;
         }
 
