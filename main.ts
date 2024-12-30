@@ -1469,7 +1469,7 @@ namespace pksdriver {
             button = 7 ;
         }
 
-        return (button & x );
+        return (button & x) !== 0;
     }
 
     /**
