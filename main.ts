@@ -1441,8 +1441,17 @@ namespace pksdriver {
     export function checkbutton(Buttoncheck:Button) :number{
         let buttonvalue = pins.analogReadPin(AnalogPin.P0);
         let button = 0;
-        let x = 0b001;
-        if (buttonvalue > 800){
+        let x = 0;
+        if (Buttoncheck == Button.B1){
+            x = 0b001
+        }
+        else if (Buttoncheck == Button.B2) {
+            x = 0b010
+        }
+        else if (Buttoncheck == Button.B3) {
+            x = 0b100
+        }
+        if (buttonvalue > 800) {
             button = 0 ;
         }else if (buttonvalue <= 800 && buttonvalue>675){
             button = 1 ;
