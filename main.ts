@@ -1438,7 +1438,7 @@ namespace pksdriver {
     //% group="Button"
     //% weight=70
 
-    export function checkbutton(Buttoncheck:Button) :boolean{
+    export function checkbutton(Buttoncheck:Button) :number{
         let buttonvalue = pins.analogReadPin(AnalogPin.P0);
         let button = 0;
         let x = 0;
@@ -1469,7 +1469,7 @@ namespace pksdriver {
             button = 7 ;
         }
 
-        return ((button & x) !== 0);
+        return button ;
     }
 
     /**
