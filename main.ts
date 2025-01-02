@@ -26,10 +26,10 @@ namespace pksdriver {
      * The user selects the 4-way dc motor.
      */
     export enum Motors {
-        M1 = 0x4,
-        M2 = 0x3,
-        M3 = 0x2,
-        M4 = 0x1
+        M1 = 0x1,
+        M2 = 0x2,
+        M3 = 0x3,
+        M4 = 0x4
     }
 
     /**
@@ -164,14 +164,14 @@ namespace pksdriver {
         }
         if (index > 4 || index <= 0)
             return
-        let pn = (4 - index) * 2
-        let pp = (4 - index) * 2 + 1
+        let pn = ( index * 2 ) + 8
+        let pp = ( index * 2 ) + 1 + 8
         if (speed >= 0) {
-            setPwm(pp+8, 0, speed)
-            setPwm(pn+8, 0, 0)
+            setPwm(pp, 0, speed)
+            setPwm(pn, 0, 0)
         } else {
-            setPwm(pp+8, 0, 0)
-            setPwm(pn+8, 0, -speed)
+            setPwm(pp, 0, 0)
+            setPwm(pn, 0, -speed)
         }
     }
 
@@ -183,8 +183,10 @@ namespace pksdriver {
     //% group="Motors"
     //% index.fieldEditor="gridpicker" index.fieldOptions.columns=2
     export function motorStop(index: Motors) {
-        setPwm((4 - index) * 2, 0, 0);
-        setPwm((4 - index) * 2 + 1, 0, 0);
+        let pn = ( index * 2 ) + 8
+        let pp = ( index * 2 ) + 1 + 8
+        setPwm(pn , 0, 0);
+        setPwm(pp , 0, 0);
     }
 
     /**
