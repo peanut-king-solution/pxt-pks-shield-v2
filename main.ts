@@ -1437,7 +1437,6 @@ namespace pksdriver {
     //% blockId=testbutton block="test button $Buttoncheck" subcategory="Edu Kit"
     //% group="Button"
     //% weight=70
-
     export function checkbutton(Buttoncheck:Button) :boolean{
         let buttonvalue = pins.analogReadPin(AnalogPin.P0);
         let button = 0;
@@ -1469,15 +1468,15 @@ namespace pksdriver {
         }else if (buttonvalue <= 373 ){
             button = 7 ;
         }
-        ans = (button & x) != 0 ? 1 : 0;
+        ans = (button & x) 
         
 
-        return ans;
+        return ans != 0;
     }
 
     /**
     * function get button B1 
-    */
+    
     //% blockId=getbutton block="get button $Buttoncheck" subcategory="Edu Kit"
     //% group="Button"
     //% weight=70
@@ -1486,7 +1485,7 @@ namespace pksdriver {
         let button = checkbutton(Buttoncheck);
         let C = (1 & button);
         return C == 1 ;
-    }
+    }*/
 
     /**
     * function get button B2 
