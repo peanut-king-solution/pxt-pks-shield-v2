@@ -164,8 +164,8 @@ namespace pksdriver {
         }
         if (index > 4 || index <= 0)
             return
-        let pn = ( index * 2 ) + 7
-        let pp = ( index * 2 ) + 1 + 7
+        let pn = ( index * 2 ) + 8
+        let pp = ( index * 2 ) + 1 + 8
         if (speed >= 0) {
             setPwm(pp, 0, speed)
             setPwm(pn, 0, 0)
