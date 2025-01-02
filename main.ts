@@ -109,7 +109,7 @@ namespace pksdriver {
         // 50hz
         let v_us = (degree * 1800 / 180 + 600) // 0.6ms ~ 2.4ms
         let value = v_us * 4096 / 20000
-        setPwm(index -1 , 0, value)
+        setPwm(8- (index -1) , 0, value)
     }
 
     /**
@@ -123,7 +123,7 @@ namespace pksdriver {
         if (!initialized) {
             initPCA9685()
         }
-        setPwm(index + 7, 0, 0)
+        setPwm(8- (index -1), 0, 0)
     }
 
     /**
@@ -137,7 +137,7 @@ namespace pksdriver {
         if (!initialized) {
             initPCA9685()
         }
-        setPwm(index + 7, 0, 150)
+        setPwm(8- (index -1) , 0, 150)
     }
 
     /**
