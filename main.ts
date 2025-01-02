@@ -1442,13 +1442,13 @@ namespace pksdriver {
         let buttonvalue = pins.analogReadPin(AnalogPin.P0);
         let button = 0;
         let x = 0;
-        if (Buttoncheck == B1){
+        if (Buttoncheck == Button.B1){
             x = 0b001;
         }
-        else if (Buttoncheck == B2) {
+        else if (Buttoncheck == Button.B2) {
             x = 0b010;
         }
-        else if (Buttoncheck == B3) {
+        else if (Buttoncheck == Button.B3) {
             x = 0b100;
         }
         if (buttonvalue > 800) {
