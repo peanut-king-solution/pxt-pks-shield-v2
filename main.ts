@@ -26,10 +26,10 @@ namespace pksdriver {
      * The user selects the 4-way dc motor.
      */
     export enum Motors {
-        M1 = 0x1,
-        M2 = 0x2,
-        M3 = 0x3,
-        M4 = 0x4
+        M1 = 0x4,
+        M2 = 0x3,
+        M3 = 0x2,
+        M4 = 0x1
     }
 
     /**
@@ -1432,8 +1432,8 @@ namespace pksdriver {
     }
 
     /**
-    * function get button  
-    */
+     * chevk button B1 - B3, return true if button is pressed.  
+     */
     //% blockId=getbutton block="get button $Buttoncheck" subcategory="Edu Kit"
     //% group="Button"
     //% weight=70
