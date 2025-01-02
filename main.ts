@@ -1432,9 +1432,9 @@ namespace pksdriver {
     }
 
     /**
-    * function test button  
+    * function get button  
     */
-    //% blockId=testbutton block="test button $Buttoncheck" subcategory="Edu Kit"
+    //% blockId=getbutton block="get button $Buttoncheck" subcategory="Edu Kit"
     //% group="Button"
     //% weight=70
     export function checkbutton(Buttoncheck:Button) :boolean{
@@ -1474,40 +1474,4 @@ namespace pksdriver {
         return ans != 0;
     }
 
-    /**
-    * function get button B1 
-    
-    //% blockId=getbutton block="get button $Buttoncheck" subcategory="Edu Kit"
-    //% group="Button"
-    //% weight=70
-    export function getbuttonB1(Buttoncheck:Button) :boolean{
-        
-        let button = checkbutton(Buttoncheck);
-        let C = (1 & button);
-        return C == 1 ;
-    }*/
-
-    /**
-    * function get button B2 
-    
-    //% blockId=getbuttonB2 block="get button B2" subcategory="Edu Kit"
-    //% group="Button"
-    //% weight=70
-    export function getbuttonB2() :boolean{
-        let button = checkbutton();
-        let C = (2 & button);
-        return C == 1 ;
-    }*/
-
-    /**
-    * function get button B3 
-    
-    //% blockId=getbuttonB3 block="get button B3" subcategory="Edu Kit"
-    //% group="Button"
-    //% weight=70
-    export function getbuttonB3() :boolean{
-        let button = checkbutton();
-        let C = (4 & button);
-        return C == 1 ;
-    }*/
 }
