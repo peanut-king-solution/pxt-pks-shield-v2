@@ -164,8 +164,8 @@ namespace pksdriver {
         }
         if (index > 4 || index <= 0)
             return
-        let pn = ( index * 2 ) + 8
-        let pp = ( index * 2 ) + 1 + 8
+        let pn = ( index * 2 ) + 7
+        let pp = ( index * 2 ) + 1 + 7
         if (speed >= 0) {
             setPwm(pp, 0, speed)
             setPwm(pn, 0, 0)
@@ -183,8 +183,8 @@ namespace pksdriver {
     //% group="Motors"
     //% index.fieldEditor="gridpicker" index.fieldOptions.columns=2
     export function motorStop(index: Motors) {
-        let pn = ( index * 2 ) + 8
-        let pp = ( index * 2 ) + 1 + 8
+        let pn = ( index * 2 ) + 7
+        let pp = ( index * 2 ) + 1 + 7
         setPwm(pn , 0, 0);
         setPwm(pp , 0, 0);
     }
