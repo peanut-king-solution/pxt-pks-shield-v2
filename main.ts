@@ -1392,10 +1392,6 @@ namespace pksdriver {
         return getcolor() == color
     }
 
-    function diff(a:number, b:number):number {
-        return Math.abs(a - b);
-    }
-
     /**
     * function transfer hsl value to color 
     */
@@ -1424,6 +1420,7 @@ namespace pksdriver {
 
     }
 
+        
     export enum Button{
         //% block="B1"
         B1,
@@ -1476,4 +1473,22 @@ namespace pksdriver {
         return ans != 0;
     }
 
+    export class i2c_multiplexer{
+        public constructor(address: number = 0x70) {
+            this._Address = address;
+        }
+        
+        public switch(channel: number): void {
+            buf = 0x00;
+            buf = 1 << channel;
+            pins.i2cWriteBuffer(this._Address, buf, false);
+        }
+
+    }
+
+
 }
+
+
+
+
