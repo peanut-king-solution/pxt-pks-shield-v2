@@ -1502,15 +1502,14 @@ namespace pksdriver {
         C8
     }
 
-    /**
-     * switch I2C multiplexer channel 
-     */
-    //% blockId=switch channel block="get channel $channelselected" subcategory="Edu Kit"
-    //% group="I2C multiplexer"
-    //% weight=70
     export class I2CMultiplexer {
-    
-    
+
+        /**
+         * switch I2C multiplexer channel 
+         */
+        //% blockId=switch channel block="get channel $channelselected" subcategory="Edu Kit"
+        //% group="I2C multiplexer"
+        //% weight=70
         switch(channelselected: channel): void {
             let i2c_multiplexerAddress = 0x70;
             let buf = 0x00;
