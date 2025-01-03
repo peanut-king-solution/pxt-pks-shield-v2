@@ -1244,9 +1244,9 @@ namespace pksdriver {
 //% color=#1c4980 
 //% icon="\uf2db" 
 //% block="PKS Drivers"
-namespace pksdriver { 
+namespace pksdriver {
 
-    enum Color{
+    enum Color {
         //i2c addr
         ADDR = 0x11,
         //data commend addr
@@ -1280,7 +1280,7 @@ namespace pksdriver {
     
     
     //Color Sensor
-    export enum RGB{
+    export enum RGB {
         //% block="red_value"
         r,
         //% block="green_value"
@@ -1289,7 +1289,7 @@ namespace pksdriver {
         b
     }
 
-    export enum RGBC{
+    export enum RGBC {
         //% block="clear_light_value"
         c,
         //% block="red_light_value"
@@ -1300,7 +1300,7 @@ namespace pksdriver {
         b
     }
 
-    export enum HSL{
+    export enum HSL {
         //% block="hue"
         h,
         //% block="saturation"
@@ -1309,10 +1309,10 @@ namespace pksdriver {
         l
     }
 
-    export enum color_t{
-        black=0,  white,  gray,
-        red,      green,   blue, 
-        yellow,cyan,purple
+    export enum color_t {
+        black = 0, white, gray,
+        red, green, blue,
+        yellow, cyan, purple
     }
 
     /**
@@ -1321,12 +1321,12 @@ namespace pksdriver {
     //% blockId=readhsl block="readHSL $hslchoose" subcategory="Edu Kit"
     //% group="Colors"
     //% weight=80
-    export function readhsl(hslchoose:HSL):number {
+    export function readhsl(hslchoose: HSL): number {
         pins.i2cWriteNumber(Color.ADDR, Color.HSL, NumberFormat.UInt8BE, false);
         let hsl = pins.i2cReadBuffer(Color.ADDR, 4, false);
-        let temp = [hsl.getNumber(NumberFormat.UInt16LE,0), //h
-                    hsl.getNumber(NumberFormat.UInt8LE, 2), //s
-                    hsl.getNumber(NumberFormat.UInt8LE, 3)] //l
+        let temp = [hsl.getNumber(NumberFormat.UInt16LE, 0), //h
+        hsl.getNumber(NumberFormat.UInt8LE, 2), //s
+        hsl.getNumber(NumberFormat.UInt8LE, 3)] //l
         return temp[hslchoose]
     }
 
@@ -1336,14 +1336,14 @@ namespace pksdriver {
     //% blockId=readrgb block="readRGB $rgbchoose" subcategory="Edu Kit"
     //% group="Colors"
     //% weight=60
-    export function readrgb(rgbchoose:RGB):number {
+    export function readrgb(rgbchoose: RGB): number {
         pins.i2cWriteNumber(Color.ADDR, Color.RGB, NumberFormat.UInt8BE, false);
         let rgb = pins.i2cReadBuffer(Color.ADDR, 3, false);
-        let temp = [rgb.getNumber(NumberFormat.UInt8LE,0),  //r
-                    rgb.getNumber(NumberFormat.UInt8LE,1),  //g
-                    rgb.getNumber(NumberFormat.UInt8LE,2)]  //b
+        let temp = [rgb.getNumber(NumberFormat.UInt8LE, 0),  //r
+        rgb.getNumber(NumberFormat.UInt8LE, 1),  //g
+        rgb.getNumber(NumberFormat.UInt8LE, 2)]  //b
         return temp[rgbchoose]
-    }   
+    }
     
     /**
     * RGBC read function
@@ -1351,13 +1351,13 @@ namespace pksdriver {
     //% blockId=readrgbc block="readRGBC $choose" subcategory="Edu Kit"
     //% group="Colors"
     //% weight=70
-    export function readrgbc(choose:RGBC): number {
+    export function readrgbc(choose: RGBC): number {
         pins.i2cWriteNumber(Color.ADDR, Color.RGBC, NumberFormat.UInt8BE, false);
-        let rgbc = pins.i2cReadBuffer(Color.ADDR, 16, false);                   
-        let temp = [rgbc.getNumber(NumberFormat.UInt32LE, 0 ),  //c                 
-                    rgbc.getNumber(NumberFormat.UInt32LE, 4 ),  //r             
-                    rgbc.getNumber(NumberFormat.UInt32LE, 8 ),  //g             
-                    rgbc.getNumber(NumberFormat.UInt32LE, 12)]  //b
+        let rgbc = pins.i2cReadBuffer(Color.ADDR, 16, false);
+        let temp = [rgbc.getNumber(NumberFormat.UInt32LE, 0),  //c                 
+        rgbc.getNumber(NumberFormat.UInt32LE, 4),  //r             
+        rgbc.getNumber(NumberFormat.UInt32LE, 8),  //g             
+        rgbc.getNumber(NumberFormat.UInt32LE, 12)]  //b
         return temp[choose]
     }
 
@@ -1367,9 +1367,9 @@ namespace pksdriver {
     //% blockId=readcolor block="readColor" subcategory="Edu Kit"
     //% group="Colors"
     //% weight=70
-    export function readcolor():color_t {
+    export function readcolor(): color_t {
         pins.i2cWriteNumber(Color.ADDR, Color.COLOR, NumberFormat.UInt8BE, false);
-        return pins.i2cReadBuffer(Color.ADDR, 1, false).getNumber(NumberFormat.UInt8LE,0);
+        return pins.i2cReadBuffer(Color.ADDR, 1, false).getNumber(NumberFormat.UInt8LE, 0);
     }
 
     /**
@@ -1398,12 +1398,12 @@ namespace pksdriver {
     //% blockId=getcolor block="getColor" subcategory="Edu Kit"
     //% group="Colors"
     //% weight=70
-    export function getcolor() :number{
+    export function getcolor(): number {
         pins.i2cWriteNumber(Color.ADDR, Color.HSL, NumberFormat.UInt8BE, false);
         let hsl = pins.i2cReadBuffer(Color.ADDR, 4, false);
-        let temp1 =[hsl.getNumber(NumberFormat.UInt16LE, 0), //h
-                    hsl.getNumber(NumberFormat.UInt8LE, 2), //s
-                    hsl.getNumber(NumberFormat.UInt8LE, 3)] //l
+        let temp1 = [hsl.getNumber(NumberFormat.UInt16LE, 0), //h
+        hsl.getNumber(NumberFormat.UInt8LE, 2), //s
+        hsl.getNumber(NumberFormat.UInt8LE, 3)] //l
         if (temp1[HSL.h] > 330 || temp1[HSL.h] < 30) {
             return color_t.red
         } else if (temp1[pksdriver.HSL.h] >= 30 && temp1[HSL.h] < 90) {
@@ -1416,12 +1416,12 @@ namespace pksdriver {
             return color_t.blue
         } else if (temp1[HSL.h] >= 210 && temp1[HSL.h] < 330) {
             return color_t.purple
-        }return null
+        } return null
 
     }
 
         
-    export enum Button{
+    export enum Button {
         //% block="B1"
         B1,
         //% block="B2"
@@ -1431,17 +1431,17 @@ namespace pksdriver {
     }
 
     /**
-     * chevk button B1 - B3, return true if button is pressed.  
+     * check button B1 - B3, return true if button is pressed.  
      */
     //% blockId=getbutton block="get button $Buttoncheck" subcategory="Edu Kit"
     //% group="Button"
     //% weight=70
-    export function checkbutton(Buttoncheck:Button) :boolean{
+    export function checkbutton(Buttoncheck: Button): boolean {
         let buttonvalue = pins.analogReadPin(AnalogPin.P0);
         let button = 0;
         let x = 0;
         let ans = 0;
-        if (Buttoncheck == Button.B1){
+        if (Buttoncheck == Button.B1) {
             x = 0b100
         }
         else if (Buttoncheck == Button.B2) {
@@ -1451,38 +1451,92 @@ namespace pksdriver {
             x = 0b001
         }
         if (buttonvalue > 800) {
-            button = 0 ;
-        }else if (buttonvalue <= 800 && buttonvalue>675){
-            button = 1 ;
-        }else if (buttonvalue <= 675 && buttonvalue>580){
-            button = 2 ;
-        }else if (buttonvalue <= 580 && buttonvalue>510){
-            button = 3 ;
-        }else if (buttonvalue <= 510 && buttonvalue>450){
-            button = 4 ;
-        }else if (buttonvalue <= 450 && buttonvalue>410){
-            button = 5 ;
-        }else if (buttonvalue <= 410 && buttonvalue>373){
-            button = 6 ;
-        }else if (buttonvalue <= 373 ){
-            button = 7 ;
+            button = 0;
+        } else if (buttonvalue <= 800 && buttonvalue > 675) {
+            button = 1;
+        } else if (buttonvalue <= 675 && buttonvalue > 580) {
+            button = 2;
+        } else if (buttonvalue <= 580 && buttonvalue > 510) {
+            button = 3;
+        } else if (buttonvalue <= 510 && buttonvalue > 450) {
+            button = 4;
+        } else if (buttonvalue <= 450 && buttonvalue > 410) {
+            button = 5;
+        } else if (buttonvalue <= 410 && buttonvalue > 373) {
+            button = 6;
+        } else if (buttonvalue <= 373) {
+            button = 7;
         }
-        ans = (button & x) 
+        ans = (button & x)
         
 
         return ans != 0;
     }
 
-    export class i2c_multiplexer{
-        public constructor(address: number = 0x70) {
-            this._Address = address;
+}
+
+
+//ColorSensor
+//% weight=60
+//% color=#1c4980 
+//% icon="\uf2db" 
+//% block="PKS Drivers"
+namespace pksdriver { 
+
+    export enum channel{
+        //% block="C1"
+        C1,
+        //% block="C2"
+        C2,
+        //% block="C3"
+        C3,
+        //% block="C4"
+        C4,
+        //% block="C5"
+        C5,
+        //% block="C6"
+        C6,
+        //% block="C7"
+        C7,
+        //% block="C8"
+        C8
+    }
+
+    /**
+     * switch I2C multiplexer channel 
+     */
+    //% blockId=switch channel block="get channel $channelselected" subcategory="Edu Kit"
+    //% group="I2C multiplexer"
+    //% weight=70
+    export function switch(channelselected: channel): void {
+        let i2c_multiplexerAddress = 0x70;
+        let buf = 0x00;
+        if (channelselected == channel.C1){
+            buf = 0x01
         }
+        else if (channelselected == channel.C2){
+            buf = 0x02
+        }
+        else if (channelselected == channel.C3){
+            buf = 0x04
+        }
+        else if (channelselected == channel.C4){
+            buf = 0x08
+        }
+        else if (channelselected == channel.C5){
+            buf = 0x10
+        }
+        else if (channelselected == channel.C6){
+            buf = 0x20
+        }
+        else if (channelselected == channel.C7){
+            buf = 0x40
+        }
+        else if (channelselected == channel.C8){
+            buf = 0x80
+        }
+        pins.i2cWriteBuffer(i2c_multiplexerAddress, buf, false);
         
-        public switch(channel: number): void {
-            buf = 0x00;
-            buf = 1 << channel;
-            pins.i2cWriteBuffer(this._Address, buf, false);
-        }
 
     }
 
