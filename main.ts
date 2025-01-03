@@ -1508,39 +1508,42 @@ namespace pksdriver {
     //% blockId=switch channel block="get channel $channelselected" subcategory="Edu Kit"
     //% group="I2C multiplexer"
     //% weight=70
-    export function switch(channelselected: channel): void {
-        let i2c_multiplexerAddress = 0x70;
-        let buf = 0x00;
-        if (channelselected == channel.C1){
-            buf = 0x01
-        }
-        else if (channelselected == channel.C2){
-            buf = 0x02
-        }
-        else if (channelselected == channel.C3){
-            buf = 0x04
-        }
-        else if (channelselected == channel.C4){
-            buf = 0x08
-        }
-        else if (channelselected == channel.C5){
-            buf = 0x10
-        }
-        else if (channelselected == channel.C6){
-            buf = 0x20
-        }
-        else if (channelselected == channel.C7){
-            buf = 0x40
-        }
-        else if (channelselected == channel.C8){
-            buf = 0x80
-        }
-        pins.i2cWriteBuffer(i2c_multiplexerAddress, buf, false);
+    export class I2CMultiplexer {
+    
+    
+        switch(channelselected: channel): void {
+            let i2c_multiplexerAddress = 0x70;
+            let buf = 0x00;
+            if (channelselected == channel.C1) {
+                buf = 0x01
+            }
+            else if (channelselected == channel.C2) {
+                buf = 0x02
+            }
+            else if (channelselected == channel.C3) {
+                buf = 0x04
+            }
+            else if (channelselected == channel.C4) {
+                buf = 0x08
+            }
+            else if (channelselected == channel.C5) {
+                buf = 0x10
+            }
+            else if (channelselected == channel.C6) {
+                buf = 0x20
+            }
+            else if (channelselected == channel.C7) {
+                buf = 0x40
+            }
+            else if (channelselected == channel.C8) {
+                buf = 0x80
+            }
+            pins.i2cWriteBuffer(i2c_multiplexerAddress, buf, false);
         
 
+        }
     }
-
-
+ 
 }
 
 
