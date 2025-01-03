@@ -1507,37 +1507,37 @@ namespace pksdriver {
         /**
          * switch I2C multiplexer channel 
          */
-        //% blockId=switch channel block="get channel $channelselected" subcategory="Edu Kit"
+        //% blockId=switch channel block="switch channel $channelselected" subcategory="Edu Kit"
         //% group="I2C multiplexer"
         //% weight=70
         switch(channelselected: channel): void {
             let i2c_multiplexerAddress = 0x70;
-            let buf = 0x00;
+            let buffer = pins.createBuffer(1);
             if (channelselected == channel.C1) {
-                buf = 0x01
+                buffer = 0x01
             }
             else if (channelselected == channel.C2) {
-                buf = 0x02
+                buffer = 0x02
             }
             else if (channelselected == channel.C3) {
-                buf = 0x04
+                buffer = 0x04
             }
             else if (channelselected == channel.C4) {
-                buf = 0x08
+                buffer = 0x08
             }
             else if (channelselected == channel.C5) {
-                buf = 0x10
+                buffer = 0x10
             }
             else if (channelselected == channel.C6) {
-                buf = 0x20
+                buffer = 0x20
             }
             else if (channelselected == channel.C7) {
-                buf = 0x40
+                buffer = 0x40
             }
             else if (channelselected == channel.C8) {
-                buf = 0x80
+                buffer = 0x80
             }
-            pins.i2cWriteBuffer(i2c_multiplexerAddress, buf, false);
+            pins.i2cWriteBuffer(i2c_multiplexerAddress, buffer, false);
         
 
         }
