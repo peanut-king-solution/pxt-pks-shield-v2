@@ -1512,7 +1512,7 @@ namespace pksdriver {
     //% weight=70
     export function switchI2CMultiplexer (channelselected: i2cchannel): void {
         let i2c_multiplexerAddress = 0x70;
-        let buffer = pins.createBuffer(1);
+        const buffer = pins.createBuffer(1);
         if (channelselected == i2cchannel.C1) {
             buffer[0] = 0x01
         }
