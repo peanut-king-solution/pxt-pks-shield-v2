@@ -1476,6 +1476,8 @@ namespace pksdriver {
 }
 
 
+/*
+
 //ColorSensor
 //% weight=60
 //% color=#1c4980 
@@ -1506,7 +1508,7 @@ namespace pksdriver {
 
         /**
          * switch I2C multiplexer channel 
-         */
+         
         //% blockId=switch channel block="switch channel $channelselected" subcategory="Edu Kit"
         //% group="I2C multiplexer"
         //% weight=70
@@ -1545,6 +1547,6 @@ namespace pksdriver {
  
 }
 
-
+*/
 
 
