@@ -1514,30 +1514,30 @@ namespace pksdriver {
         let i2c_multiplexerAddress = 0x70;
         let buffer = pins.createBuffer(1);
         if (channelselected == channel.C1) {
-            buffer = 0x01
+            buffer[0] = 0x01
         }
         else if (channelselected == channel.C2) {
-            buffer = 0x02
+            buffer[0] = 0x02
         }
         else if (channelselected == channel.C3) {
-            buffer = 0x04
+            buffer[0] = 0x04
         }
         else if (channelselected == channel.C4) {
-            buffer = 0x08
+            buffer[0] = 0x08
         }
         else if (channelselected == channel.C5) {
-            buffer = 0x10
+            buffer[0] = 0x10
         }
         else if (channelselected == channel.C6) {
-            buffer = 0x20
+            buffer[0] = 0x20
         }
         else if (channelselected == channel.C7) {
-            buffer = 0x40
+            buffer[0] = 0x40
         }
         else if (channelselected == channel.C8) {
-            buffer = 0x80
+            buffer[0] = 0x80
         }
-        pins.i2cWriteBuffer(i2c_multiplexerAddress, buffer, false);
+        pins.i2cWriteBuffer(i2c_multiplexerAddress, buffer[0], false);
 
     }
 
