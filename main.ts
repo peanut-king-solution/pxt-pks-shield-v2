@@ -1507,7 +1507,7 @@ namespace pksdriver {
     /**
     * switch I2C multiplexer channel 
      */
-    //% blockId=switch channel block="switch channel $channelselected" subcategory="Edu Kit"
+    //% blockId=switch channel block="switch i2cchannel $channelselected" subcategory="Edu Kit"
     //% group="I2C multiplexer"
     //% weight=70
     export function switchI2CMultiplexer (channelselected: i2cchannel): void {
