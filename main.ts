@@ -1476,7 +1476,7 @@ namespace pksdriver {
 }
 
 
-/*
+
 
 //ColorSensor
 //% weight=60
@@ -1504,49 +1504,45 @@ namespace pksdriver {
         C8
     }
 
-    export class I2CMultiplexer {
-
-        /**
-         * switch I2C multiplexer channel 
-         
-        //% blockId=switch channel block="switch channel $channelselected" subcategory="Edu Kit"
-        //% group="I2C multiplexer"
-        //% weight=70
-        switch(channelselected: channel): void {
-            let i2c_multiplexerAddress = 0x70;
-            let buffer = pins.createBuffer(1);
-            if (channelselected == channel.C1) {
-                buffer = 0x01
-            }
-            else if (channelselected == channel.C2) {
-                buffer = 0x02
-            }
-            else if (channelselected == channel.C3) {
-                buffer = 0x04
-            }
-            else if (channelselected == channel.C4) {
-                buffer = 0x08
-            }
-            else if (channelselected == channel.C5) {
-                buffer = 0x10
-            }
-            else if (channelselected == channel.C6) {
-                buffer = 0x20
-            }
-            else if (channelselected == channel.C7) {
-                buffer = 0x40
-            }
-            else if (channelselected == channel.C8) {
-                buffer = 0x80
-            }
-            pins.i2cWriteBuffer(i2c_multiplexerAddress, buffer, false);
-        
-
+    /**
+    * switch I2C multiplexer channel 
+     */
+    //% blockId=switch channel block="switch channel $channelselected" subcategory="Edu Kit"
+    //% group="I2C multiplexer"
+    //% weight=70
+    export function switchI2CMultiplexer (channelselected: channel): void {
+        let i2c_multiplexerAddress = 0x70;
+        let buffer = pins.createBuffer(1);
+        if (channelselected == channel.C1) {
+            buffer = 0x01
         }
+        else if (channelselected == channel.C2) {
+            buffer = 0x02
+        }
+        else if (channelselected == channel.C3) {
+            buffer = 0x04
+        }
+        else if (channelselected == channel.C4) {
+            buffer = 0x08
+        }
+        else if (channelselected == channel.C5) {
+            buffer = 0x10
+        }
+        else if (channelselected == channel.C6) {
+            buffer = 0x20
+        }
+        else if (channelselected == channel.C7) {
+            buffer = 0x40
+        }
+        else if (channelselected == channel.C8) {
+            buffer = 0x80
+        }
+        pins.i2cWriteBuffer(i2c_multiplexerAddress, buffer, false);
+
     }
- 
+
 }
 
-*/
+
 
 
