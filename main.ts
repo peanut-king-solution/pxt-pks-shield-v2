@@ -1485,7 +1485,7 @@ namespace pksdriver {
 //% block="PKS Drivers"
 namespace pksdriver { 
 
-    export enum channel{
+    export enum i2cchannel{
         //% block="C1"
         C1,
         //% block="C2"
@@ -1510,31 +1510,31 @@ namespace pksdriver {
     //% blockId=switch channel block="switch channel $channelselected" subcategory="Edu Kit"
     //% group="I2C multiplexer"
     //% weight=70
-    export function switchI2CMultiplexer (channelselected: channel): void {
+    export function switchI2CMultiplexer (channelselected: i2cchannel): void {
         let i2c_multiplexerAddress = 0x70;
         let buffer = pins.createBuffer(1);
-        if (channelselected == channel.C1) {
+        if (channelselected == i2cchannel.C1) {
             buffer[0] = 0x01
         }
-        else if (channelselected == channel.C2) {
+        else if (channelselected == i2cchannel.C2) {
             buffer[0] = 0x02
         }
-        else if (channelselected == channel.C3) {
+        else if (channelselected == i2cchannel.C3) {
             buffer[0] = 0x04
         }
-        else if (channelselected == channel.C4) {
+        else if (channelselected == i2cchannel.C4) {
             buffer[0] = 0x08
         }
-        else if (channelselected == channel.C5) {
+        else if (channelselected == i2cchannel.C5) {
             buffer[0] = 0x10
         }
-        else if (channelselected == channel.C6) {
+        else if (channelselected == i2cchannel.C6) {
             buffer[0] = 0x20
         }
-        else if (channelselected == channel.C7) {
+        else if (channelselected == i2cchannel.C7) {
             buffer[0] = 0x40
         }
-        else if (channelselected == channel.C8) {
+        else if (channelselected == i2cchannel.C8) {
             buffer[0] = 0x80
         }
         pins.i2cWriteBuffer(i2c_multiplexerAddress, buffer[0], false);
