@@ -218,8 +218,8 @@ namespace pksdriver {
         }
         if (index > 4 || index <= 0)
             return
-        let pn = (4 - index) * 2
-        let pp = (4 - index) * 2 + 1
+        let pn = ( index -1 )*2 + 8
+        let pp = ( index -1 )*2 + 8 + 1
         if (speed >= 0) {
             setPwm(pp, 0, speed)
             setPwm(pn, 0, 0)
@@ -233,8 +233,10 @@ namespace pksdriver {
     //% blockId=light_lightoff block="light off|%index" subcategory="Smart Living"
     //% group="Lights"
     export function LightOff(index: Motors) {
-        setPwm((4 - index) * 2, 0, 0);
-        setPwm((4 - index) * 2 + 1, 0, 0);
+        let pn = ( index -1 )*2 + 8
+        let pp = ( index -1 )*2 + 8 + 1
+        setPwm(pn , 0, 0);
+        setPwm(pp , 0, 0);
     }
 
     export enum compoundEyeData {
