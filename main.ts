@@ -1509,10 +1509,7 @@ namespace pksdriver {
     /**
     * switch I2C multiplexer channel 
      */
-    //% blockId=switch channel block="switch i2cchannel $channelselected" subcategory="Edu Kit"
-    //% group="I2C multiplexer"
-    //% weight=70
-    export function switchI2CMultiplexer (channelselected: i2cchannel): void {
+    function switchI2CMultiplexer (channelselected: i2cchannel): void {
         let i2c_multiplexerAddress = 0x70;
         const buf = pins.createBuffer(1);
         if (channelselected == i2cchannel.C1) {
@@ -1541,6 +1538,33 @@ namespace pksdriver {
         }
         pins.i2cWriteBuffer(i2c_multiplexerAddress, buf, false);
 
+    }
+    //% blockId=switch_channel_edu block="switch i2cchannel %channelselected" subcategory="Edu Kit"
+    //% group="I2C multiplexer"
+    //% weight=70
+    export function switchI2CChannelEdu(channelselected: i2cchannel): void {
+        switchI2CMultiplexer(channelselected);
+    }
+    
+    //% blockId=switch_channel_maze block="switch i2cchannel %channelselected" subcategory="Maze Car"
+    //% group="I2C multiplexer"
+    //% weight=70
+    export function switchI2CChannelMaze(channelselected: i2cchannel): void {
+        switchI2CMultiplexer(channelselected);
+    }
+    
+    //% blockId=switch_channel_soccer block="switch i2cchannel %channelselected" subcategory="Soccer Robot"
+    //% group="I2C multiplexer"
+    //% weight=70
+    export function switchI2CChannelSoccer(channelselected: i2cchannel): void {
+        switchI2CMultiplexer(channelselected);
+    }
+    
+    //% blockId=switch_channel_smart block="switch i2cchannel %channelselected" subcategory="Smart Living"
+    //% group="I2C multiplexer"
+    //% weight=70
+    export function switchI2CChannelSmart(channelselected: i2cchannel): void {
+        switchI2CMultiplexer(channelselected);
     }
 
 }
