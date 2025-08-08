@@ -203,40 +203,35 @@ namespace pksdriver {
 
     //% weight=90
     //% blockId=light_lighton block="light on|%index" subcategory="Smart Living"
-    //% group="Lights"
+    //% group="Grow Lights"
     export function LightOn(index: Motors): void {
         if (!initialized) {
             initPCA9685()
         }
         let speed = 255
         speed = speed * 16 * 1; // map 255 to 4096
-        if (speed >= 4096) {
-            speed = 4095
-        }
-        if (speed <= -4096) {
-            speed = -4095
+        if (index > 4 || index <= 0)
+            return
+        let pn = ( index -1 )*2 + 8
+        let pp = ( index -1 )*2 + 8 + 1
+        setPwm(pp, 0, speed)
+        setPwm(pn, 0, 0)
+        
+    }
+
+    //% weight=90
+    //% blockId=light_lightoff block="light off|%index" subcategory="Smart Living"
+    //% group="Grow Lights"
+    export function LightOff(index: Motors) {
+         if (!initialized) {
+            initPCA9685()
         }
         if (index > 4 || index <= 0)
             return
         let pn = ( index -1 )*2 + 8
         let pp = ( index -1 )*2 + 8 + 1
-        if (speed >= 0) {
-            setPwm(pp, 0, speed)
-            setPwm(pn, 0, 0)
-        } else {
-            setPwm(pp, 0, 0)
-            setPwm(pn, 0, -speed)
-        }
-    }
-
-    //% weight=90
-    //% blockId=light_lightoff block="light off|%index" subcategory="Smart Living"
-    //% group="Lights"
-    export function LightOff(index: Motors) {
-        let pn = ( index -1 )*2 + 8
-        let pp = ( index -1 )*2 + 8 + 1
-        setPwm(pn , 0, 0);
-        setPwm(pp , 0, 0);
+        setPwm(pp, 0, 0)
+        setPwm(pn, 0, 0)
     }
 
     export enum compoundEyeData {
