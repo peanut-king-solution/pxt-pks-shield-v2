@@ -97,31 +97,27 @@ namespace pksdriver {
      * S1~S8.
      * 0°~180°.
     */
-    function servo(index: Servos, degree: number): void {
+    //% blockId=motor_servo block="servo|%index|degree|%degree" subcategory="Edu Kit"
+    //% group="Servo"
+    //% weight=100
+    //% degree.min=0 degree.max=180
+    //% index.fieldEditor="gridpicker" index.fieldOptions.columns=4
+    export function servo(index: Servos, degree: number): void {
         if (!initialized) {
             initPCA9685()
         }
         // 50hz
         let v_us = (degree * 1800 / 180 + 600) // 0.6ms ~ 2.4ms
         let value = v_us * 4096 / 20000
-        setPwm(8- (index ) , 0, value)
+        setPwm(8 - index, 0, value)
     }
-    //% blockId=motor_servo block="servo|%index|degree|%degree" subcategory="Edu Kit"
-    //% group="Servos"
-    //% weight=100
+    //% blockId=smart_servo block="smart servo|%index|degree|%degree" subcategory="Smart Living"
+    //% group="Servo"
+    //% weight=99
     //% degree.min=0 degree.max=180
     //% index.fieldEditor="gridpicker" index.fieldOptions.columns=4
-    
-    export function servoedu(index: Servos, degree: number): void {
-       servo(index,degree)
-    }
-//% blockId=motor_servo block="servo|%index|degree|%degree" subcategory="Smart Living"
-    //% group="Servos"
-    //% weight=100
-    //% degree.min=0 degree.max=180
-    //% index.fieldEditor="gridpicker" index.fieldOptions.columns=4
-    export function servoliv(index: Servos, degree: number): void {
-       servo(index,degree)
+    export function smartServo(index: Servos, degree: number): void {
+        servo(index, degree)
     }
 
     /**
