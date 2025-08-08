@@ -226,7 +226,12 @@ namespace pksdriver {
         setPwm(pn, 0, 0)
         
     }
-
+    //% weight=90
+    //% blockId=fan_fanon block="fan on|%index" subcategory="Smart Living"
+    //% group="Fan"
+    export function FanOn(index: Motors): void {
+        LightOn(index)        
+    }
     //% weight=90
     //% blockId=light_lightoff block="light off|%index" subcategory="Smart Living"
     //% group="Grow Lights"
@@ -240,6 +245,13 @@ namespace pksdriver {
         let pp = ( index -1 )*2 + 8 + 1
         setPwm(pp, 0, 0)
         setPwm(pn, 0, 0)
+    }
+
+    //% weight=90
+    //% blockId=fan_fanoff block="fan off|%index" subcategory="Smart Living"
+    //% group="Fan"
+    export function FanOff(index: Motors) {
+         LightOff(index)  
     }
 
     export enum compoundEyeData {
