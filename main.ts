@@ -230,7 +230,7 @@ namespace pksdriver {
     //% blockId=motor_motorStopAll block="motor stop all" subcategory="Maze Car"
     //% group="Motors"
     export function mazemotorStopAll(): void {
-        MmotorStopAll();
+        motorStopAll();
     }
     //% weight=90
     //% blockId=light_lighton block="light on|%index" subcategory="Smart Living"
