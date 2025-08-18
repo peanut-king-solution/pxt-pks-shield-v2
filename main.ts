@@ -182,6 +182,16 @@ namespace pksdriver {
             setPwm(pn, 0, -speed)
         }
     }
+     //% weight=130
+    //% blockId=motor_MotorRun block="motor|%index|dir|%Dir|speed|%speed" subcategory="Maze Car"
+    //% speed.min=0 speed.max=255
+    //% index.fieldEditor="gridpicker" index.fieldOptions.columns=2
+    //% direction.fieldEditor="gridpicker" direction.fieldOptions.columns=2
+    //% group="Motors"
+    export function MazeMotorRun(index: Motors, direction: Dir, speed: number): void {
+        MotorRun(index, direction, speed);
+    }
+    
 
     /**
      * Stop the dc motor.
@@ -191,6 +201,11 @@ namespace pksdriver {
     //% group="Motors"
     //% index.fieldEditor="gridpicker" index.fieldOptions.columns=2
     export function motorStop(index: Motors) {
+        if (!initialized) {
+            initPCA9685()
+        }
+        if (index > 4 || index <= 0)
+            return
         let pn = ( index -1 )*2 + 8
         let pp = ( index -1 )*2 + 8 + 1
         setPwm(pn , 0, 0);
@@ -208,23 +223,20 @@ namespace pksdriver {
             motorStop(idx);
         }
     }
-
+ /**
+     * Stop all motors
+    */
+    //% weight=128
+    //% blockId=motor_motorStopAll block="motor stop all" subcategory="Maze Car"
+    //% group="Motors"
+    export function mazemotorStopAll(): void {
+        MmotorStopAll();
+    }
     //% weight=90
     //% blockId=light_lighton block="light on|%index" subcategory="Smart Living"
     //% group="Grow Lights"
     export function LightOn(index: Motors): void {
-        if (!initialized) {
-            initPCA9685()
-        }
-        let speed = 255
-        speed = speed * 16 * 1; // map 255 to 4096
-        if (index > 4 || index <= 0)
-            return
-        let pn = ( index -1 )*2 + 8
-        let pp = ( index -1 )*2 + 8 + 1
-        setPwm(pp, 0, speed)
-        setPwm(pn, 0, 0)
-        
+        MotorRun(index, 1, 255);        
     }
     //% weight=90
     //% blockId=fan_fanon block="fan on|%index" subcategory="Smart Living"
@@ -236,15 +248,7 @@ namespace pksdriver {
     //% blockId=light_lightoff block="light off|%index" subcategory="Smart Living"
     //% group="Grow Lights"
     export function LightOff(index: Motors) {
-         if (!initialized) {
-            initPCA9685()
-        }
-        if (index > 4 || index <= 0)
-            return
-        let pn = ( index -1 )*2 + 8
-        let pp = ( index -1 )*2 + 8 + 1
-        setPwm(pp, 0, 0)
-        setPwm(pn, 0, 0)
+        motorStop(index);
     }
 
     //% weight=90
