@@ -1231,7 +1231,7 @@ namespace pksdriver {
     export function ultra_result(): number {
         let dist = 0;
         pins.i2cWriteNumber(0x57,0x01, NumberFormat.UInt8BE, false);
-        basic.pause(30);
+        basic.pause(100);
         let ul_raw = pins.i2cReadBuffer(0x57,pins.sizeOf(NumberFormat.UInt8LE)* 3, false);
         dist = ul_raw[0]*65536+ ul_raw[1]*256 + ul_raw[2];
         dist /= 1000;
