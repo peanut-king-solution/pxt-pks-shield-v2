@@ -1225,6 +1225,18 @@ namespace pksdriver {
         WRI_REG = 0x20,   // write reg
 
     };
+    //% block="get_dist (Unit: mm)" subcategory="Maze Car"
+    //% group="Ultrasound"
+    //% weight=70
+    export function ultra_result(): number {
+        let dist = 0;
+        pins.i2cWriteNumber(0x57,0x01, NumberFormat.UInt8BE, false);
+        let ul_raw = pins.i2cReadBuffer(0x57, 3, false);
+        dist = ul_raw[0] << 16 + ul_raw[1] << 8 + ul_raw[2];
+        dist /= 1000;
+        return dist;
+    }
+
     /**
     * Compass read function, to get the yaw angle
     */
