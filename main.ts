@@ -1604,3 +1604,191 @@ namespace pksdriver {
 
 
 
+//% weight=60
+//% color=#1c4980 
+//% icon="\uf2db" 
+//% block="PKS Drivers"
+namespace pksdriver {
+    /**
+         * Rounds a number to the specified number of decimal places (returns a string with the requested decimals, similar to toFixed).
+         * @param value The number to round
+         * @param decimals The number of decimal places to keep
+         * @return A string representation of the rounded number with the specified decimal places
+         * @example roundToDp(3.14159, 2) returns "3.14"
+         */
+    //% blockId=pksdriver_round block="round %value to %decimals decimal places" subcategory="Math"
+    //% group="Math"
+    //% weight=10
+    export function roundToDp(value: number, decimals: number): string {
+        // safety
+        if (decimals < 0) decimals = 0;
+        if (decimals > 20) decimals = 20;
+
+        let factor = Math.pow(10, decimals);
+        let rounded = Math.round(value * factor) / factor;
+        let str = "" + rounded;
+        // Add trailing zeros if needed
+        let dotIdx = str.indexOf(".");
+        if (decimals == 0) {
+            return str.split(".")[0];
+        }
+        if (dotIdx == -1) {
+            str += ".";
+            dotIdx = str.length - 1;
+        }
+        let decimalsNow = str.length - dotIdx - 1;
+        while (decimalsNow < decimals) {
+            str += "0";
+            decimalsNow++;
+        }
+        return str;
+    }
+}
+
+/**
+ * ESP32 IoT Driver for micro:bit
+ * ESP32 I2C Command Codes (Relabeled for collision-free protocol):
+ * Setup (0x30-0x33):
+ *   0x30 — Set ESP32 port number
+ *   0x31 — Set Wi-Fi SSID
+ *   0x32 — Set Wi-Fi password
+ *   0x33 — Start ESP32 Wi-Fi transmissions (connect and begin hosting)
+ * Sending data to ESP32 (0x40):
+ *   0x40 — Send sensor reading (sensor name + value)
+ * Reading from ESP32 (0x50-0x51):
+ *   0x50 — Status register, high bit indicates command available
+ *   0x51 — Command buffer, read latest command from ESP32 (up to 32 bytes)
+ */
+//% weight=60
+//% color=#1c4980 
+//% icon="\uf2db" 
+//% block="PKS Drivers"
+namespace pksdriver {
+
+    let esp32I2CAddress = 0x22;
+
+    /**
+     * devices to toggle from ESP client
+     */
+    export enum ESP_Devices {
+        Light = 0x00,
+        Fan = 0x01,
+        Door = 0x02
+    }
+    /**
+     * sensors to read from
+     */
+    export enum ESP_Sensors {
+        Temperature = 0x00,
+        Humidity = 0x01,
+        Light = 0x02,
+        Ultrasound = 0x03,
+        Magnetic = 0x04
+    }
+
+    /**
+     * Starts I2C communication with the ESP32 extension board.
+     * @param address The I2C address of the ESP32 (default 0x22)
+     */
+    //% blockId=pksdriver_esp32_start_i2c block="set ESP32 I2C to address %address" subcategory="IoT"
+    //% group="ESP32 IoT"
+    //% weight=100
+    //% address.defl=0x22
+    export function setI2cAddress(address: number = 0x22): void {
+        esp32I2CAddress = address;
+    }
+    /**
+     * Set the Wi-Fi SSID and password for the ESP32 and start Wi-Fi transmissions (connect and begin hosting).
+     * @param ssid The Wi-Fi network name
+     * @param password The Wi-Fi password
+     */
+    //% blockId=pksdriver_esp32_set_wifi_and_start block="set ESP32 mDNS name %mdns_name|Wi-Fi SSID %ssid|password %password|and start Wi-Fi" subcategory="IoT"
+    //% inlineInputMode=external
+    //% group="ESP32 IoT"
+    //% weight=80
+    export function setESP32WiFiAndStart(mdns_name: string, ssid: string, password: string): void {
+        basic.pause(1000); // wait for ESP to start
+
+        // Send mDNS name, SSID and password to ESP32 via I2C
+        let mDNSnameBuf = pins.createBuffer(mdns_name.length + 1);
+        mDNSnameBuf[0] = 0x30; // mDNS name cmd
+        for (let i = 0; i < mdns_name.length; i++) mDNSnameBuf[1 + i] = mdns_name.charCodeAt(i);
+        pins.i2cWriteBuffer(esp32I2CAddress, mDNSnameBuf);
+
+        let ssidBuf = pins.createBuffer(ssid.length + 1);
+        ssidBuf[0] = 0x31; // SSID cmd
+        for (let i = 0; i < ssid.length; i++) ssidBuf[1 + i] = ssid.charCodeAt(i);
+        pins.i2cWriteBuffer(esp32I2CAddress, ssidBuf);
+
+        let passBuf = pins.createBuffer(password.length + 1);
+        passBuf[0] = 0x32; // password cmd
+        for (let i = 0; i < password.length; i++) passBuf[1 + i] = password.charCodeAt(i);
+        pins.i2cWriteBuffer(esp32I2CAddress, passBuf);
+
+        // Now send the command to start Wi-Fi
+        let buf = pins.createBuffer(1);
+        buf[0] = 0x33; // start Wi-Fi cmd
+        pins.i2cWriteBuffer(esp32I2CAddress, buf);
+    }
+
+    /**
+     * Send a sensor reading to the ESP32 for dashboard display (browser).
+     * @param sensorName The name of the sensor (e.g. "temp")
+     * @param value The value to send
+     */
+    //% blockId=pksdriver_send_sensor block="send sensor %sensorName value %value to ESP32" subcategory="IoT"
+    //% inlineInputMode=external
+    //% group="ESP32 IoT"
+    //% weight=60
+    export function sendSensorReading(sensorType: ESP_Sensors, value: number): void {
+        let buf = pins.createBuffer(6);
+        buf[0] = 0x40; // sensor
+        buf[1] = sensorType;
+        // Encode float as 4 bytes (IEEE 754)
+        
+        let floatBuf = pins.createBuffer(4);
+        floatBuf.setNumber(NumberFormat.Float32LE, 0, value);
+        for (let i = 0; i < 4; i++) buf[2 + i] = floatBuf[i];
+        pins.i2cWriteBuffer(esp32I2CAddress, buf);
+        // give time for ESP to process
+        basic.pause(100);
+    }
+
+    // state of outputs
+    let iDoor = 0;
+    let iLight = 0;
+    let iFan = 0;
+
+    /**
+     * Read the commands from the ESP32 module
+     * The results are stored, use the accessors to access
+     */
+    //% blockId=pksdriver_esp_read block="Read commands from ESP32" subcategory="IoT"
+    //% group="ESP32 IoT"
+    //% weight=60
+    export function readESP32Bits() {
+        let buf = pins.i2cReadBuffer(esp32I2CAddress, 4, false);
+        // buf[0] is garbage data, see doc
+        iDoor = buf[1];
+        iFan = buf[2];
+        iLight = buf[3];
+    }
+
+
+    /**
+     * Public Accessor of ESP Devices
+     */
+    //% block="Get state of $esp_cmd" subcategory="IoT"
+    //% group="ESP32 IoT"
+    //% weight=60
+    export function decodeESP(esp_cmd: ESP_Devices): number {
+        switch (esp_cmd) {
+            case (ESP_Devices.Door):
+                return iDoor;
+            case (ESP_Devices.Light):
+                return iLight;
+            case (ESP_Devices.Fan):
+                return iFan;
+        }
+    }
+}
