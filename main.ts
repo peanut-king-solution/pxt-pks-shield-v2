@@ -1601,9 +1601,6 @@ namespace pksdriver {
 
 }
 
-
-
-
 //% weight=60
 //% color=#1c4980 
 //% icon="\uf2db" 
@@ -1652,7 +1649,8 @@ namespace pksdriver {
  *   0x30 — Set ESP32 port number
  *   0x31 — Set Wi-Fi SSID
  *   0x32 — Set Wi-Fi password
- *   0x33 — Start ESP32 Wi-Fi transmissions (connect and begin hosting)
+ *   0x33 — Start ESP32 Wi-Fi in Station mode (connect to existing AP) transmissions (connect and begin hosting)
+ *   0x34 — Start ESP32 Wi-Fi in Access Point mode (devices connect to ESP32) transmissions (connect and begin hosting)
  * Sending data to ESP32 (0x40):
  *   0x40 — Send sensor reading (sensor name + value)
  * Reading from ESP32 (0x50-0x51):
@@ -1698,15 +1696,17 @@ namespace pksdriver {
         esp32I2CAddress = address;
     }
     /**
-     * Set the Wi-Fi SSID and password for the ESP32 and start Wi-Fi transmissions (connect and begin hosting).
+     * Set the Wi-Fi Station mode SSID and password for the ESP32 and start Wi-Fi transmissions (connect and begin hosting).
+     * The ESP32 uses mdns to set a friendly name.
+     * @param mdns_name The mDNS name for the ESP32
      * @param ssid The Wi-Fi network name
      * @param password The Wi-Fi password
      */
-    //% blockId=pksdriver_esp32_set_wifi_and_start block="set ESP32 mDNS name %mdns_name|Wi-Fi SSID %ssid|password %password|and start Wi-Fi" subcategory="IoT"
+    //% blockId=pksdriver_esp32_set_wifi_station_and_start block="set ESP32 in station mode with|mDNS name %mdns_name|Wi-Fi SSID %ssid|password %password|and start Wi-Fi" subcategory="IoT"
     //% inlineInputMode=external
     //% group="ESP32 IoT"
     //% weight=80
-    export function setESP32WiFiAndStart(mdns_name: string, ssid: string, password: string): void {
+    export function setESP32WiFiStationAndStart(mdns_name: string, ssid: string, password: string): void {
         basic.pause(1000); // wait for ESP to start
 
         // Send mDNS name, SSID and password to ESP32 via I2C
@@ -1728,6 +1728,33 @@ namespace pksdriver {
         // Now send the command to start Wi-Fi
         let buf = pins.createBuffer(1);
         buf[0] = 0x33; // start Wi-Fi cmd
+        pins.i2cWriteBuffer(esp32I2CAddress, buf);
+    }
+    /**
+     * Set the Wi-Fi Access Point SSID and password for the ESP32 and start Wi-Fi transmissions (connect and begin hosting).
+     * @param ssid The Wi-Fi network name
+     * @param password The Wi-Fi password
+     */
+    //% blockId=pksdriver_esp32_set_wifi_access_point_and_start block="set ESP32 in Access Point mode with|Wi-Fi SSID %ssid|password %password|and start Wi-Fi" subcategory="IoT"
+    //% inlineInputMode=external
+    //% group="ESP32 IoT"
+    //% weight=80
+    export function setESP32WiFiAccessPointAndStart(ssid: string, password: string): void {
+        basic.pause(1000); // wait for ESP to start
+
+        let ssidBuf = pins.createBuffer(ssid.length + 1);
+        ssidBuf[0] = 0x31; // SSID cmd
+        for (let i = 0; i < ssid.length; i++) ssidBuf[1 + i] = ssid.charCodeAt(i);
+        pins.i2cWriteBuffer(esp32I2CAddress, ssidBuf);
+
+        let passBuf = pins.createBuffer(password.length + 1);
+        passBuf[0] = 0x32; // password cmd
+        for (let i = 0; i < password.length; i++) passBuf[1 + i] = password.charCodeAt(i);
+        pins.i2cWriteBuffer(esp32I2CAddress, passBuf);
+
+        // Now send the command to start Wi-Fi
+        let buf = pins.createBuffer(1);
+        buf[0] = 0x34; // start Wi-Fi cmd
         pins.i2cWriteBuffer(esp32I2CAddress, buf);
     }
 
