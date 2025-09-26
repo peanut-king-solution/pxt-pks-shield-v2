@@ -1484,21 +1484,21 @@ namespace pksdriver {
         else if (Buttoncheck == Button.B3) {
             x = 0b001
         }
-        if (buttonvalue > 800) {
+        if (buttonvalue > 912) {
             button = 0;
-        } else if (buttonvalue <= 800 && buttonvalue > 675) {
+        } else if (buttonvalue <= 912 && buttonvalue > 747) {
             button = 1;
-        } else if (buttonvalue <= 675 && buttonvalue > 580) {
+        } else if (buttonvalue <= 747 && buttonvalue > 631) {
             button = 2;
-        } else if (buttonvalue <= 580 && buttonvalue > 510) {
+        } else if (buttonvalue <= 631 && buttonvalue > 547) {
             button = 3;
-        } else if (buttonvalue <= 510 && buttonvalue > 450) {
+        } else if (buttonvalue <= 547 && buttonvalue > 482) {
             button = 4;
-        } else if (buttonvalue <= 450 && buttonvalue > 410) {
+        } else if (buttonvalue <= 482 && buttonvalue > 431) {
             button = 5;
-        } else if (buttonvalue <= 410 && buttonvalue > 373) {
+        } else if (buttonvalue <= 431 && buttonvalue > 390) {
             button = 6;
-        } else if (buttonvalue <= 373) {
+        } else if (buttonvalue <= 390) {
             button = 7;
         }
         ans = (button & x)
