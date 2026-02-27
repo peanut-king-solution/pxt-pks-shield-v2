@@ -159,7 +159,7 @@ namespace pksdriver {
     //% index.fieldEditor="gridpicker" index.fieldOptions.columns=2
     //% direction.fieldEditor="gridpicker" direction.fieldOptions.columns=2
     //% group="Motors"
-    export function MotorRun(index: Motors, direction: Dir, speed: number): void {
+    export function motorRun(index: Motors, direction: Dir, speed: number): void {
         if (!initialized) {
             initPCA9685()
         }
@@ -188,8 +188,8 @@ namespace pksdriver {
     //% index.fieldEditor="gridpicker" index.fieldOptions.columns=2
     //% direction.fieldEditor="gridpicker" direction.fieldOptions.columns=2
     //% group="Motors"
-    export function MazeMotorRun(index: Motors, direction: Dir, speed: number): void {
-        MotorRun(index, direction, speed);
+    export function mazeMotorRun(index: Motors, direction: Dir, speed: number): void {
+        motorRun(index, direction, speed);
     }
     
 
@@ -229,71 +229,71 @@ namespace pksdriver {
     //% weight=128
     //% blockId=motor_motorStopAll block="motor stop all" subcategory="Maze Car"
     //% group="Motors"
-    export function mazemotorStopAll(): void {
+    export function mazeMotorStopAll(): void {
         motorStopAll();
     }
     //% weight=90
     //% blockId=light_lighton block="light on|%index" subcategory="Smart Living"
     //% group="Grow Lights"
-    export function LightOn(index: Motors): void {
-        MotorRun(index, 1, 255);        
+    export function lightOn(index: Motors): void {
+        motorRun(index, 1, 255);        
     }
     //% weight=90
     //% blockId=fan_fanon block="fan on|%index" subcategory="Smart Living"
     //% group="Fan"
-    export function FanOn(index: Motors): void {
-        LightOn(index)        
+    export function fanOn(index: Motors): void {
+        lightOn(index)        
     }
     //% weight=90
     //% blockId=light_lightoff block="light off|%index" subcategory="Smart Living"
     //% group="Grow Lights"
-    export function LightOff(index: Motors) {
+    export function lightOff(index: Motors) {
         motorStop(index);
     }
 
     //% weight=90
     //% blockId=fan_fanoff block="fan off|%index" subcategory="Smart Living"
     //% group="Fan"
-    export function FanOff(index: Motors) {
-         LightOff(index)  
+    export function fanOff(index: Motors) {
+         lightOff(index)  
     }
 
-    export enum compoundEyeData {
+    export enum CompoundEyeData {
         //% block="eye_1"
-        ir_1,
+        Ir_1,
         //% block="eye_2"
-        ir_2,
+        Ir_2,
         //% block="eye_3"
-        ir_3,
+        Ir_3,
         //% block="eye_4"
-        ir_4,
+        Ir_4,
         //% block="eye_5"
-        ir_5,
+        Ir_5,
         //% block="eye_6"
-        ir_6,
+        Ir_6,
         //% block="eye_7"
-        ir_7,
+        Ir_7,
         //% block="eye_8"
-        ir_8,
+        Ir_8,
         //% block="eye_9"
-        ir_9,
+        Ir_9,
         //% block="eye_10"
-        ir_10,
+        Ir_10,
         //% block="eye_11"
-        ir_11,
+        Ir_11,
         //% block="eye_12"
-        ir_12,
+        Ir_12,
         //% block="max_eye_value"
         //% weight=99
-        max_eye_value,
+        MaxEyeValue,
         //% block="max_eye"
         //% weight=100
-        max_eye,
+        MaxEye,
         //% block="angle"
         //% weight=98
-        angle,
+        Angle,
         //% block="mode"
-        mode,
+        Mode,
     }
 
     /**
@@ -302,7 +302,7 @@ namespace pksdriver {
     //% blockId=compoundEye block="compound eye $compound_eye_data"  subcategory="Soccer Robot"
     //% group="Compound Eye"
     //% weight=50
-    export function compoundEyeRead(compound_eye_data: compoundEyeData): number {
+    export function compoundEyeRead(compound_eye_data: CompoundEyeData): number {
         pins.i2cWriteNumber(
             0x13,
             compound_eye_data,
@@ -312,9 +312,9 @@ namespace pksdriver {
         let temp = pins.i2cReadNumber(0x13, NumberFormat.UInt8LE, false);
         if (temp == 255) {
             return -1;
-        } else if (compound_eye_data == compoundEyeData.angle) {
+        } else if (compound_eye_data == CompoundEyeData.Angle) {
             temp *= 2;
-        } else if (compound_eye_data == compoundEyeData.max_eye) {
+        } else if (compound_eye_data == CompoundEyeData.MaxEye) {
             temp += 1;
         }
         return temp;
@@ -327,20 +327,20 @@ namespace pksdriver {
 //% icon="\uf2db" 
 //% block="PKS Drivers"
 namespace pksdriver {
-    function Read(aht20: AHT20): { Humidity: number, Temperature: number } {
-        if (!aht20.GetState().Calibrated) {
-            aht20.Initialization();
-            if (!aht20.GetState().Calibrated) return null;
+    function read(aht20: AHT20): { Humidity: number, Temperature: number } {
+        if (!aht20.state().Calibrated) {
+            aht20.initialization();
+            if (!aht20.state().Calibrated) return null;
         }
 
-        aht20.TriggerMeasurement();
+        aht20.triggerMeasurement();
         for (let i = 0; ; ++i) {
-            if (!aht20.GetState().Busy) break;
+            if (!aht20.state().Busy) break;
             if (i >= 500) return null;
             basic.pause(10);
         }
 
-        return aht20.Read();
+        return aht20.read();
     }
 
     //% group="Temperature and Humidity (AHT20)"  subcategory="Smart Living"
@@ -348,7 +348,7 @@ namespace pksdriver {
     //% weight=3
     export function aht20ReadTemperatureC(): number {
         const aht20 = new AHT20();
-        const val = Read(aht20);
+        const val = read(aht20);
         if (val == null) return null;
 
         return val.Temperature;
@@ -359,7 +359,7 @@ namespace pksdriver {
     //% weight=2
     export function aht20ReadTemperatureF(): number {
         const aht20 = new AHT20();
-        const val = Read(aht20);
+        const val = read(aht20);
         if (val == null) return null;
 
         return val.Temperature * 9 / 5 + 32;
@@ -370,7 +370,7 @@ namespace pksdriver {
     //% weight=1
     export function aht20ReadHumidity(): number {
         const aht20 = new AHT20();
-        const val = Read(aht20);
+        const val = read(aht20);
         if (val == null) return null;
 
         return val.Humidity;
@@ -381,7 +381,7 @@ namespace pksdriver {
             this._Address = address;
         }
 
-        public Initialization(): AHT20 {
+        public initialization(): AHT20 {
             const buf = pins.createBuffer(3);
             buf[0] = 0xbe;
             buf[1] = 0x08;
@@ -392,7 +392,7 @@ namespace pksdriver {
             return this;
         }
 
-        public TriggerMeasurement(): AHT20 {
+        public triggerMeasurement(): AHT20 {
             const buf = pins.createBuffer(3);
             buf[0] = 0xac;
             buf[1] = 0x33;
@@ -403,7 +403,7 @@ namespace pksdriver {
             return this;
         }
 
-        public GetState(): { Busy: boolean, Calibrated: boolean } {
+        public state(): { Busy: boolean, Calibrated: boolean } {
             const buf = pins.i2cReadBuffer(this._Address, 1, false);
             const busy = buf[0] & 0x80 ? true : false;
             const calibrated = buf[0] & 0x08 ? true : false;
@@ -411,10 +411,10 @@ namespace pksdriver {
             return { Busy: busy, Calibrated: calibrated };
         }
 
-        public Read(): { Humidity: number, Temperature: number } {
+        public read(): { Humidity: number, Temperature: number } {
             const buf = pins.i2cReadBuffer(this._Address, 7, false);
 
-            const crc8 = AHT20.CalcCRC8(buf, 0, 6);
+            const crc8 = AHT20.calcCRC8(buf, 0, 6);
             if (buf[6] != crc8) return null;
 
             const humidity = ((buf[1] << 12) + (buf[2] << 4) + (buf[3] >> 4)) * 100 / 1048576;
@@ -425,7 +425,7 @@ namespace pksdriver {
 
         private _Address: number;
 
-        private static CalcCRC8(buf: Buffer, offset: number, size: number): number {
+        private static calcCRC8(buf: Buffer, offset: number, size: number): number {
             let crc8 = 0xff;
             for (let i = 0; i < size; ++i) {
                 crc8 ^= buf[offset + i];
@@ -452,12 +452,12 @@ enum DHTtype {
     DHT22,
 }
 
-enum dataType {
-    humidity,
-    temperature,
+enum DataType {
+    Humidity,
+    Temperature,
 }
 
-enum tempType {
+enum TempType {
     Celsius,
     Fahrenheit,
 }
@@ -470,7 +470,7 @@ namespace pksdriver {
 
     let _temperature: number = -999.0
     let _humidity: number = -999.0
-    let _temptype: tempType = tempType.Celsius
+    let _temptype: TempType = TempType.Celsius
     let _readSuccessful: boolean = false
     let _sensorresponding: boolean = false
 
@@ -563,7 +563,7 @@ namespace pksdriver {
                 _humidity = (resultArray[0] * 256 + resultArray[1]) / 10
                 _temperature = (resultArray[2] * 256 + resultArray[3]) / 10 * temp_sign
             }
-            if (_temptype == tempType.Fahrenheit)
+            if (_temptype == TempType.Fahrenheit)
                 _temperature = _temperature * 9 / 5 + 32
             // }
 
@@ -573,11 +573,11 @@ namespace pksdriver {
                 if (_readSuccessful) {
                     serial.writeLine("Checksum ok")
                     serial.writeLine("Humidity: " + _humidity)
-                    serial.writeLine("Temperature: " + _temperature + (_temptype == tempType.Celsius ? " *C" : " *F"))
+                    serial.writeLine("Temperature: " + _temperature + (_temptype == TempType.Celsius ? " *C" : " *F"))
                 } else {
                     serial.writeLine("Checksum error, showing old values")
                     serial.writeLine("Humidity: " + _humidity)
-                    serial.writeLine("Temperature: " + _temperature + (_temptype == tempType.Celsius ? " *C" : " *F"))
+                    serial.writeLine("Temperature: " + _temperature + (_temptype == TempType.Celsius ? " *C" : " *F"))
                 }
                 serial.writeLine("----------------------------------------")
             }
@@ -592,8 +592,8 @@ namespace pksdriver {
     //% weight=99
     //% block="read $data" subcategory="Smart Living"
     //% group="Temperature and Humidity (DHT11/DHT22)" 
-    export function readData(data: dataType): number {
-        return data == dataType.humidity ? _humidity : _temperature
+    export function readData(data: DataType): number {
+        return data == DataType.Humidity ? _humidity : _temperature
     }
 
     /**
@@ -602,7 +602,7 @@ namespace pksdriver {
     //% block="temperature type: $temp" subcategory="Smart Living"
     //% group="Temperature and Humidity (DHT11/DHT22)" 
     //% weight=98
-    export function selectTempType(temp: tempType) {
+    export function selectTempType(temp: TempType) {
         _temptype = temp
     }
 
@@ -646,14 +646,14 @@ namespace pksdriver {
     /**
      * convert a Hex data to Dec
      */
-    function HexToDec(dat: number): number {
+    function hexToDec(dat: number): number {
         return (dat >> 4) * 10 + (dat % 16);
     }
 
     /**
      * convert a Dec data to Hex
      */
-    function DecToHex(dat: number): number {
+    function decToHex(dat: number): number {
         return Math.idiv(dat, 10) * 16 + (dat % 10)
     }
 
@@ -728,7 +728,7 @@ namespace pksdriver {
         //% parts="DS1302"
         //% group="Date and Time"
         getYear(): number {
-            return Math.min(HexToDec(this.getReg(DS1302_REG_YEAR + 1)), 99) + 2000
+            return Math.min(hexToDec(this.getReg(DS1302_REG_YEAR + 1)), 99) + 2000
         }
 
         /**
@@ -740,7 +740,7 @@ namespace pksdriver {
         //% group="Date and Time"
         //% parts="DS1302"
         setYear(dat: number): void {
-            this.wr(DS1302_REG_YEAR, DecToHex(dat % 100))
+            this.wr(DS1302_REG_YEAR, decToHex(dat % 100))
         }
 
         /**
@@ -751,7 +751,7 @@ namespace pksdriver {
         //% group="Date and Time"
         //% parts="DS1302"
         getMonth(): number {
-            return Math.max(Math.min(HexToDec(this.getReg(DS1302_REG_MONTH + 1)), 12), 1)
+            return Math.max(Math.min(hexToDec(this.getReg(DS1302_REG_MONTH + 1)), 12), 1)
         }
 
         /**
@@ -764,7 +764,7 @@ namespace pksdriver {
         //% parts="DS1302"
         //% dat.min=1 dat.max=12
         setMonth(dat: number): void {
-            this.wr(DS1302_REG_MONTH, DecToHex(dat % 13))
+            this.wr(DS1302_REG_MONTH, decToHex(dat % 13))
         }
 
         /**
@@ -775,7 +775,7 @@ namespace pksdriver {
         //% group="Date and Time"
         //% parts="DS1302"
         getDay(): number {
-            return Math.max(Math.min(HexToDec(this.getReg(DS1302_REG_DAY + 1)), 31), 1)
+            return Math.max(Math.min(hexToDec(this.getReg(DS1302_REG_DAY + 1)), 31), 1)
         }
 
         /**
@@ -788,7 +788,7 @@ namespace pksdriver {
         //% group="Date and Time"
         //% dat.min=1 dat.max=31
         setDay(dat: number): void {
-            this.wr(DS1302_REG_DAY, DecToHex(dat % 32))
+            this.wr(DS1302_REG_DAY, decToHex(dat % 32))
         }
 
         /**
@@ -799,7 +799,7 @@ namespace pksdriver {
         //% parts="DS1302"
         //% group="Date and Time"
         getWeekday(): number {
-            return Math.max(Math.min(HexToDec(this.getReg(DS1302_REG_WEEKDAY + 1)), 7), 1)
+            return Math.max(Math.min(hexToDec(this.getReg(DS1302_REG_WEEKDAY + 1)), 7), 1)
         }
 
         /**
@@ -812,7 +812,7 @@ namespace pksdriver {
         //% dat.min=1 dat.max=7
         //% group="Date and Time"
         setWeekday(dat: number): void {
-            this.wr(DS1302_REG_WEEKDAY, DecToHex(dat % 8))
+            this.wr(DS1302_REG_WEEKDAY, decToHex(dat % 8))
         }
 
         /**
@@ -823,7 +823,7 @@ namespace pksdriver {
         //% parts="DS1302"
         //% group="Date and Time"
         getHour(): number {
-            return Math.min(HexToDec(this.getReg(DS1302_REG_HOUR + 1)), 23)
+            return Math.min(hexToDec(this.getReg(DS1302_REG_HOUR + 1)), 23)
         }
 
         /**
@@ -836,7 +836,7 @@ namespace pksdriver {
         //% dat.min=0 dat.max=23
         //% group="Date and Time"
         setHour(dat: number): void {
-            this.wr(DS1302_REG_HOUR, DecToHex(dat % 24))
+            this.wr(DS1302_REG_HOUR, decToHex(dat % 24))
         }
 
         /**
@@ -847,7 +847,7 @@ namespace pksdriver {
         //% parts="DS1302"
         //% group="Date and Time"
         getMinute(): number {
-            return Math.min(HexToDec(this.getReg(DS1302_REG_MINUTE + 1)), 59)
+            return Math.min(hexToDec(this.getReg(DS1302_REG_MINUTE + 1)), 59)
         }
 
         /**
@@ -860,7 +860,7 @@ namespace pksdriver {
         //% dat.min=0 dat.max=59
         //% group="Date and Time"
         setMinute(dat: number): void {
-            this.wr(DS1302_REG_MINUTE, DecToHex(dat % 60))
+            this.wr(DS1302_REG_MINUTE, decToHex(dat % 60))
         }
 
         /**
@@ -871,7 +871,7 @@ namespace pksdriver {
         //% parts="DS1302"
         //% group="Date and Time"
         getSecond(): number {
-            return Math.min(HexToDec(this.getReg(DS1302_REG_SECOND + 1)), 59)
+            return Math.min(hexToDec(this.getReg(DS1302_REG_SECOND + 1)), 59)
         }
 
         /**
@@ -884,7 +884,7 @@ namespace pksdriver {
         //% dat.min=0 dat.max=59
         //% group="Date and Time"
         setSecond(dat: number): void {
-            this.wr(DS1302_REG_SECOND, DecToHex(dat % 60))
+            this.wr(DS1302_REG_SECOND, decToHex(dat % 60))
         }
 
         /**
@@ -986,39 +986,39 @@ namespace pksdriver {
     }
 }
 
-enum axisXYZ {
+enum AxisXYZ {
     //% block="X"
-    x,
+    X,
     //% block="Y"
-    y,
+    Y,
     //% block="Z"
-    z
+    Z
 }
 
-enum accelSen {
+enum AccelSen {
     // accelerometer sensitivity
 
     //% block="2g"
-    range_2_g,
+    Range_2_g,
     //% block="4g"
-    range_4_g,
+    Range_4_g,
     //% block="8g"
-    range_8_g,
+    Range_8_g,
     //% block="16g"
-    range_16_g
+    Range_16_g
 }
 
-enum gyroSen {
+enum GyroSen {
     // gyroscope sensitivite
 
     //% block="250dps"
-    range_250_dps,
+    Range_250_dps,
     //% block="500dps"
-    range_500_dps,
+    Range_500_dps,
     //% block="1000dps"
-    range_1000_dps,
+    Range_1000_dps,
     //% block="2000dps"
-    range_2000_dps
+    Range_2000_dps
 }
 
 //% weight=60
@@ -1073,19 +1073,19 @@ namespace pksdriver {
     function updateAcceleration(sensitivity: number) {
         // Set sensitivity of acceleration range, according to selection and datasheet value
         let accelRange = 0;
-        if (sensitivity == accelSen.range_2_g) {
+        if (sensitivity == AccelSen.Range_2_g) {
             // +- 2g
             accelRange = 16384;
         }
-        else if (sensitivity == accelSen.range_4_g) {
+        else if (sensitivity == AccelSen.Range_4_g) {
             // +- 4g
             accelRange = 8192;
         }
-        else if (sensitivity == accelSen.range_8_g) {
+        else if (sensitivity == AccelSen.Range_8_g) {
             // +- 8g
             accelRange = 4096;
         }
-        else if (sensitivity == accelSen.range_16_g) {
+        else if (sensitivity == AccelSen.Range_16_g) {
             // +- 16g
             accelRange = 2048;
         }
@@ -1095,22 +1095,22 @@ namespace pksdriver {
     }
 
     // Update gyroscope data via I2C
-    function updateGyroscope(sensitivity: gyroSen) {
+    function updateGyroscope(sensitivity: GyroSen) {
         // Set sensitivity of gyroscope range, according to selection and datasheet value
         let gyroRange = 0;
-        if (sensitivity == gyroSen.range_250_dps) {
+        if (sensitivity == GyroSen.Range_250_dps) {
             // +- 250dps
             gyroRange = 131;
         }
-        else if (sensitivity == gyroSen.range_500_dps) {
+        else if (sensitivity == GyroSen.Range_500_dps) {
             // +- 500dps
             gyroRange = 65.5;
         }
-        else if (sensitivity == gyroSen.range_1000_dps) {
+        else if (sensitivity == GyroSen.Range_1000_dps) {
             // +- 1000dps
             gyroRange = 32.8;
         }
-        else if (sensitivity == gyroSen.range_2000_dps) {
+        else if (sensitivity == GyroSen.Range_2000_dps) {
             // +- 2000dps
             gyroRange = 16.4;
         }
@@ -1138,12 +1138,12 @@ namespace pksdriver {
     //% block="gyroscope value of %axisXYZ axis with %gyroSen sensitivity (Unit: rad/s)" subcategory="Edu Kit"
     //% group="Acceleration"
     //% weight=99
-    export function gyroscope(axis: axisXYZ, sensitivity: gyroSen) {
+    export function gyroscope(axis: AxisXYZ, sensitivity: GyroSen) {
         updateGyroscope(sensitivity);
-        if (axis == axisXYZ.x) {
+        if (axis == AxisXYZ.X) {
             return xGyro;
         }
-        else if (axis == axisXYZ.y) {
+        else if (axis == AxisXYZ.Y) {
             return yGyro;
         }
         else {
@@ -1157,17 +1157,17 @@ namespace pksdriver {
     //% block="angle of %xaxisXYZ axis with %accelSen sensitivity (Unit: Degrees)" subcategory="Edu Kit"
     //% group="Acceleration"
     //% weight=98
-    export function axisRotation(axis: axisXYZ, sensitivity: accelSen): number {
+    export function axisRotation(axis: AxisXYZ, sensitivity: AccelSen): number {
         updateAcceleration(sensitivity);
 
         let radians;
-        if (axis == axisXYZ.x) {
+        if (axis == AxisXYZ.X) {
             radians = Math.atan2(yAccel, dist(xAccel, zAccel));
         }
-        else if (axis == axisXYZ.y) {
+        else if (axis == AxisXYZ.Y) {
             radians = -Math.atan2(xAccel, dist(yAccel, zAccel));
         }
-        else if (axis == axisXYZ.z) {
+        else if (axis == AxisXYZ.Z) {
             radians = Math.atan2(zAccel, dist(xAccel, yAccel));
         }
 
@@ -1183,13 +1183,13 @@ namespace pksdriver {
     //% block="acceleration of %xaxisXYZ axis with %accelSen sensitivity (Unit: g)" subcategory="Edu Kit"
     //% group="Acceleration"
     //% weight=97
-    export function axisAcceleration(axis: axisXYZ, sensitivity: accelSen): number {
+    export function axisAcceleration(axis: AxisXYZ, sensitivity: AccelSen): number {
         updateAcceleration(sensitivity);
         // Return acceleration of specific axis
-        if (axis == axisXYZ.x) {
+        if (axis == AxisXYZ.X) {
             return xAccel;
         }
-        else if (axis == axisXYZ.y) {
+        else if (axis == AxisXYZ.Y) {
             return yAccel;
         }
         else {
@@ -1228,7 +1228,7 @@ namespace pksdriver {
     //% block="get_dist (Unit: mm)" subcategory="Maze Car"
     //% group="Ultrasound"
     //% weight=70
-    export function ultra_result(): number {
+    export function ultraResult(): number {
         let dist = 0;
         pins.i2cWriteNumber(0x57,0x01, NumberFormat.UInt8BE, false);
         basic.pause(100);
@@ -1244,7 +1244,7 @@ namespace pksdriver {
     //% block="get_yaw (Unit: deg)" subcategory="Soccer Robot"
     //% group="Compass"
     //% weight=70
-    export function compass_get_yaw(): number {
+    export function compassGetYaw(): number {
         let yaw_ang = 0;
         pins.i2cWriteNumber(Compass.BOARD_ID, Compass.GET_YAW, NumberFormat.UInt8BE, false);
         let compass_raw = pins.i2cReadBuffer(Compass.BOARD_ID, 2, false);
@@ -1256,7 +1256,7 @@ namespace pksdriver {
 }
 
 // for maze car's use only
-enum direction { FRONT, BACK, LEFT, RIGHT }
+enum Direction { FRONT, BACK, LEFT, RIGHT }
 
 //% weight=60
 //% color=#1c4980 
@@ -1267,7 +1267,7 @@ namespace pksdriver {
     //% block="direction $wantedDirection" subcategory="Maze Car"
     //% group="Directions"
     //% weight=70
-    export function chooseDirection(wantedDirection: direction): direction {
+    export function chooseDirection(wantedDirection: Direction): Direction {
         return wantedDirection;
     }
 
@@ -1316,37 +1316,37 @@ namespace pksdriver {
     //Color Sensor
     export enum RGB {
         //% block="red_value"
-        r,
+        R,
         //% block="green_value"
-        g,
+        G,
         //% block="blue_value"
-        b
+        B
     }
 
     export enum RGBC {
         //% block="clear_light_value"
-        c,
+        C,
         //% block="red_light_value"
-        r,
+        R,
         //% block="green_light_value"
-        g,
+        G,
         //% block="blue_light_value"
-        b
+        B
     }
 
     export enum HSL {
         //% block="hue"
-        h,
+        H,
         //% block="saturation"
-        s,
+        S,
         //% block="lightness"
-        l
+        L
     }
 
-    export enum color_t {
-        black = 0, white, gray,
-        red, green, blue,
-        yellow, cyan, purple
+    export enum Color_t {
+        Black = 0, White, Gray,
+        Red, Green, Blue,
+        Yellow, Cyan, Purple
     }
 
     /**
@@ -1401,7 +1401,7 @@ namespace pksdriver {
     //% blockId=readcolor block="readColor" subcategory="Edu Kit"
     //% group="Colors"
     //% weight=70
-    export function readcolor(): color_t {
+    export function readColor(): Color_t {
         pins.i2cWriteNumber(Color.ADDR, Color.COLOR, NumberFormat.UInt8BE, false);
         return pins.i2cReadBuffer(Color.ADDR, 1, false).getNumber(NumberFormat.UInt8LE, 0);
     }
@@ -1412,8 +1412,8 @@ namespace pksdriver {
     //% blockId=checkReadColor block="read color is %color_t" subcategory="Edu Kit"
     //% group="Colors"
     //% weight=70
-    export function checkReadColor(color: color_t): boolean {
-        return readcolor() == color
+    export function checkReadColor(color: Color_t): boolean {
+        return readColor() == color
     }
     
     /**
@@ -1422,8 +1422,8 @@ namespace pksdriver {
     //% blockId=checkGetColor block="get color is %color_t" subcategory="Edu Kit"
     //% group="Colors"
     //% weight=70
-    export function checkGetColor(color: color_t): boolean {
-        return getcolor() == color
+    export function checkGetColor(color: Color_t): boolean {
+        return getColor() == color
     }
 
     /**
@@ -1432,24 +1432,24 @@ namespace pksdriver {
     //% blockId=getcolor block="getColor" subcategory="Edu Kit"
     //% group="Colors"
     //% weight=70
-    export function getcolor(): number {
+    export function getColor(): number {
         pins.i2cWriteNumber(Color.ADDR, Color.HSL, NumberFormat.UInt8BE, false);
         let hsl = pins.i2cReadBuffer(Color.ADDR, 4, false);
         let temp1 = [hsl.getNumber(NumberFormat.UInt16LE, 0), //h
         hsl.getNumber(NumberFormat.UInt8LE, 2), //s
         hsl.getNumber(NumberFormat.UInt8LE, 3)] //l
-        if (temp1[HSL.h] > 330 || temp1[HSL.h] < 30) {
-            return color_t.red
-        } else if (temp1[pksdriver.HSL.h] >= 30 && temp1[HSL.h] < 90) {
-            return color_t.yellow
-        } else if (temp1[HSL.h] >= 90 && temp1[HSL.h] < 150) {
-            return color_t.green
-        } else if (temp1[HSL.h] >= 150 && temp1[HSL.h] < 210) {
-            return color_t.blue//cyan but i find many blue color will sense as cyan color
-        } else if (temp1[HSL.h] >= 210 && temp1[HSL.h] < 270) {
-            return color_t.blue
-        } else if (temp1[HSL.h] >= 210 && temp1[HSL.h] < 330) {
-            return color_t.purple
+        if (temp1[HSL.H] > 330 || temp1[HSL.H] < 30) {
+            return Color_t.Red
+        } else if (temp1[pksdriver.HSL.H] >= 30 && temp1[HSL.H] < 90) {
+            return Color_t.Yellow
+        } else if (temp1[HSL.H] >= 90 && temp1[HSL.H] < 150) {
+            return Color_t.Green
+        } else if (temp1[HSL.H] >= 150 && temp1[HSL.H] < 210) {
+            return Color_t.Blue//cyan but i find many blue color will sense as cyan color
+        } else if (temp1[HSL.H] >= 210 && temp1[HSL.H] < 270) {
+            return Color_t.Blue
+        } else if (temp1[HSL.H] >= 210 && temp1[HSL.H] < 330) {
+            return Color_t.Purple
         } return null
 
     }
@@ -1470,7 +1470,7 @@ namespace pksdriver {
     //% blockId=getbutton block="get button $Buttoncheck" subcategory="Edu Kit"
     //% group="Button"
     //% weight=70
-    export function checkbutton(Buttoncheck: Button): boolean {
+    export function checkButton(Buttoncheck: Button): boolean {
         let buttonvalue = pins.analogReadPin(AnalogPin.P0);
         let button = 0;
         let x = 0;
@@ -1519,7 +1519,7 @@ namespace pksdriver {
 //% block="PKS Drivers"
 namespace pksdriver { 
 
-    export enum i2cchannel{
+    export enum I2cchannel{
         //% block="C1"
         C1,
         //% block="C2"
@@ -1541,31 +1541,31 @@ namespace pksdriver {
     /**
     * switch I2C multiplexer channel 
      */
-    function switchI2CMultiplexer (channelselected: i2cchannel): void {
+    function switchI2CMultiplexer (channelselected: I2cchannel): void {
         let i2c_multiplexerAddress = 0x70;
         const buf = pins.createBuffer(1);
-        if (channelselected == i2cchannel.C1) {
+        if (channelselected == I2cchannel.C1) {
             buf[0] = 0x08
         }
-        else if (channelselected == i2cchannel.C2) {
+        else if (channelselected == I2cchannel.C2) {
             buf[0] = 0x04
         }
-        else if (channelselected == i2cchannel.C3) {
+        else if (channelselected == I2cchannel.C3) {
             buf[0] = 0x02
         }
-        else if (channelselected == i2cchannel.C4) {
+        else if (channelselected == I2cchannel.C4) {
             buf[0] = 0x01
         }
-        else if (channelselected == i2cchannel.C5) {
+        else if (channelselected == I2cchannel.C5) {
             buf[0] = 0x10
         }
-        else if (channelselected == i2cchannel.C6) {
+        else if (channelselected == I2cchannel.C6) {
             buf[0] = 0x20
         }
-        else if (channelselected == i2cchannel.C7) {
+        else if (channelselected == I2cchannel.C7) {
             buf[0] = 0x40
         }
-        else if (channelselected == i2cchannel.C8) {
+        else if (channelselected == I2cchannel.C8) {
             buf[0] = 0x80
         }
         pins.i2cWriteBuffer(i2c_multiplexerAddress, buf, false);
@@ -1574,33 +1574,29 @@ namespace pksdriver {
     //% blockId=switch_channel_edu block="switch i2cchannel %channelselected" subcategory="Edu Kit"
     //% group="I2C multiplexer"
     //% weight=70
-    export function switchI2CChannelEdu(channelselected: i2cchannel): void {
+    export function switchI2CChannelEdu(channelselected: I2cchannel): void {
         switchI2CMultiplexer(channelselected);
     }
     
     //% blockId=switch_channel_maze block="switch i2cchannel %channelselected" subcategory="Maze Car"
     //% group="I2C multiplexer"
     //% weight=70
-    export function switchI2CChannelMaze(channelselected: i2cchannel): void {
+    export function switchI2CChannelMaze(channelselected: I2cchannel): void {
         switchI2CMultiplexer(channelselected);
     }
     
     //% blockId=switch_channel_soccer block="switch i2cchannel %channelselected" subcategory="Soccer Robot"
     //% group="I2C multiplexer"
     //% weight=70
-    export function switchI2CChannelSoccer(channelselected: i2cchannel): void {
+    export function switchI2CChannelSoccer(channelselected: I2cchannel): void {
         switchI2CMultiplexer(channelselected);
     }
     
     //% blockId=switch_channel_smart block="switch i2cchannel %channelselected" subcategory="Smart Living"
     //% group="I2C multiplexer"
     //% weight=70
-    export function switchI2CChannelSmart(channelselected: i2cchannel): void {
+    export function switchI2CChannelSmart(channelselected: I2cchannel): void {
         switchI2CMultiplexer(channelselected);
     }
 
 }
-
-
-
-
