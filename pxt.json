@@ -4,7 +4,14 @@
     "description": "This is a library for Peanut KING Micro:bit Robot Shield",
     "license": "MIT",
     "dependencies": {
-        "core": "*"
+        "core": "*",
+        "radio": "*",
+        "pins": "*",
+        "servo": "*",
+        "pca9685": "github:jdarling/pxt-pca9685",
+        "dht11": "github:alankrantas/pxt-dht11_dht22",
+        "aht20": "github:koudayao27/AHT20",
+        "mpu6050": "github:microsoft/pxt-mpu6050"
     },
     "files": [
         "README.md",
