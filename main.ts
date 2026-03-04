@@ -3,6 +3,59 @@
 //% icon="\uf2db" 
 //% block="PKS Drivers"
 namespace pksdriver {
+
+    export enum DHTtype {
+        //% block="DHT11"
+        DHT11,
+        //% block="DHT22"
+        DHT22
+    }
+
+    export enum dataType {
+        //% block="humidity"
+        humidity,
+        //% block="temperature"
+        temperature,
+    }
+
+    export enum tempType {
+        //% block="Celsius (*C)"
+        celsius,
+        //% block="Fahrenheit (*F)"
+        fahrenheit,
+    }
+
+    export enum axisXYZ {
+        //% block="X"
+        x,
+        //% block="Y"
+        y,
+        //% block="Z"
+        z
+    }
+
+    export enum gyroSen {
+        //% block="250dps"
+        range_250_dps,
+        //% block="500dps"
+        range_500_dps,
+        //% block="1000dps"
+        range_1000_dps,
+        //% block="2000dps"
+        range_2000_dps
+    }
+
+    export enum accelSen {
+        //% block="2g"
+        range_2_g,
+        //% block="4g"
+        range_4_g,
+        //% block="8g"
+        range_8_g,
+        //% block="16g"
+        range_16_g
+    }
+
     const PCA9685_ADDRESS = 0x40
     const MODE = 0x00
     const PRESCALE = 0xFE
@@ -39,7 +92,7 @@ namespace pksdriver {
         //% blockId="CW" block="CW"
         CW = 1,
         //% blockId="CCW" block="CCW"
-        CCW = -1,
+        CCW = -1
     }
 
     let initialized = false
@@ -131,7 +184,7 @@ namespace pksdriver {
         if (!initialized) {
             initPCA9685()
         }
-        setPwm(8- (index ), 0, 0)
+        setPwm(8 - (index), 0, 0)
     }
 
     /**
@@ -145,7 +198,7 @@ namespace pksdriver {
         if (!initialized) {
             initPCA9685()
         }
-        setPwm(8- (index ) , 0, 150)
+        setPwm(8 - (index), 0, 150)
     }
 
     /**
@@ -154,16 +207,16 @@ namespace pksdriver {
      * speed(0~255).
     */
     //% weight=130
-    //% blockId=motor_MotorRun block="motor|%index|dir|%Dir|speed|%speed" subcategory="Edu Kit"
+    //% blockId=motor_MotorRun block="motor|%index|dir|%dir|speed|%speed" subcategory="Edu Kit"
     //% speed.min=0 speed.max=255
     //% index.fieldEditor="gridpicker" index.fieldOptions.columns=2
     //% direction.fieldEditor="gridpicker" direction.fieldOptions.columns=2
     //% group="Motors"
-    export function motorRun(index: Motors, direction: Dir, speed: number): void {
+    export function motorRun(index: Motors, dir: Dir, speed: number): void {
         if (!initialized) {
             initPCA9685()
         }
-        speed = speed * 16 * direction; // map 255 to 4096
+        speed = speed * 16 * dir; // map 255 to 4096
         if (speed >= 4096) {
             speed = 4095
         }
@@ -172,8 +225,8 @@ namespace pksdriver {
         }
         if (index > 4 || index <= 0)
             return
-        let pn = ( index -1 )*2 + 8
-        let pp = ( index -1 )*2 + 8 + 1
+        let pn = (index - 1) * 2 + 8
+        let pp = (index - 1) * 2 + 8 + 1
         if (speed >= 0) {
             setPwm(pp, 0, speed)
             setPwm(pn, 0, 0)
@@ -182,16 +235,16 @@ namespace pksdriver {
             setPwm(pn, 0, -speed)
         }
     }
-     //% weight=130
-    //% blockId=motor_MotorRun block="motor|%index|dir|%Dir|speed|%speed" subcategory="Maze Car"
+    //% weight=130
+    //% blockId=maze_motor_MotorRun block="motor|%index|dir|%dir|speed|%speed" subcategory="Maze Car"
     //% speed.min=0 speed.max=255
     //% index.fieldEditor="gridpicker" index.fieldOptions.columns=2
     //% direction.fieldEditor="gridpicker" direction.fieldOptions.columns=2
     //% group="Motors"
-    export function mazeMotorRun(index: Motors, direction: Dir, speed: number): void {
-        motorRun(index, direction, speed);
+    export function mazeMotorRun(index: Motors, dir: Dir, speed: number): void {
+        motorRun(index, dir, speed);
     }
-    
+
 
     /**
      * Stop the dc motor.
@@ -206,10 +259,10 @@ namespace pksdriver {
         }
         if (index > 4 || index <= 0)
             return
-        let pn = ( index -1 )*2 + 8
-        let pp = ( index -1 )*2 + 8 + 1
-        setPwm(pn , 0, 0);
-        setPwm(pp , 0, 0);
+        let pn = (index - 1) * 2 + 8
+        let pp = (index - 1) * 2 + 8 + 1
+        setPwm(pn, 0, 0);
+        setPwm(pp, 0, 0);
     }
 
     /**
@@ -223,11 +276,11 @@ namespace pksdriver {
             motorStop(idx);
         }
     }
- /**
-     * Stop all motors
-    */
+    /**
+        * Stop all motors
+       */
     //% weight=128
-    //% blockId=motor_motorStopAll block="motor stop all" subcategory="Maze Car"
+    //% blockId=maze_motor_motorStopAll block="motor stop all" subcategory="Maze Car"
     //% group="Motors"
     export function mazeMotorStopAll(): void {
         motorStopAll();
@@ -236,13 +289,13 @@ namespace pksdriver {
     //% blockId=light_lighton block="light on|%index" subcategory="Smart Living"
     //% group="Grow Lights"
     export function lightOn(index: Motors): void {
-        motorRun(index, 1, 255);        
+        motorRun(index, 1, 255);
     }
     //% weight=90
     //% blockId=fan_fanon block="fan on|%index" subcategory="Smart Living"
     //% group="Fan"
     export function fanOn(index: Motors): void {
-        lightOn(index)        
+        lightOn(index);
     }
     //% weight=90
     //% blockId=light_lightoff block="light off|%index" subcategory="Smart Living"
@@ -255,7 +308,7 @@ namespace pksdriver {
     //% blockId=fan_fanoff block="fan off|%index" subcategory="Smart Living"
     //% group="Fan"
     export function fanOff(index: Motors) {
-         lightOff(index)  
+        lightOff(index);
     }
 
     export enum CompoundEyeData {
@@ -293,7 +346,7 @@ namespace pksdriver {
         //% weight=98
         Angle,
         //% block="mode"
-        Mode,
+        Mode
     }
 
     /**
@@ -327,27 +380,27 @@ namespace pksdriver {
 //% icon="\uf2db" 
 //% block="PKS Drivers"
 namespace pksdriver {
-    function read(aht20: AHT20): { Humidity: number, Temperature: number } {
-        if (!aht20.state().Calibrated) {
-            aht20.initialization();
-            if (!aht20.state().Calibrated) return null;
+    function read(aht20: AHT20.AHT20Sensor): { Humidity: number, Temperature: number } {
+        if (!aht20.GetState().Calibrated) {
+            aht20.Initialization();
+            if (!aht20.GetState().Calibrated) return null;
         }
 
-        aht20.triggerMeasurement();
+        aht20.TriggerMeasurement();
         for (let i = 0; ; ++i) {
-            if (!aht20.state().Busy) break;
+            if (!aht20.GetState().Busy) break;
             if (i >= 500) return null;
             basic.pause(10);
         }
 
-        return aht20.read();
+        return aht20.Read();
     }
 
     //% group="Temperature and Humidity (AHT20)"  subcategory="Smart Living"
     //% block="read temperature(°C))"
     //% weight=3
     export function aht20ReadTemperatureC(): number {
-        const aht20 = new AHT20();
+        const aht20 = new AHT20.AHT20Sensor();
         const val = read(aht20);
         if (val == null) return null;
 
@@ -358,7 +411,7 @@ namespace pksdriver {
     //% block="read temperature(°F))"
     //% weight=2
     export function aht20ReadTemperatureF(): number {
-        const aht20 = new AHT20();
+        const aht20 = new AHT20.AHT20Sensor();
         const val = read(aht20);
         if (val == null) return null;
 
@@ -369,98 +422,14 @@ namespace pksdriver {
     //% group="Temperature and Humidity (AHT20)" 
     //% weight=1
     export function aht20ReadHumidity(): number {
-        const aht20 = new AHT20();
+        const aht20 = new AHT20.AHT20Sensor();
         const val = read(aht20);
         if (val == null) return null;
 
         return val.Humidity;
     }
-
-    export class AHT20 {
-        public constructor(address: number = 0x38) {
-            this._Address = address;
-        }
-
-        public initialization(): AHT20 {
-            const buf = pins.createBuffer(3);
-            buf[0] = 0xbe;
-            buf[1] = 0x08;
-            buf[2] = 0x00;
-            pins.i2cWriteBuffer(this._Address, buf, false);
-            basic.pause(10);
-
-            return this;
-        }
-
-        public triggerMeasurement(): AHT20 {
-            const buf = pins.createBuffer(3);
-            buf[0] = 0xac;
-            buf[1] = 0x33;
-            buf[2] = 0x00;
-            pins.i2cWriteBuffer(this._Address, buf, false);
-            basic.pause(80);
-
-            return this;
-        }
-
-        public state(): { Busy: boolean, Calibrated: boolean } {
-            const buf = pins.i2cReadBuffer(this._Address, 1, false);
-            const busy = buf[0] & 0x80 ? true : false;
-            const calibrated = buf[0] & 0x08 ? true : false;
-
-            return { Busy: busy, Calibrated: calibrated };
-        }
-
-        public read(): { Humidity: number, Temperature: number } {
-            const buf = pins.i2cReadBuffer(this._Address, 7, false);
-
-            const crc8 = AHT20.calcCRC8(buf, 0, 6);
-            if (buf[6] != crc8) return null;
-
-            const humidity = ((buf[1] << 12) + (buf[2] << 4) + (buf[3] >> 4)) * 100 / 1048576;
-            const temperature = (((buf[3] & 0x0f) << 16) + (buf[4] << 8) + buf[5]) * 200 / 1048576 - 50;
-
-            return { Humidity: humidity, Temperature: temperature };
-        }
-
-        private _Address: number;
-
-        private static calcCRC8(buf: Buffer, offset: number, size: number): number {
-            let crc8 = 0xff;
-            for (let i = 0; i < size; ++i) {
-                crc8 ^= buf[offset + i];
-                for (let j = 0; j < 8; ++j) {
-                    if (crc8 & 0x80) {
-                        crc8 <<= 1;
-                        crc8 ^= 0x31;
-                    }
-                    else {
-                        crc8 <<= 1;
-                    }
-                    crc8 &= 0xff;
-                }
-            }
-
-            return crc8;
-        }
-
-    }
 }
 
-enum DHTtype {
-    DHT11,
-    DHT22,
-}
-
-enum DataType {
-    Humidity,
-    Temperature,
-}
-
-enum TempType {
-    Celsius,
-    Fahrenheit,
-}
 
 //% weight=60
 //% color=#1c4980 
@@ -470,7 +439,7 @@ namespace pksdriver {
 
     let _temperature: number = -999.0
     let _humidity: number = -999.0
-    let _temptype: TempType = TempType.Celsius
+    let _temptype: tempType = tempType.celsius
     let _readSuccessful: boolean = false
     let _sensorresponding: boolean = false
 
@@ -486,104 +455,7 @@ namespace pksdriver {
     //% subcategory="Smart Living"
     //% group="Temperature and Humidity (DHT11/DHT22)" 
     export function queryData(DHT: DHTtype, dataPin: DigitalPin, pullUp: boolean, serialOutput: boolean, wait: boolean) {
-
-        //initialize
-        let startTime: number = 0
-        let endTime: number = 0
-        let checksum: number = 0
-        let checksumTmp: number = 0
-        let dataArray: boolean[] = []
-        let resultArray: number[] = []
-        let DHTstr: string = (DHT == DHTtype.DHT11) ? "DHT11" : "DHT22"
-
-        for (let index = 0; index < 40; index++) dataArray.push(false)
-        for (let index = 0; index < 5; index++) resultArray.push(0)
-
-        _readSuccessful = false
-        _sensorresponding = false
-        startTime = input.runningTimeMicros()
-
-        //request data
-        pins.digitalWritePin(dataPin, 0) //begin protocol, pull down pin
-        basic.pause(18)
-
-        if (pullUp) pins.setPull(dataPin, PinPullMode.PullUp) //pull up data pin if needed
-        pins.digitalReadPin(dataPin) //pull up pin
-        control.waitMicros(40)
-
-        if (pins.digitalReadPin(dataPin) == 1) {
-            if (serialOutput) {
-                serial.writeLine(DHTstr + " not responding!")
-                serial.writeLine("----------------------------------------")
-            }
-
-        } else {
-
-            _sensorresponding = true
-
-            while (pins.digitalReadPin(dataPin) == 0); //sensor response
-            while (pins.digitalReadPin(dataPin) == 1); //sensor response
-
-            //read data (5 bytes)
-            for (let index = 0; index < 40; index++) {
-                while (pins.digitalReadPin(dataPin) == 1);
-                while (pins.digitalReadPin(dataPin) == 0);
-                control.waitMicros(28)
-                //if sensor still pull up data pin after 28 us it means 1, otherwise 0
-                if (pins.digitalReadPin(dataPin) == 1) dataArray[index] = true
-            }
-
-            endTime = input.runningTimeMicros()
-
-            //convert byte number array to integer
-            for (let index = 0; index < 5; index++)
-                for (let index2 = 0; index2 < 8; index2++)
-                    if (dataArray[8 * index + index2]) resultArray[index] += 2 ** (7 - index2)
-
-            //verify checksum
-            checksumTmp = resultArray[0] + resultArray[1] + resultArray[2] + resultArray[3]
-            checksum = resultArray[4]
-            if (checksumTmp >= 512) checksumTmp -= 512
-            if (checksumTmp >= 256) checksumTmp -= 256
-            if (checksum == checksumTmp) _readSuccessful = true
-
-            //read data if checksum ok, output new readings, do nothing otherwise
-            // if (_readSuccessful) {
-            if (DHT == DHTtype.DHT11) {
-                //DHT11
-                _humidity = resultArray[0] + resultArray[1] / 100
-                _temperature = resultArray[2] + resultArray[3] / 100
-            } else {
-                //DHT22
-                let temp_sign: number = 1
-                if (resultArray[2] >= 128) {
-                    resultArray[2] -= 128
-                    temp_sign = -1
-                }
-                _humidity = (resultArray[0] * 256 + resultArray[1]) / 10
-                _temperature = (resultArray[2] * 256 + resultArray[3]) / 10 * temp_sign
-            }
-            if (_temptype == TempType.Fahrenheit)
-                _temperature = _temperature * 9 / 5 + 32
-            // }
-
-            //serial output
-            if (serialOutput) {
-                serial.writeLine(DHTstr + " query completed in " + (endTime - startTime) + " microseconds")
-                if (_readSuccessful) {
-                    serial.writeLine("Checksum ok")
-                    serial.writeLine("Humidity: " + _humidity)
-                    serial.writeLine("Temperature: " + _temperature + (_temptype == TempType.Celsius ? " *C" : " *F"))
-                } else {
-                    serial.writeLine("Checksum error, showing old values")
-                    serial.writeLine("Humidity: " + _humidity)
-                    serial.writeLine("Temperature: " + _temperature + (_temptype == TempType.Celsius ? " *C" : " *F"))
-                }
-                serial.writeLine("----------------------------------------")
-            }
-
-        }
-
+        dht11_dht22.queryData(DHT, dataPin, pullUp, serialOutput, wait)
     }
 
     /**
@@ -592,8 +464,8 @@ namespace pksdriver {
     //% weight=99
     //% block="read $data" subcategory="Smart Living"
     //% group="Temperature and Humidity (DHT11/DHT22)" 
-    export function readData(data: DataType): number {
-        return data == DataType.Humidity ? _humidity : _temperature
+    export function readData(data: dataType): number {
+        return dht11_dht22.readData(data)
     }
 
     /**
@@ -602,8 +474,8 @@ namespace pksdriver {
     //% block="temperature type: $temp" subcategory="Smart Living"
     //% group="Temperature and Humidity (DHT11/DHT22)" 
     //% weight=98
-    export function selectTempType(temp: TempType) {
-        _temptype = temp
+    export function selectTempType(temp: tempType) {
+        dht11_dht22.selectTempType(temp)
     }
 
     /**
@@ -613,7 +485,7 @@ namespace pksdriver {
     //% weight=97
     //% group="Temperature and Humidity (DHT11/DHT22)" 
     export function readDataSuccessful(): boolean {
-        return _readSuccessful
+        return dht11_dht22.readDataSuccessful()
     }
 
     /**
@@ -623,7 +495,7 @@ namespace pksdriver {
     //% weight=96
     //% group="Temperature and Humidity (DHT11/DHT22)" 
     export function sensorrResponding(): boolean {
-        return _sensorresponding
+        return dht11_dht22.sensorrResponding()
     }
 
 }
@@ -633,338 +505,249 @@ namespace pksdriver {
 //% icon="\uf2db" 
 //% block="PKS Drivers"
 namespace pksdriver {
-    let DS1302_REG_SECOND = 0x80
-    let DS1302_REG_MINUTE = 0x82
-    let DS1302_REG_HOUR = 0x84
-    let DS1302_REG_DAY = 0x86
-    let DS1302_REG_MONTH = 0x88
-    let DS1302_REG_WEEKDAY = 0x8A
-    let DS1302_REG_YEAR = 0x8C
-    let DS1302_REG_WP = 0x8E
-    let DS1302_REG_RAM = 0xC0
-
-    /**
-     * convert a Hex data to Dec
-     */
-    function hexToDec(dat: number): number {
-        return (dat >> 4) * 10 + (dat % 16);
-    }
-
-    /**
-     * convert a Dec data to Hex
-     */
-    function decToHex(dat: number): number {
-        return Math.idiv(dat, 10) * 16 + (dat % 10)
-    }
 
     /**
      * DS1302 RTC class
      */
-    export class DS1302RTC {
-        clk: DigitalPin;
-        dio: DigitalPin;
-        cs: DigitalPin;
+    // Create instance of DS1302RTC
+    let _rtc = new DS1302.DS1302RTC();
 
-        /**
-         * write a byte to DS1302
-         */
-        write_byte(dat: number) {
-            for (let i = 0; i < 8; i++) {
-                pins.digitalWritePin(this.dio, (dat >> i) & 1);
-                pins.digitalWritePin(this.clk, 1);
-                pins.digitalWritePin(this.clk, 0);
-            }
-        }
+    /**
+     * get Year
+     */
+    //% blockId="DS1302_get_year" block="%ds|get year" subcategory="Smart Living"
+    //% weight=80 blockGap=8
+    //% parts="DS1302"
+    //% group="Date and Time"
+    export function getYear(): number {
+        return _rtc.getYear();
+    }
 
-        /**
-         * read a byte from DS1302
-         */
-        read_byte(): number {
-            let d = 0;
-            for (let i = 0; i < 8; i++) {
-                d = d | (pins.digitalReadPin(this.dio) << i);
-                pins.digitalWritePin(this.clk, 1);
-                pins.digitalWritePin(this.clk, 0);
-            }
-            return d;
-        }
+    /**
+     * set year
+     * @param dat is the Year will be set, eg: 2018
+     */
+    //% blockId="DS1302_set_year" block="%ds|set year %dat" subcategory="Smart Living"
+    //% weight=81 blockGap=8
+    //% group="Date and Time"
+    //% parts="DS1302"
+    export function setYear(dat: number): void {
+        _rtc.setYear(dat);
+    }
 
-        /**
-         * read reg
-         */
-        getReg(reg: number): number {
-            let t = 0;
-            pins.digitalWritePin(this.cs, 1);
-            this.write_byte(reg);
-            t = this.read_byte();
-            pins.digitalWritePin(this.cs, 0);
-            return t;
-        }
+    /**
+     * get Month
+     */
+    //% blockId="DS1302_get_month" block="%ds|get month" subcategory="Smart Living"
+    //% weight=78 blockGap=8
+    //% group="Date and Time"
+    //% parts="DS1302"
+    export function getMonth(): number {
+        return _rtc.getMonth();
+    }
 
-        /**
-         * write reg
-         */
-        setReg(reg: number, dat: number) {
-            pins.digitalWritePin(this.cs, 1);
-            this.write_byte(reg);
-            this.write_byte(dat);
-            pins.digitalWritePin(this.cs, 0);
-        }
+    /**
+     * set month
+     * @param dat is Month will be set.  eg: 2
+     */
+    //% blockId="DS1302_set_month" block="%ds|set month %dat" subcategory="Smart Living"
+    //% weight=79 blockGap=8
+    //% group="Date and Time"
+    //% parts="DS1302"
+    //% dat.min=1 dat.max=12
+    export function setMonth(dat: number): void {
+        _rtc.setMonth(dat);
+    }
 
-        /**
-         * write reg with WP protect
-         */
-        wr(reg: number, dat: number) {
-            this.setReg(DS1302_REG_WP, 0)
-            this.setReg(reg, dat)
-            this.setReg(DS1302_REG_WP, 0)
-        }
+    /**
+     * get Day
+     */
+    //% blockId="DS1302_get_day" block="%ds|get day" subcategory="Smart Living"
+    //% weight=76 blockGap=8
+    //% group="Date and Time"
+    //% parts="DS1302"
+    export function getDay(): number {
+        return _rtc.getDay();
+    }
 
-        /**
-         * get Year
-         */
-        //% blockId="DS1302_get_year" block="%ds|get year" subcategory="Smart Living"
-        //% weight=80 blockGap=8
-        //% parts="DS1302"
-        //% group="Date and Time"
-        getYear(): number {
-            return Math.min(hexToDec(this.getReg(DS1302_REG_YEAR + 1)), 99) + 2000
-        }
+    /**
+     * set day
+     * @param dat is the Day will be set, eg: 15
+     */
+    //% blockId="DS1302_set_day" block="%ds|set day %dat" subcategory="Smart Living"
+    //% weight=77 blockGap=8
+    //% parts="DS1302"
+    //% group="Date and Time"
+    //% dat.min=1 dat.max=31
+    export function setDay(dat: number): void {
+        _rtc.setDay(dat);
+    }
 
-        /**
-         * set year
-         * @param dat is the Year will be set, eg: 2018
-         */
-        //% blockId="DS1302_set_year" block="%ds|set year %dat" subcategory="Smart Living"
-        //% weight=81 blockGap=8
-        //% group="Date and Time"
-        //% parts="DS1302"
-        setYear(dat: number): void {
-            this.wr(DS1302_REG_YEAR, decToHex(dat % 100))
-        }
+    /**
+     * get Week Day
+     */
+    //% blockId="DS1302_get_weekday" block="%ds|get weekday" subcategory="Smart Living"
+    //% weight=74 blockGap=8
+    //% parts="DS1302"
+    //% group="Date and Time"
+    export function getWeekday(): number {
+        return _rtc.getWeekday();
+    }
 
-        /**
-         * get Month
-         */
-        //% blockId="DS1302_get_month" block="%ds|get month" subcategory="Smart Living"
-        //% weight=78 blockGap=8
-        //% group="Date and Time"
-        //% parts="DS1302"
-        getMonth(): number {
-            return Math.max(Math.min(hexToDec(this.getReg(DS1302_REG_MONTH + 1)), 12), 1)
-        }
+    /**
+     * set weekday
+     * @param dat is the Week Day will be set, eg: 4
+     */
+    //% blockId="DS1302_set_weekday" block="%ds|set weekday %dat" subcategory="Smart Living"
+    //% weight=75 blockGap=8
+    //% parts="DS1302"
+    //% dat.min=1 dat.max=7
+    //% group="Date and Time"
+    export function setWeekday(dat: number): void {
+        _rtc.setWeekday(dat);
+    }
 
-        /**
-         * set month
-         * @param dat is Month will be set.  eg: 2
-         */
-        //% blockId="DS1302_set_month" block="%ds|set month %dat" subcategory="Smart Living"
-        //% weight=79 blockGap=8
-        //% group="Date and Time"
-        //% parts="DS1302"
-        //% dat.min=1 dat.max=12
-        setMonth(dat: number): void {
-            this.wr(DS1302_REG_MONTH, decToHex(dat % 13))
-        }
+    /**
+     * get Hour
+     */
+    //% blockId="DS1302_get_hour" block="%ds|get hour" subcategory="Smart Living"
+    //% weight=72 blockGap=8
+    //% parts="DS1302"
+    //% group="Date and Time"
+    export function getHour(): number {
+        return _rtc.getHour();
+    }
 
-        /**
-         * get Day
-         */
-        //% blockId="DS1302_get_day" block="%ds|get day" subcategory="Smart Living"
-        //% weight=76 blockGap=8
-        //% group="Date and Time"
-        //% parts="DS1302"
-        getDay(): number {
-            return Math.max(Math.min(hexToDec(this.getReg(DS1302_REG_DAY + 1)), 31), 1)
-        }
+    /**
+     * set hour
+     * @param dat is the Hour will be set, eg: 0
+     */
+    //% blockId="DS1302_set_hour" block="%ds|set hour %dat" subcategory="Smart Living"
+    //% weight=73 blockGap=8
+    //% parts="DS1302"
+    //% dat.min=0 dat.max=23
+    //% group="Date and Time"
+    export function setHour(dat: number): void {
+        _rtc.setHour(dat);
+    }
 
-        /**
-         * set day
-         * @param dat is the Day will be set, eg: 15
-         */
-        //% blockId="DS1302_set_day" block="%ds|set day %dat" subcategory="Smart Living"
-        //% weight=77 blockGap=8
-        //% parts="DS1302"
-        //% group="Date and Time"
-        //% dat.min=1 dat.max=31
-        setDay(dat: number): void {
-            this.wr(DS1302_REG_DAY, decToHex(dat % 32))
-        }
+    /**
+     * get Minute
+     */
+    //% blockId="DS1302_get_minute" block="%ds|get minute" subcategory="Smart Living"
+    //% weight=70 blockGap=8
+    //% parts="DS1302"
+    //% group="Date and Time"
+    export function getMinute(): number {
+        return _rtc.getMinute();
+    }
 
-        /**
-         * get Week Day
-         */
-        //% blockId="DS1302_get_weekday" block="%ds|get weekday" subcategory="Smart Living"
-        //% weight=74 blockGap=8
-        //% parts="DS1302"
-        //% group="Date and Time"
-        getWeekday(): number {
-            return Math.max(Math.min(hexToDec(this.getReg(DS1302_REG_WEEKDAY + 1)), 7), 1)
-        }
+    /**
+     * set minute
+     * @param dat is the Minute will be set, eg: 0
+     */
+    //% blockId="DS1302_set_minute" block="%ds|set minute %dat" subcategory="Smart Living"
+    //% weight=71 blockGap=8
+    //% parts="DS1302"
+    //% dat.min=0 dat.max=59
+    //% group="Date and Time"
+    export function setMinute(dat: number): void {
+        _rtc.setMinute(dat);
+    }
 
-        /**
-         * set weekday
-         * @param dat is the Week Day will be set, eg: 4
-         */
-        //% blockId="DS1302_set_weekday" block="%ds|set weekday %dat" subcategory="Smart Living"
-        //% weight=75 blockGap=8
-        //% parts="DS1302"
-        //% dat.min=1 dat.max=7
-        //% group="Date and Time"
-        setWeekday(dat: number): void {
-            this.wr(DS1302_REG_WEEKDAY, decToHex(dat % 8))
-        }
+    /**
+     * get Second
+     */
+    //% blockId="DS1302_get_second" block="%ds|get second" subcategory="Smart Living"
+    //% weight=67 blockGap=8
+    //% parts="DS1302"
+    //% group="Date and Time"
+    export function getSecond(): number {
+        return _rtc.getSecond();
+    }
 
-        /**
-         * get Hour
-         */
-        //% blockId="DS1302_get_hour" block="%ds|get hour" subcategory="Smart Living"
-        //% weight=72 blockGap=8
-        //% parts="DS1302"
-        //% group="Date and Time"
-        getHour(): number {
-            return Math.min(hexToDec(this.getReg(DS1302_REG_HOUR + 1)), 23)
-        }
+    /**
+     * set second
+     * @param dat is the Second will be set, eg: 0
+     */
+    //% blockId="DS1302_set_second" block="%ds|set second %dat" subcategory="Smart Living"
+    //% weight=68 blockGap=8
+    //% parts="DS1302"
+    //% dat.min=0 dat.max=59
+    //% group="Date and Time"
+    export function setSecond(dat: number): void {
+        _rtc.setSecond(dat);
+    }
 
-        /**
-         * set hour
-         * @param dat is the Hour will be set, eg: 0
-         */
-        //% blockId="DS1302_set_hour" block="%ds|set hour %dat" subcategory="Smart Living"
-        //% weight=73 blockGap=8
-        //% parts="DS1302"
-        //% dat.min=0 dat.max=23
-        //% group="Date and Time"
-        setHour(dat: number): void {
-            this.wr(DS1302_REG_HOUR, decToHex(dat % 24))
-        }
+    /**
+     * set Date and Time
+     * @param year is the Year will be set, eg: 2018
+     * @param month is the Month will be set, eg: 2
+     * @param day is the Day will be set, eg: 15
+     * @param weekday is the Weekday will be set, eg: 4
+     * @param hour is the Hour will be set, eg: 0
+     * @param minute is the Minute will be set, eg: 0
+     * @param second is the Second will be set, eg: 0
+     */
+    //% blockId="DS1302_set_DateTime" block="%ds|set date and time: year %year|month %month|day %day|weekday %weekday|hour %hour|minute %minute|second %second" subcategory="Smart Living"
+    //% weight=50 blockGap=8
+    //% parts="DS1302"
+    //% year.min=2000 year.max=2100
+    //% month.min=1 month.max=12
+    //% day.min=1 day.max=31
+    //% weekday.min=1 weekday.max=7
+    //% hour.min=0 hour.max=23
+    //% minute.min=0 minute.max=59
+    //% second.min=0 second.max=59
+    //% group="Date and Time"
+    export function DateTime(year: number, month: number, day: number, weekday: number, hour: number, minute: number, second: number): void {
+        _rtc.DateTime(year, month, day, weekday, hour, minute, second)
+    }
 
-        /**
-         * get Minute
-         */
-        //% blockId="DS1302_get_minute" block="%ds|get minute" subcategory="Smart Living"
-        //% weight=70 blockGap=8
-        //% parts="DS1302"
-        //% group="Date and Time"
-        getMinute(): number {
-            return Math.min(hexToDec(this.getReg(DS1302_REG_MINUTE + 1)), 59)
-        }
+    /**
+     * start ds1302 RTC (go on)
+     */
+    //% blockId="DS1302_start" block="%ds|start RTC" subcategory="Smart Living"
+    //% weight=41 blockGap=8
+    //% parts="DS1302"
+    //% group="Date and Time"
+    export function start() {
+        _rtc.start()
+    }
 
-        /**
-         * set minute
-         * @param dat is the Minute will be set, eg: 0
-         */
-        //% blockId="DS1302_set_minute" block="%ds|set minute %dat" subcategory="Smart Living"
-        //% weight=71 blockGap=8
-        //% parts="DS1302"
-        //% dat.min=0 dat.max=59
-        //% group="Date and Time"
-        setMinute(dat: number): void {
-            this.wr(DS1302_REG_MINUTE, decToHex(dat % 60))
-        }
+    /**
+     * pause ds1302 RTC
+     */
+    //% blockId="DS1302_pause" block="%ds|pause RTC" subcategory="Smart Living"
+    //% weight=40 blockGap=8
+    //% parts="DS1302"
+    //% group="Date and Time"
+    export function pause() {
+        _rtc.pause();
+    }
 
-        /**
-         * get Second
-         */
-        //% blockId="DS1302_get_second" block="%ds|get second" subcategory="Smart Living"
-        //% weight=67 blockGap=8
-        //% parts="DS1302"
-        //% group="Date and Time"
-        getSecond(): number {
-            return Math.min(hexToDec(this.getReg(DS1302_REG_SECOND + 1)), 59)
-        }
+    /**
+     * read RAM
+     */
+    //% blockId="DS1302_read_ram" block="%ds|read ram %reg" subcategory="Smart Living"
+    //% weight=43 blockGap=8
+    //% parts="DS1302"
+    //% reg.min=0 reg.max=30
+    //% group="Date and Time"
+    export function readRam(reg: number): number {
+        return _rtc.readRam(reg);
+    }
 
-        /**
-         * set second
-         * @param dat is the Second will be set, eg: 0
-         */
-        //% blockId="DS1302_set_second" block="%ds|set second %dat" subcategory="Smart Living"
-        //% weight=68 blockGap=8
-        //% parts="DS1302"
-        //% dat.min=0 dat.max=59
-        //% group="Date and Time"
-        setSecond(dat: number): void {
-            this.wr(DS1302_REG_SECOND, decToHex(dat % 60))
-        }
-
-        /**
-         * set Date and Time
-         * @param year is the Year will be set, eg: 2018
-         * @param month is the Month will be set, eg: 2
-         * @param day is the Day will be set, eg: 15
-         * @param weekday is the Weekday will be set, eg: 4
-         * @param hour is the Hour will be set, eg: 0
-         * @param minute is the Minute will be set, eg: 0
-         * @param second is the Second will be set, eg: 0
-         */
-        //% blockId="DS1302_set_DateTime" block="%ds|set date and time: year %year|month %month|day %day|weekday %weekday|hour %hour|minute %minute|second %second" subcategory="Smart Living"
-        //% weight=50 blockGap=8
-        //% parts="DS1302"
-        //% year.min=2000 year.max=2100
-        //% month.min=1 month.max=12
-        //% day.min=1 day.max=31
-        //% weekday.min=1 weekday.max=7
-        //% hour.min=0 hour.max=23
-        //% minute.min=0 minute.max=59
-        //% second.min=0 second.max=59
-        //% group="Date and Time"
-        DateTime(year: number, month: number, day: number, weekday: number, hour: number, minute: number, second: number): void {
-            this.setYear(year);
-            this.setMonth(month);
-            this.setDay(day);
-            this.setWeekday(weekday);
-            this.setHour(hour);
-            this.setMinute(minute);
-            this.setSecond(second);
-        }
-
-        /**
-         * start ds1302 RTC (go on)
-         */
-        //% blockId="DS1302_start" block="%ds|start RTC" subcategory="Smart Living"
-        //% weight=41 blockGap=8
-        //% parts="DS1302"
-        //% group="Date and Time"
-        start() {
-            let t = this.getSecond()
-            this.setSecond(t & 0x7f)
-        }
-
-        /**
-         * pause ds1302 RTC
-         */
-        //% blockId="DS1302_pause" block="%ds|pause RTC" subcategory="Smart Living"
-        //% weight=40 blockGap=8
-        //% parts="DS1302"
-        //% group="Date and Time"
-        pause() {
-            let t = this.getSecond()
-            this.setSecond(t | 0x80)
-        }
-
-        /**
-         * read RAM
-         */
-        //% blockId="DS1302_read_ram" block="%ds|read ram %reg" subcategory="Smart Living"
-        //% weight=43 blockGap=8
-        //% parts="DS1302"
-        //% reg.min=0 reg.max=30
-        //% group="Date and Time"
-        readRam(reg: number): number {
-            return this.getReg(DS1302_REG_RAM + 1 + (reg % 31) * 2)
-        }
-
-        /**
-         * write RAM
-         */
-        //% blockId="DS1302_write_ram" block="%ds|write ram %reg|with %dat" subcategory="Smart Living"
-        //% weight=42 blockGap=8
-        //% parts="DS1302"
-        //% reg.min=0 reg.max=30
-        //% group="Date and Time"
-        writeRam(reg: number, dat: number) {
-            this.wr(DS1302_REG_RAM + (reg % 31) * 2, dat)
-        }
+    /**
+     * write RAM
+     */
+    //% blockId="DS1302_write_ram" block="%ds|write ram %reg|with %dat" subcategory="Smart Living"
+    //% weight=42 blockGap=8
+    //% parts="DS1302"
+    //% reg.min=0 reg.max=30
+    //% group="Date and Time"
+    export function writeRam(reg: number, dat: number) {
+        _rtc.writeRam(reg, dat);
     }
 
     /**
@@ -975,50 +758,9 @@ namespace pksdriver {
      */
     //% weight=95 blockGap=8
     //% blockId="DS1302_create" block="CLK %clk|DIO %dio|CS %cs" subcategory="Smart Living"
-    export function create(clk: DigitalPin, dio: DigitalPin, cs: DigitalPin): DS1302RTC {
-        let ds = new DS1302RTC();
-        ds.clk = clk;
-        ds.dio = dio;
-        ds.cs = cs;
-        pins.digitalWritePin(ds.clk, 0);
-        pins.digitalWritePin(ds.cs, 0);
-        return ds;
+    export function create(clk: DigitalPin, dio: DigitalPin, cs: DigitalPin): DS1302.DS1302RTC {
+        return DS1302.create(clk, dio, cs);
     }
-}
-
-enum AxisXYZ {
-    //% block="X"
-    X,
-    //% block="Y"
-    Y,
-    //% block="Z"
-    Z
-}
-
-enum AccelSen {
-    // accelerometer sensitivity
-
-    //% block="2g"
-    Range_2_g,
-    //% block="4g"
-    Range_4_g,
-    //% block="8g"
-    Range_8_g,
-    //% block="16g"
-    Range_16_g
-}
-
-enum GyroSen {
-    // gyroscope sensitivite
-
-    //% block="250dps"
-    Range_250_dps,
-    //% block="500dps"
-    Range_500_dps,
-    //% block="1000dps"
-    Range_1000_dps,
-    //% block="2000dps"
-    Range_2000_dps
 }
 
 //% weight=60
@@ -1026,99 +768,6 @@ enum GyroSen {
 //% icon="\uf2db" 
 //% block="PKS Drivers"
 namespace pksdriver {
-    let i2cAddress = 0x68;
-    let power_mgmt = 0x6b;
-    // Acceleration addresses
-    let xAccelAddr = 0x3b;
-    let yAccelAddr = 0x3d;
-    let zAccelAddr = 0x3f;
-    // Gyroscope addresses
-    let xGyroAddr = 0x43;
-    let yGyroAddr = 0x45;
-    let zGyroAddr = 0x47;
-    // Temperature address
-    let tempAddr = 0x41;
-
-    // Initialize acceleration and gyroscope values
-    let xAccel = 0;
-    let yAccel = 0;
-    let zAccel = 0;
-    let xGyro = 0;
-    let yGyro = 0;
-    let zGyro = 0;
-
-    function i2cRead(reg: number): number {
-        pins.i2cWriteNumber(i2cAddress, reg, NumberFormat.UInt8BE);
-        return pins.i2cReadNumber(i2cAddress, NumberFormat.UInt8BE);;
-    }
-
-    function readData(reg: number) {
-        let h = i2cRead(reg);
-        let l = i2cRead(reg + 1);
-        let value = (h << 8) + l;
-
-        if (value >= 0x8000) {
-            return -((65535 - value) + 1);
-        }
-        else {
-            return value;
-        }
-    }
-
-    function dist(a: number, b: number): number {
-        return Math.sqrt((a * a) + (b * b));
-    }
-
-    // Update acceleration data via I2C
-    function updateAcceleration(sensitivity: number) {
-        // Set sensitivity of acceleration range, according to selection and datasheet value
-        let accelRange = 0;
-        if (sensitivity == AccelSen.Range_2_g) {
-            // +- 2g
-            accelRange = 16384;
-        }
-        else if (sensitivity == AccelSen.Range_4_g) {
-            // +- 4g
-            accelRange = 8192;
-        }
-        else if (sensitivity == AccelSen.Range_8_g) {
-            // +- 8g
-            accelRange = 4096;
-        }
-        else if (sensitivity == AccelSen.Range_16_g) {
-            // +- 16g
-            accelRange = 2048;
-        }
-        xAccel = readData(xAccelAddr) / accelRange;
-        yAccel = readData(yAccelAddr) / accelRange;
-        zAccel = readData(zAccelAddr) / accelRange;
-    }
-
-    // Update gyroscope data via I2C
-    function updateGyroscope(sensitivity: GyroSen) {
-        // Set sensitivity of gyroscope range, according to selection and datasheet value
-        let gyroRange = 0;
-        if (sensitivity == GyroSen.Range_250_dps) {
-            // +- 250dps
-            gyroRange = 131;
-        }
-        else if (sensitivity == GyroSen.Range_500_dps) {
-            // +- 500dps
-            gyroRange = 65.5;
-        }
-        else if (sensitivity == GyroSen.Range_1000_dps) {
-            // +- 1000dps
-            gyroRange = 32.8;
-        }
-        else if (sensitivity == GyroSen.Range_2000_dps) {
-            // +- 2000dps
-            gyroRange = 16.4;
-        }
-        xGyro = readData(xGyroAddr) / gyroRange;
-        yGyro = readData(yGyroAddr) / gyroRange;
-        zGyro = readData(zGyroAddr) / gyroRange;
-    }
-
     /**
      * Initialize MPU6050
      */
@@ -1126,10 +775,7 @@ namespace pksdriver {
     //% group="Acceleration"
     //% weight=100
     export function initMPU6050() {
-        let buffer = pins.createBuffer(2);
-        buffer[0] = power_mgmt;
-        buffer[1] = 0;
-        pins.i2cWriteBuffer(i2cAddress, buffer);
+        SENMPU6050.initMPU6050();
     }
 
     /**
@@ -1138,17 +784,8 @@ namespace pksdriver {
     //% block="gyroscope value of %axisXYZ axis with %gyroSen sensitivity (Unit: rad/s)" subcategory="Edu Kit"
     //% group="Acceleration"
     //% weight=99
-    export function gyroscope(axis: AxisXYZ, sensitivity: GyroSen) {
-        updateGyroscope(sensitivity);
-        if (axis == AxisXYZ.X) {
-            return xGyro;
-        }
-        else if (axis == AxisXYZ.Y) {
-            return yGyro;
-        }
-        else {
-            return zGyro;
-        }
+    export function gyroscope(axis: axisXYZ, sensitivity: gyroSen) {
+        SENMPU6050.gyroscope(axis, sensitivity)
     }
 
     /**
@@ -1157,24 +794,8 @@ namespace pksdriver {
     //% block="angle of %xaxisXYZ axis with %accelSen sensitivity (Unit: Degrees)" subcategory="Edu Kit"
     //% group="Acceleration"
     //% weight=98
-    export function axisRotation(axis: AxisXYZ, sensitivity: AccelSen): number {
-        updateAcceleration(sensitivity);
-
-        let radians;
-        if (axis == AxisXYZ.X) {
-            radians = Math.atan2(yAccel, dist(xAccel, zAccel));
-        }
-        else if (axis == AxisXYZ.Y) {
-            radians = -Math.atan2(xAccel, dist(yAccel, zAccel));
-        }
-        else if (axis == AxisXYZ.Z) {
-            radians = Math.atan2(zAccel, dist(xAccel, yAccel));
-        }
-
-        // Convert radian to degrees and return
-        let pi = Math.PI;
-        let degrees = radians * (180 / pi);
-        return degrees;
+    export function axisRotation(axis: axisXYZ, sensitivity: accelSen): number {
+        return SENMPU6050.axisRotation(axis, sensitivity)
     }
 
     /**
@@ -1183,18 +804,8 @@ namespace pksdriver {
     //% block="acceleration of %xaxisXYZ axis with %accelSen sensitivity (Unit: g)" subcategory="Edu Kit"
     //% group="Acceleration"
     //% weight=97
-    export function axisAcceleration(axis: AxisXYZ, sensitivity: AccelSen): number {
-        updateAcceleration(sensitivity);
-        // Return acceleration of specific axis
-        if (axis == AxisXYZ.X) {
-            return xAccel;
-        }
-        else if (axis == AxisXYZ.Y) {
-            return yAccel;
-        }
-        else {
-            return zAccel;
-        }
+    export function axisAcceleration(axis: axisXYZ, sensitivity: accelSen): number {
+        return SENMPU6050.axisAcceleration(axis, sensitivity);
     }
 
     /**
@@ -1204,8 +815,7 @@ namespace pksdriver {
     //% group="Temperature and Humidity (DHT11/DHT22)" 
     //% weight=96
     export function readTemperature(): number {
-        let rawTemp = readData(tempAddr);
-        return 36.53 + rawTemp / 340;
+        return SENMPU6050.readTemperature();
     }
 
     enum Compass {
@@ -1230,14 +840,14 @@ namespace pksdriver {
     //% weight=70
     export function ultraResult(): number {
         let dist = 0;
-        pins.i2cWriteNumber(0x57,0x01, NumberFormat.UInt8BE, false);
+        pins.i2cWriteNumber(0x57, 0x01, NumberFormat.UInt8BE, false);
         basic.pause(100);
-        let ul_raw = pins.i2cReadBuffer(0x57,pins.sizeOf(NumberFormat.UInt8LE)* 3, false);
-        dist = ul_raw[0]*65536+ ul_raw[1]*256 + ul_raw[2];
+        let ul_raw = pins.i2cReadBuffer(0x57, pins.sizeOf(NumberFormat.UInt8LE) * 3, false);
+        dist = ul_raw[0] * 65536 + ul_raw[1] * 256 + ul_raw[2];
         dist /= 1000;
         return dist;
     }
-   
+
     /**
     * Compass read function, to get the yaw angle
     */
@@ -1256,7 +866,7 @@ namespace pksdriver {
 }
 
 // for maze car's use only
-enum Direction { FRONT, BACK, LEFT, RIGHT }
+enum direction { FRONT, BACK, LEFT, RIGHT }
 
 //% weight=60
 //% color=#1c4980 
@@ -1267,7 +877,7 @@ namespace pksdriver {
     //% block="direction $wantedDirection" subcategory="Maze Car"
     //% group="Directions"
     //% weight=70
-    export function chooseDirection(wantedDirection: Direction): Direction {
+    export function chooseDirection(wantedDirection: direction): direction {
         return wantedDirection;
     }
 
@@ -1311,8 +921,8 @@ namespace pksdriver {
     //    uint8_t b;                                //
     //} rgb_t;                                      //    
     //////////////////////////////////////////////////
-    
-    
+
+
     //Color Sensor
     export enum RGB {
         //% block="red_value"
@@ -1378,7 +988,7 @@ namespace pksdriver {
         rgb.getNumber(NumberFormat.UInt8LE, 2)]  //b
         return temp[rgbchoose]
     }
-    
+
     /**
     * RGBC read function
     */
@@ -1415,7 +1025,7 @@ namespace pksdriver {
     export function checkReadColor(color: Color_t): boolean {
         return readColor() == color
     }
-    
+
     /**
     * check get color
     */
@@ -1454,7 +1064,7 @@ namespace pksdriver {
 
     }
 
-        
+
     export enum Button {
         //% block="B1"
         B1,
@@ -1502,7 +1112,7 @@ namespace pksdriver {
             button = 7;
         }
         ans = (button & x)
-        
+
 
         return ans != 0;
     }
@@ -1517,9 +1127,9 @@ namespace pksdriver {
 //% color=#1c4980 
 //% icon="\uf2db" 
 //% block="PKS Drivers"
-namespace pksdriver { 
+namespace pksdriver {
 
-    export enum I2cchannel{
+    export enum I2cchannel {
         //% block="C1"
         C1,
         //% block="C2"
@@ -1541,7 +1151,7 @@ namespace pksdriver {
     /**
     * switch I2C multiplexer channel 
      */
-    function switchI2CMultiplexer (channelselected: I2cchannel): void {
+    function switchI2CMultiplexer(channelselected: I2cchannel): void {
         let i2c_multiplexerAddress = 0x70;
         const buf = pins.createBuffer(1);
         if (channelselected == I2cchannel.C1) {
@@ -1577,21 +1187,21 @@ namespace pksdriver {
     export function switchI2CChannelEdu(channelselected: I2cchannel): void {
         switchI2CMultiplexer(channelselected);
     }
-    
+
     //% blockId=switch_channel_maze block="switch i2cchannel %channelselected" subcategory="Maze Car"
     //% group="I2C multiplexer"
     //% weight=70
     export function switchI2CChannelMaze(channelselected: I2cchannel): void {
         switchI2CMultiplexer(channelselected);
     }
-    
+
     //% blockId=switch_channel_soccer block="switch i2cchannel %channelselected" subcategory="Soccer Robot"
     //% group="I2C multiplexer"
     //% weight=70
     export function switchI2CChannelSoccer(channelselected: I2cchannel): void {
         switchI2CMultiplexer(channelselected);
     }
-    
+
     //% blockId=switch_channel_smart block="switch i2cchannel %channelselected" subcategory="Smart Living"
     //% group="I2C multiplexer"
     //% weight=70
