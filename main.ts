@@ -1,60 +1,12 @@
+// for maze car's use only
+enum MazeCarDirection { FRONT, BACK, LEFT, RIGHT }
+
+
 //% weight=60
 //% color=#1c4980 
 //% icon="\uf2db" 
 //% block="PKS Drivers"
 namespace pksdriver {
-
-    export enum DHTtype {
-        //% block="DHT11"
-        DHT11,
-        //% block="DHT22"
-        DHT22
-    }
-
-    export enum dataType {
-        //% block="humidity"
-        humidity,
-        //% block="temperature"
-        temperature,
-    }
-
-    export enum tempType {
-        //% block="Celsius (*C)"
-        celsius,
-        //% block="Fahrenheit (*F)"
-        fahrenheit,
-    }
-
-    export enum axisXYZ {
-        //% block="X"
-        x,
-        //% block="Y"
-        y,
-        //% block="Z"
-        z
-    }
-
-    export enum gyroSen {
-        //% block="250dps"
-        range_250_dps,
-        //% block="500dps"
-        range_500_dps,
-        //% block="1000dps"
-        range_1000_dps,
-        //% block="2000dps"
-        range_2000_dps
-    }
-
-    export enum accelSen {
-        //% block="2g"
-        range_2_g,
-        //% block="4g"
-        range_4_g,
-        //% block="8g"
-        range_8_g,
-        //% block="16g"
-        range_16_g
-    }
 
     const PCA9685_ADDRESS = 0x40
     const MODE = 0x00
@@ -64,7 +16,7 @@ namespace pksdriver {
     /**
      * The user can select the 8 steering gear controller.
      */
-    export enum Servos {
+    export enum PKSDriverServos {
         S1 = 0x08,
         S2 = 0x07,
         S3 = 0x06,
@@ -78,7 +30,7 @@ namespace pksdriver {
     /**
      * The user selects the 4-way dc motor.
      */
-    export enum Motors {
+    export enum PKSDriverMotors {
         M1 = 0x1,
         M2 = 0x2,
         M3 = 0x3,
@@ -88,7 +40,7 @@ namespace pksdriver {
     /**
      * the motor rotation direction
      */
-    export enum Dir {
+    export enum PKSDriverDir {
         //% blockId="CW" block="CW"
         CW = 1,
         //% blockId="CCW" block="CCW"
@@ -155,7 +107,7 @@ namespace pksdriver {
     //% weight=100
     //% degree.min=0 degree.max=180
     //% index.fieldEditor="gridpicker" index.fieldOptions.columns=4
-    export function servo(index: Servos, degree: number): void {
+    export function servo(index: PKSDriverServos, degree: number): void {
         if (!initialized) {
             initPCA9685()
         }
@@ -169,7 +121,7 @@ namespace pksdriver {
     //% weight=99
     //% degree.min=0 degree.max=180
     //% index.fieldEditor="gridpicker" index.fieldOptions.columns=4
-    export function smartServo(index: Servos, degree: number): void {
+    export function smartServo(index: PKSDriverServos, degree: number): void {
         servo(index, degree)
     }
 
@@ -180,7 +132,7 @@ namespace pksdriver {
     //% group="Servos"
     //% weight=99
     //% index.fieldEditor="gridpicker" index.fieldOptions.columns=4
-    export function servoOff(index: Servos): void {
+    export function servoOff(index: PKSDriverServos): void {
         if (!initialized) {
             initPCA9685()
         }
@@ -194,7 +146,7 @@ namespace pksdriver {
     //% group="Servos"
     //% weight=98
     //% index.fieldEditor="gridpicker" index.fieldOptions.columns=4
-    export function servoOn(index: Servos): void {
+    export function servoOn(index: PKSDriverServos): void {
         if (!initialized) {
             initPCA9685()
         }
@@ -212,7 +164,7 @@ namespace pksdriver {
     //% index.fieldEditor="gridpicker" index.fieldOptions.columns=2
     //% direction.fieldEditor="gridpicker" direction.fieldOptions.columns=2
     //% group="Motors"
-    export function motorRun(index: Motors, dir: Dir, speed: number): void {
+    export function motorRun(index: PKSDriverMotors, dir: PKSDriverDir, speed: number): void {
         if (!initialized) {
             initPCA9685()
         }
@@ -241,7 +193,7 @@ namespace pksdriver {
     //% index.fieldEditor="gridpicker" index.fieldOptions.columns=2
     //% direction.fieldEditor="gridpicker" direction.fieldOptions.columns=2
     //% group="Motors"
-    export function mazeMotorRun(index: Motors, dir: Dir, speed: number): void {
+    export function mazeMotorRun(index: PKSDriverMotors, dir: PKSDriverDir, speed: number): void {
         motorRun(index, dir, speed);
     }
 
@@ -253,7 +205,7 @@ namespace pksdriver {
     //% blockId=motor_motorStop block="motor stop|%index" subcategory="Edu Kit"
     //% group="Motors"
     //% index.fieldEditor="gridpicker" index.fieldOptions.columns=2
-    export function motorStop(index: Motors) {
+    export function motorStop(index: PKSDriverMotors) {
         if (!initialized) {
             initPCA9685()
         }
@@ -288,30 +240,30 @@ namespace pksdriver {
     //% weight=90
     //% blockId=light_lighton block="light on|%index" subcategory="Smart Living"
     //% group="Grow Lights"
-    export function lightOn(index: Motors): void {
+    export function lightOn(index: PKSDriverMotors): void {
         motorRun(index, 1, 255);
     }
     //% weight=90
     //% blockId=fan_fanon block="fan on|%index" subcategory="Smart Living"
     //% group="Fan"
-    export function fanOn(index: Motors): void {
+    export function fanOn(index: PKSDriverMotors): void {
         lightOn(index);
     }
     //% weight=90
     //% blockId=light_lightoff block="light off|%index" subcategory="Smart Living"
     //% group="Grow Lights"
-    export function lightOff(index: Motors) {
+    export function lightOff(index: PKSDriverMotors) {
         motorStop(index);
     }
 
     //% weight=90
     //% blockId=fan_fanoff block="fan off|%index" subcategory="Smart Living"
     //% group="Fan"
-    export function fanOff(index: Motors) {
+    export function fanOff(index: PKSDriverMotors) {
         lightOff(index);
     }
 
-    export enum CompoundEyeData {
+    export enum PKSDriverCompoundEyeData {
         //% block="eye_1"
         Ir_1,
         //% block="eye_2"
@@ -355,7 +307,7 @@ namespace pksdriver {
     //% blockId=compoundEye block="compound eye $compound_eye_data"  subcategory="Soccer Robot"
     //% group="Compound Eye"
     //% weight=50
-    export function compoundEyeRead(compound_eye_data: CompoundEyeData): number {
+    export function compoundEyeRead(compound_eye_data: PKSDriverCompoundEyeData): number {
         pins.i2cWriteNumber(
             0x13,
             compound_eye_data,
@@ -365,22 +317,22 @@ namespace pksdriver {
         let temp = pins.i2cReadNumber(0x13, NumberFormat.UInt8LE, false);
         if (temp == 255) {
             return -1;
-        } else if (compound_eye_data == CompoundEyeData.Angle) {
+        } else if (compound_eye_data == PKSDriverCompoundEyeData.Angle) {
             temp *= 2;
-        } else if (compound_eye_data == CompoundEyeData.MaxEye) {
+        } else if (compound_eye_data == PKSDriverCompoundEyeData.MaxEye) {
             temp += 1;
         }
         return temp;
     }
 
-}
 
-//% weight=60
-//% color=#1c4980 
-//% icon="\uf2db" 
-//% block="PKS Drivers"
-namespace pksdriver {
-    function read(aht20: AHT20.AHT20Sensor): { Humidity: number, Temperature: number } {
+
+
+
+
+
+
+       function read(aht20: AHT20.AHT20Sensor): { Humidity: number, Temperature: number } {
         if (!aht20.GetState().Calibrated) {
             aht20.Initialization();
             if (!aht20.GetState().Calibrated) return null;
@@ -498,14 +450,12 @@ namespace pksdriver {
         return dht11_dht22.sensorrResponding()
     }
 
-}
 
-//% weight=60
-//% color=#1c4980 
-//% icon="\uf2db" 
-//% block="PKS Drivers"
-namespace pksdriver {
 
+
+
+
+    
     /**
      * DS1302 RTC class
      */
@@ -761,14 +711,11 @@ namespace pksdriver {
     export function create(clk: DigitalPin, dio: DigitalPin, cs: DigitalPin): DS1302.DS1302RTC {
         return DS1302.create(clk, dio, cs);
     }
-}
 
-//% weight=60
-//% color=#1c4980 
-//% icon="\uf2db" 
-//% block="PKS Drivers"
-namespace pksdriver {
-    /**
+
+
+
+        /**
      * Initialize MPU6050
      */
     //% block="initialize MPU6050" subcategory="Edu Kit"
@@ -818,7 +765,7 @@ namespace pksdriver {
         return SENMPU6050.readTemperature();
     }
 
-    enum Compass {
+    enum PKSDriverCompass {
         BOARD_ID = 0x08,
         //  Compass     (0x40 - 0x5f) + 6 bytes
         ACC_RAW = 0x40,   // 6  (0-5)
@@ -856,41 +803,27 @@ namespace pksdriver {
     //% weight=70
     export function compassGetYaw(): number {
         let yaw_ang = 0;
-        pins.i2cWriteNumber(Compass.BOARD_ID, Compass.GET_YAW, NumberFormat.UInt8BE, false);
-        let compass_raw = pins.i2cReadBuffer(Compass.BOARD_ID, 2, false);
+        pins.i2cWriteNumber(PKSDriverCompass.BOARD_ID, PKSDriverCompass.GET_YAW, NumberFormat.UInt8BE, false);
+        let compass_raw = pins.i2cReadBuffer(PKSDriverCompass.BOARD_ID, 2, false);
         yaw_ang = compass_raw[0] & 0xff;
         yaw_ang |= compass_raw[1] << 8;
         yaw_ang /= 100;
         return yaw_ang;
     }
-}
 
-// for maze car's use only
-enum direction { FRONT, BACK, LEFT, RIGHT }
 
-//% weight=60
-//% color=#1c4980 
-//% icon="\uf2db" 
-//% block="PKS Drivers"
-namespace pksdriver {
 
+
+
+    
     //% block="direction $wantedDirection" subcategory="Maze Car"
     //% group="Directions"
     //% weight=70
-    export function chooseDirection(wantedDirection: direction): direction {
+    export function chooseDirection(wantedDirection: MazeCarDirection): MazeCarDirection {
         return wantedDirection;
     }
-
-}
-
-//ColorSensor
-//% weight=60
-//% color=#1c4980 
-//% icon="\uf2db" 
-//% block="PKS Drivers"
-namespace pksdriver {
-
-    enum Color {
+    
+    enum PKSDriverColor {
         //i2c addr
         ADDR = 0x11,
         //data commend addr
@@ -924,7 +857,7 @@ namespace pksdriver {
 
 
     //Color Sensor
-    export enum RGB {
+    export enum PKSDriverRGB {
         //% block="red_value"
         R,
         //% block="green_value"
@@ -933,7 +866,7 @@ namespace pksdriver {
         B
     }
 
-    export enum RGBC {
+    export enum PKSDriverRGBC {
         //% block="clear_light_value"
         C,
         //% block="red_light_value"
@@ -944,7 +877,7 @@ namespace pksdriver {
         B
     }
 
-    export enum HSL {
+    export enum PKSDriverHSL {
         //% block="hue"
         H,
         //% block="saturation"
@@ -953,7 +886,7 @@ namespace pksdriver {
         L
     }
 
-    export enum Color_t {
+    export enum PKSDriverColor_t {
         Black = 0, White, Gray,
         Red, Green, Blue,
         Yellow, Cyan, Purple
@@ -965,9 +898,9 @@ namespace pksdriver {
     //% blockId=readhsl block="readHSL $hslchoose" subcategory="Edu Kit"
     //% group="Colors"
     //% weight=80
-    export function readhsl(hslchoose: HSL): number {
-        pins.i2cWriteNumber(Color.ADDR, Color.HSL, NumberFormat.UInt8BE, false);
-        let hsl = pins.i2cReadBuffer(Color.ADDR, 4, false);
+    export function readhsl(hslchoose: PKSDriverHSL): number {
+        pins.i2cWriteNumber(PKSDriverColor.ADDR, PKSDriverColor.HSL, NumberFormat.UInt8BE, false);
+        let hsl = pins.i2cReadBuffer(PKSDriverColor.ADDR, 4, false);
         let temp = [hsl.getNumber(NumberFormat.UInt16LE, 0), //h
         hsl.getNumber(NumberFormat.UInt8LE, 2), //s
         hsl.getNumber(NumberFormat.UInt8LE, 3)] //l
@@ -980,9 +913,9 @@ namespace pksdriver {
     //% blockId=readrgb block="readRGB $rgbchoose" subcategory="Edu Kit"
     //% group="Colors"
     //% weight=60
-    export function readrgb(rgbchoose: RGB): number {
-        pins.i2cWriteNumber(Color.ADDR, Color.RGB, NumberFormat.UInt8BE, false);
-        let rgb = pins.i2cReadBuffer(Color.ADDR, 3, false);
+    export function readrgb(rgbchoose: PKSDriverRGB): number {
+        pins.i2cWriteNumber(PKSDriverColor.ADDR, PKSDriverColor.RGB, NumberFormat.UInt8BE, false);
+        let rgb = pins.i2cReadBuffer(PKSDriverColor.ADDR, 3, false);
         let temp = [rgb.getNumber(NumberFormat.UInt8LE, 0),  //r
         rgb.getNumber(NumberFormat.UInt8LE, 1),  //g
         rgb.getNumber(NumberFormat.UInt8LE, 2)]  //b
@@ -995,9 +928,9 @@ namespace pksdriver {
     //% blockId=readrgbc block="readRGBC $choose" subcategory="Edu Kit"
     //% group="Colors"
     //% weight=70
-    export function readrgbc(choose: RGBC): number {
-        pins.i2cWriteNumber(Color.ADDR, Color.RGBC, NumberFormat.UInt8BE, false);
-        let rgbc = pins.i2cReadBuffer(Color.ADDR, 16, false);
+    export function readrgbc(choose: PKSDriverRGBC): number {
+        pins.i2cWriteNumber(PKSDriverColor.ADDR, PKSDriverColor.RGBC, NumberFormat.UInt8BE, false);
+        let rgbc = pins.i2cReadBuffer(PKSDriverColor.ADDR, 16, false);
         let temp = [rgbc.getNumber(NumberFormat.UInt32LE, 0),  //c                 
         rgbc.getNumber(NumberFormat.UInt32LE, 4),  //r             
         rgbc.getNumber(NumberFormat.UInt32LE, 8),  //g             
@@ -1011,9 +944,9 @@ namespace pksdriver {
     //% blockId=readcolor block="readColor" subcategory="Edu Kit"
     //% group="Colors"
     //% weight=70
-    export function readColor(): Color_t {
-        pins.i2cWriteNumber(Color.ADDR, Color.COLOR, NumberFormat.UInt8BE, false);
-        return pins.i2cReadBuffer(Color.ADDR, 1, false).getNumber(NumberFormat.UInt8LE, 0);
+    export function readColor(): PKSDriverColor_t {
+        pins.i2cWriteNumber(PKSDriverColor.ADDR, PKSDriverColor.COLOR, NumberFormat.UInt8BE, false);
+        return pins.i2cReadBuffer(PKSDriverColor.ADDR, 1, false).getNumber(NumberFormat.UInt8LE, 0);
     }
 
     /**
@@ -1022,7 +955,7 @@ namespace pksdriver {
     //% blockId=checkReadColor block="read color is %color_t" subcategory="Edu Kit"
     //% group="Colors"
     //% weight=70
-    export function checkReadColor(color: Color_t): boolean {
+    export function checkReadColor(color: PKSDriverColor_t): boolean {
         return readColor() == color
     }
 
@@ -1032,7 +965,7 @@ namespace pksdriver {
     //% blockId=checkGetColor block="get color is %color_t" subcategory="Edu Kit"
     //% group="Colors"
     //% weight=70
-    export function checkGetColor(color: Color_t): boolean {
+    export function checkGetColor(color: PKSDriverColor_t): boolean {
         return getColor() == color
     }
 
@@ -1043,29 +976,29 @@ namespace pksdriver {
     //% group="Colors"
     //% weight=70
     export function getColor(): number {
-        pins.i2cWriteNumber(Color.ADDR, Color.HSL, NumberFormat.UInt8BE, false);
-        let hsl = pins.i2cReadBuffer(Color.ADDR, 4, false);
+        pins.i2cWriteNumber(PKSDriverColor.ADDR, PKSDriverColor.HSL, NumberFormat.UInt8BE, false);
+        let hsl = pins.i2cReadBuffer(PKSDriverColor.ADDR, 4, false);
         let temp1 = [hsl.getNumber(NumberFormat.UInt16LE, 0), //h
         hsl.getNumber(NumberFormat.UInt8LE, 2), //s
         hsl.getNumber(NumberFormat.UInt8LE, 3)] //l
-        if (temp1[HSL.H] > 330 || temp1[HSL.H] < 30) {
-            return Color_t.Red
-        } else if (temp1[pksdriver.HSL.H] >= 30 && temp1[HSL.H] < 90) {
-            return Color_t.Yellow
-        } else if (temp1[HSL.H] >= 90 && temp1[HSL.H] < 150) {
-            return Color_t.Green
-        } else if (temp1[HSL.H] >= 150 && temp1[HSL.H] < 210) {
-            return Color_t.Blue//cyan but i find many blue color will sense as cyan color
-        } else if (temp1[HSL.H] >= 210 && temp1[HSL.H] < 270) {
-            return Color_t.Blue
-        } else if (temp1[HSL.H] >= 210 && temp1[HSL.H] < 330) {
-            return Color_t.Purple
+        if (temp1[PKSDriverHSL.H] > 330 || temp1[PKSDriverHSL.H] < 30) {
+            return PKSDriverColor_t.Red
+        } else if (temp1[pksdriver.PKSDriverHSL.H] >= 30 && temp1[PKSDriverHSL.H] < 90) {
+            return PKSDriverColor_t.Yellow
+        } else if (temp1[PKSDriverHSL.H] >= 90 && temp1[PKSDriverHSL.H] < 150) {
+            return PKSDriverColor_t.Green
+        } else if (temp1[PKSDriverHSL.H] >= 150 && temp1[PKSDriverHSL.H] < 210) {
+            return PKSDriverColor_t.Blue//cyan but i find many blue color will sense as cyan color
+        } else if (temp1[PKSDriverHSL.H] >= 210 && temp1[PKSDriverHSL.H] < 270) {
+            return PKSDriverColor_t.Blue
+        } else if (temp1[PKSDriverHSL.H] >= 210 && temp1[PKSDriverHSL.H] < 330) {
+            return PKSDriverColor_t.Purple
         } return null
 
     }
 
 
-    export enum Button {
+    export enum PKSDriverButton {
         //% block="B1"
         B1,
         //% block="B2"
@@ -1080,18 +1013,18 @@ namespace pksdriver {
     //% blockId=getbutton block="get button $Buttoncheck" subcategory="Edu Kit"
     //% group="Button"
     //% weight=70
-    export function checkButton(Buttoncheck: Button): boolean {
+    export function checkButton(Buttoncheck: PKSDriverButton): boolean {
         let buttonvalue = pins.analogReadPin(AnalogPin.P0);
         let button = 0;
         let x = 0;
         let ans = 0;
-        if (Buttoncheck == Button.B1) {
+        if (Buttoncheck == PKSDriverButton.B1) {
             x = 0b100
         }
-        else if (Buttoncheck == Button.B2) {
+        else if (Buttoncheck == PKSDriverButton.B2) {
             x = 0b010
         }
-        else if (Buttoncheck == Button.B3) {
+        else if (Buttoncheck == PKSDriverButton.B3) {
             x = 0b001
         }
         if (buttonvalue > 912) {
@@ -1117,19 +1050,13 @@ namespace pksdriver {
         return ans != 0;
     }
 
-}
 
 
 
 
-//ColorSensor
-//% weight=60
-//% color=#1c4980 
-//% icon="\uf2db" 
-//% block="PKS Drivers"
-namespace pksdriver {
 
-    export enum I2cchannel {
+    
+    export enum PKSDriverI2cchannel {
         //% block="C1"
         C1,
         //% block="C2"
@@ -1151,31 +1078,31 @@ namespace pksdriver {
     /**
     * switch I2C multiplexer channel 
      */
-    function switchI2CMultiplexer(channelselected: I2cchannel): void {
+    function switchI2CMultiplexer(channelselected: PKSDriverI2cchannel): void {
         let i2c_multiplexerAddress = 0x70;
         const buf = pins.createBuffer(1);
-        if (channelselected == I2cchannel.C1) {
+        if (channelselected == PKSDriverI2cchannel.C1) {
             buf[0] = 0x08
         }
-        else if (channelselected == I2cchannel.C2) {
+        else if (channelselected == PKSDriverI2cchannel.C2) {
             buf[0] = 0x04
         }
-        else if (channelselected == I2cchannel.C3) {
+        else if (channelselected == PKSDriverI2cchannel.C3) {
             buf[0] = 0x02
         }
-        else if (channelselected == I2cchannel.C4) {
+        else if (channelselected == PKSDriverI2cchannel.C4) {
             buf[0] = 0x01
         }
-        else if (channelselected == I2cchannel.C5) {
+        else if (channelselected == PKSDriverI2cchannel.C5) {
             buf[0] = 0x10
         }
-        else if (channelselected == I2cchannel.C6) {
+        else if (channelselected == PKSDriverI2cchannel.C6) {
             buf[0] = 0x20
         }
-        else if (channelselected == I2cchannel.C7) {
+        else if (channelselected == PKSDriverI2cchannel.C7) {
             buf[0] = 0x40
         }
-        else if (channelselected == I2cchannel.C8) {
+        else if (channelselected == PKSDriverI2cchannel.C8) {
             buf[0] = 0x80
         }
         pins.i2cWriteBuffer(i2c_multiplexerAddress, buf, false);
@@ -1184,28 +1111,28 @@ namespace pksdriver {
     //% blockId=switch_channel_edu block="switch i2cchannel %channelselected" subcategory="Edu Kit"
     //% group="I2C multiplexer"
     //% weight=70
-    export function switchI2CChannelEdu(channelselected: I2cchannel): void {
+    export function switchI2CChannelEdu(channelselected: PKSDriverI2cchannel): void {
         switchI2CMultiplexer(channelselected);
     }
 
     //% blockId=switch_channel_maze block="switch i2cchannel %channelselected" subcategory="Maze Car"
     //% group="I2C multiplexer"
     //% weight=70
-    export function switchI2CChannelMaze(channelselected: I2cchannel): void {
+    export function switchI2CChannelMaze(channelselected: PKSDriverI2cchannel): void {
         switchI2CMultiplexer(channelselected);
     }
 
     //% blockId=switch_channel_soccer block="switch i2cchannel %channelselected" subcategory="Soccer Robot"
     //% group="I2C multiplexer"
     //% weight=70
-    export function switchI2CChannelSoccer(channelselected: I2cchannel): void {
+    export function switchI2CChannelSoccer(channelselected: PKSDriverI2cchannel): void {
         switchI2CMultiplexer(channelselected);
     }
 
     //% blockId=switch_channel_smart block="switch i2cchannel %channelselected" subcategory="Smart Living"
     //% group="I2C multiplexer"
     //% weight=70
-    export function switchI2CChannelSmart(channelselected: I2cchannel): void {
+    export function switchI2CChannelSmart(channelselected: PKSDriverI2cchannel): void {
         switchI2CMultiplexer(channelselected);
     }
 
