@@ -6,12 +6,10 @@
     "dependencies": {
         "core": "*",
         "radio": "*",
-        "pins": "*",
-        "servo": "*",
-        "pca9685": "github:jdarling/pxt-pca9685",
-        "dht11": "github:alankrantas/pxt-dht11_dht22",
-        "aht20": "github:koudayao27/AHT20",
-        "mpu6050": "github:microsoft/pxt-mpu6050"
+        "pxt-DHT11_DHT22": "github:alankrantas/pxt-dht11_dht22#v0.0.3",
+        "AHT20": "github:koudayao27/AHT20#7a747f27f5f00cc438a2929f39fe322ae7b19270",
+        "SEN-MPU6050": "github:joy-it/sen-mpu6050#1.0.1",
+        "DS1302": "github:makecode-extensions/ds1302#v1.1.0"
     },
     "files": [
         "README.md",
