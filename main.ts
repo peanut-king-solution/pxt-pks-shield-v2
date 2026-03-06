@@ -374,8 +374,10 @@ namespace pksdriver {
     }
 
     /**
-    * compoundEye read function
-    */
+     * Reads data from the compound eye sensor.
+     * @param compound_eye_data The type of data to read
+     * @returns sensor value, -1 if there is error
+     */
     //% blockId=compoundEye block="compound eye $compound_eye_data"  subcategory="Soccer Robot"
     //% group="Compound Eye"
     //% weight=50
@@ -397,7 +399,11 @@ namespace pksdriver {
         return temp;
     }
 
-
+    /**
+     * Reads humidity and temperature from the AHT20 sensor.
+     * @param aht20 The AHT20 sensor instance
+     * @returns humidity and temperature 
+     */
     function read(aht20: AHT20.AHT20Sensor): { Humidity: number, Temperature: number } {
         if (!aht20.GetState().Calibrated) {
             aht20.Initialization();
@@ -499,7 +505,7 @@ namespace pksdriver {
 
     /**
     * Select temperature type (Celsius/Fahrenheit)
-    * @param temp Temperature type (celsius or fahrenheit)
+    * @param temp 
     */
     //% block="temperature type: $temp" subcategory="Smart Living"
     //% group="Temperature and Humidity (DHT11/DHT22)" 
@@ -663,6 +669,7 @@ namespace pksdriver {
 
     /**
      * get Minute
+     * @returns minute
      */
     //% blockId="DS1302_get_minute" block="%ds|get minute" subcategory="Smart Living"
     //% weight=70 blockGap=8
@@ -687,6 +694,7 @@ namespace pksdriver {
 
     /**
      * get Second
+     * @returns second
      */
     //% blockId="DS1302_get_second" block="%ds|get second" subcategory="Smart Living"
     //% weight=67 blockGap=8
@@ -758,6 +766,8 @@ namespace pksdriver {
 
     /**
      * read RAM
+     * @param reg RAM register address
+     * @returns value read from RAM
      */
     //% blockId="DS1302_read_ram" block="%ds|read ram %reg" subcategory="Smart Living"
     //% weight=43 blockGap=8
@@ -770,6 +780,8 @@ namespace pksdriver {
 
     /**
      * write RAM
+     * @param reg RAM register address
+     * @param dat data to write
      */
     //% blockId="DS1302_write_ram" block="%ds|write ram %reg|with %dat" subcategory="Smart Living"
     //% weight=42 blockGap=8
@@ -807,6 +819,8 @@ namespace pksdriver {
 
     /**
       * Get gyroscope values
+      * @param axis which axis to read 
+      * @param sensitivity gyroscope sensitivity setting (rad/s)
       */
     //% block="gyroscope value of %axisXYZ axis with %gyroSen sensitivity (Unit: rad/s)" subcategory="Edu Kit"
     //% group="Acceleration"
@@ -817,6 +831,9 @@ namespace pksdriver {
 
     /**
      * Get rotation of the corresponding Axis
+     * @param axis select axis
+     * @param sensitivity accelerator sensitivity setting 
+     * @returns angle in Degree 
      */
     //% block="angle of %xaxisXYZ axis with %accelSen sensitivity (Unit: Degrees)" subcategory="Edu Kit"
     //% group="Acceleration"
@@ -827,6 +844,9 @@ namespace pksdriver {
 
     /**
      * Get acceleration of the corresponding Axis
+     * @param axis select axis
+     * @param sensitivity accelerator sensitivity setting
+     * @returns acceleration
      */
     //% block="acceleration of %xaxisXYZ axis with %accelSen sensitivity (Unit: g)" subcategory="Edu Kit"
     //% group="Acceleration"
@@ -837,6 +857,7 @@ namespace pksdriver {
 
     /**
      * Get temperature
+     * @returns temperature 
      */
     //% block="temperature (Unit: Celsius)" subcategory="Smart Living"
     //% group="Temperature and Humidity (DHT11/DHT22)" 
@@ -1194,6 +1215,7 @@ namespace pksdriver {
 
     /**
     * switch I2C multiplexer channel 
+    * @param channelselected which channel to select on the I2C multiplexer 
      */
     function switchI2CMultiplexer(channelselected: PKSDriverI2cchannel): void {
         let i2c_multiplexerAddress = 0x70;
