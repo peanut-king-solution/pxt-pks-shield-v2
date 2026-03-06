@@ -1,4 +1,7 @@
-// for maze car's use only
+/**
+ * For maze car's use only
+ * Maze car direction options
+ */
 enum MazeCarDirection { FRONT, BACK, LEFT, RIGHT }
 
 
@@ -49,18 +52,33 @@ namespace pksdriver {
 
     let initialized = false
 
+    /**
+     * initalize PCA9685
+     */
     function initPCA9685(): void {
         i2cWrite(PCA9685_ADDRESS, MODE, 0x00)
         setFreq(50);
         initialized = true
     }
 
+    /**
+     * Read data from I2C device
+     * @param addr I2C device address  
+     * @param reg Register address
+     * @returns data read from device
+     */
     function i2cRead(addr: number, reg: number) {
         pins.i2cWriteNumber(addr, reg, NumberFormat.UInt8BE);
         let val = pins.i2cReadNumber(addr, NumberFormat.UInt8BE);
         return val;
     }
 
+    /**
+     * Write data to I2C device
+     * @param addr I2C device address  
+     * @param reg Register address
+     * @param value Value to write 
+     */
     function i2cWrite(addr: number, reg: number, value: number) {
         let buf = pins.createBuffer(2)
         buf[0] = reg
@@ -68,6 +86,10 @@ namespace pksdriver {
         pins.i2cWriteBuffer(addr, buf)
     }
 
+    /**
+     * Set PWM frequency for PCA9685
+     * @param freq Frequency in Hz (default 50)
+     */
     function setFreq(freq: number): void {
         // Constrain the frequency
         let prescaleval = 25000000;
@@ -84,6 +106,12 @@ namespace pksdriver {
         i2cWrite(PCA9685_ADDRESS, MODE, oldmode | 0xa1);
     }
 
+    /**
+     * Set PWM value for a channel on PCA9685
+     * @param channel PWM channel (0-15)
+     * @param on On time
+     * @param off Off time
+     */
     function setPwm(channel: number, on: number, off: number): void {
         if (channel < 0 || channel > 15)
             return;
@@ -98,9 +126,9 @@ namespace pksdriver {
     }
 
     /**
-     * Steering gear control function.
-     * S1~S8.
-     * 0°~180°.
+     * Steering gear control function 
+     * @param idnex S1~S8.
+     * @param degree 0°~180°.
     */
     //% blockId=motor_servo block="servo|%index|degree|%degree" subcategory="Edu Kit"
     //% group="Servo"
@@ -116,6 +144,13 @@ namespace pksdriver {
         let value = v_us * 4096 / 20000
         setPwm(8 - index, 0, value)
     }
+
+
+    /**
+     * Steering gear control function 
+     * @param idnex S1~S8.
+     * @param degree 0°~180°.
+     */ 
     //% blockId=smart_servo block="smart servo|%index|degree|%degree" subcategory="Smart Living"
     //% group="Servo"
     //% weight=99
@@ -127,6 +162,7 @@ namespace pksdriver {
 
     /**
      * set servo off
+     * @param idnex S1~S8.
     */
     //% blockId=motor_servoOff block="servo off|%index" subcategory="Edu Kit"
     //% group="Servos"
@@ -141,6 +177,7 @@ namespace pksdriver {
 
     /**
      * set servo on
+     * @param index S1~S8.
     */
     //% blockId=motor_servoOn block="servo on|%index" subcategory="Edu Kit"
     //% group="Servos"
@@ -155,8 +192,9 @@ namespace pksdriver {
 
     /**
      * Execute a motor
-     * M1~M4.
-     * speed(0~255).
+     * @param index M1~M4.
+     * @param dir CW/CCW
+     * @param speed speed(0~255).
     */
     //% weight=130
     //% blockId=motor_MotorRun block="motor|%index|dir|%dir|speed|%speed" subcategory="Edu Kit"
@@ -187,6 +225,14 @@ namespace pksdriver {
             setPwm(pn, 0, -speed)
         }
     }
+
+
+    /**
+     * Execute a motor 
+     * @param index M1~M4.
+     * @param dir CW/CCW
+     * @param speed speed(0~255).
+     */
     //% weight=130
     //% blockId=maze_motor_MotorRun block="motor|%index|dir|%dir|speed|%speed" subcategory="Maze Car"
     //% speed.min=0 speed.max=255
@@ -200,6 +246,7 @@ namespace pksdriver {
 
     /**
      * Stop the dc motor.
+     * @param index M1~M4
     */
     //% weight=129
     //% blockId=motor_motorStop block="motor stop|%index" subcategory="Edu Kit"
@@ -228,27 +275,43 @@ namespace pksdriver {
             motorStop(idx);
         }
     }
+
     /**
-        * Stop all motors
-       */
+    * Stop all motors
+    */
     //% weight=128
     //% blockId=maze_motor_motorStopAll block="motor stop all" subcategory="Maze Car"
     //% group="Motors"
     export function mazeMotorStopAll(): void {
         motorStopAll();
     }
+
+    /**
+     * Switch light on 
+     * @param index M1~M4.
+     */
     //% weight=90
     //% blockId=light_lighton block="light on|%index" subcategory="Smart Living"
     //% group="Grow Lights"
     export function lightOn(index: PKSDriverMotors): void {
         motorRun(index, 1, 255);
     }
+
+    /**
+     * Switch fan on
+     * @param index M1~M4. 
+     */
     //% weight=90
     //% blockId=fan_fanon block="fan on|%index" subcategory="Smart Living"
     //% group="Fan"
     export function fanOn(index: PKSDriverMotors): void {
         lightOn(index);
     }
+
+    /**
+     * Switch light off
+     * @param index M1~M4.
+     */
     //% weight=90
     //% blockId=light_lightoff block="light off|%index" subcategory="Smart Living"
     //% group="Grow Lights"
@@ -256,6 +319,11 @@ namespace pksdriver {
         motorStop(index);
     }
 
+
+    /**
+     * Switch fan off
+     * @param index M1~M4.
+     */
     //% weight=90
     //% blockId=fan_fanoff block="fan off|%index" subcategory="Smart Living"
     //% group="Fan"
@@ -263,6 +331,10 @@ namespace pksdriver {
         lightOff(index);
     }
 
+
+    /**
+     * Compound eye sensor data types
+     */
     export enum PKSDriverCompoundEyeData {
         //% block="eye_1"
         Ir_1,
@@ -326,13 +398,7 @@ namespace pksdriver {
     }
 
 
-
-
-
-
-
-
-       function read(aht20: AHT20.AHT20Sensor): { Humidity: number, Temperature: number } {
+    function read(aht20: AHT20.AHT20Sensor): { Humidity: number, Temperature: number } {
         if (!aht20.GetState().Calibrated) {
             aht20.Initialization();
             if (!aht20.GetState().Calibrated) return null;
@@ -348,6 +414,10 @@ namespace pksdriver {
         return aht20.Read();
     }
 
+    /**
+     * Read temperature in Celsius from AHT20 sensor
+     * @returns temperature in °C
+     */
     //% group="Temperature and Humidity (AHT20)"  subcategory="Smart Living"
     //% block="read temperature(°C))"
     //% weight=3
@@ -359,6 +429,10 @@ namespace pksdriver {
         return val.Temperature;
     }
 
+    /**
+     * Read temperature in Fahrenheit from AHT20 sensor
+     * @returns temperature in °F
+     */
     //% group="Temperature and Humidity (AHT20)" subcategory="Smart Living"
     //% block="read temperature(°F))"
     //% weight=2
@@ -370,6 +444,10 @@ namespace pksdriver {
         return val.Temperature * 9 / 5 + 32;
     }
 
+    /**
+     * Read humidity from AHT20 sensor
+     * @returns humidity percentage
+     */
     //% block="read humidity" subcategory="Smart Living"
     //% group="Temperature and Humidity (AHT20)" 
     //% weight=1
@@ -380,14 +458,6 @@ namespace pksdriver {
 
         return val.Humidity;
     }
-}
-
-
-//% weight=60
-//% color=#1c4980 
-//% icon="\uf2db" 
-//% block="PKS Drivers"
-namespace pksdriver {
 
     let _temperature: number = -999.0
     let _humidity: number = -999.0
@@ -449,10 +519,6 @@ namespace pksdriver {
     export function sensorrResponding(): boolean {
         return dht11_dht22.sensorrResponding()
     }
-
-
-
-
 
 
     
@@ -715,7 +781,7 @@ namespace pksdriver {
 
 
 
-        /**
+    /**
      * Initialize MPU6050
      */
     //% block="initialize MPU6050" subcategory="Edu Kit"
@@ -765,6 +831,9 @@ namespace pksdriver {
         return SENMPU6050.readTemperature();
     }
 
+    /**
+     * Compass I2C register addresses
+     */
     enum PKSDriverCompass {
         BOARD_ID = 0x08,
         //  Compass     (0x40 - 0x5f) + 6 bytes
@@ -782,6 +851,11 @@ namespace pksdriver {
         WRI_REG = 0x20,   // write reg
 
     };
+
+    /**
+     * Get ultrasonic distance 
+     * @returns distance in mm
+     */
     //% block="get_dist (Unit: mm)" subcategory="Maze Car"
     //% group="Ultrasound"
     //% weight=70
@@ -797,6 +871,7 @@ namespace pksdriver {
 
     /**
     * Compass read function, to get the yaw angle
+    * @returns yaw angle in degrees
     */
     //% block="get_yaw (Unit: deg)" subcategory="Soccer Robot"
     //% group="Compass"
@@ -811,11 +886,11 @@ namespace pksdriver {
         return yaw_ang;
     }
 
-
-
-
-
-    
+    /**
+     * Select a direction for maze car
+     * @param wantedDirection FRONT, BACK, LEFT or RIGHT
+     * @returns the selected direction 
+     */
     //% block="direction $wantedDirection" subcategory="Maze Car"
     //% group="Directions"
     //% weight=70
@@ -823,6 +898,9 @@ namespace pksdriver {
         return wantedDirection;
     }
     
+    /**
+     * Color sensor I2C addresses and commands
+     */
     enum PKSDriverColor {
         //i2c addr
         ADDR = 0x11,
@@ -856,7 +934,9 @@ namespace pksdriver {
     //////////////////////////////////////////////////
 
 
-    //Color Sensor
+    /**
+     * Color Sensor
+     */
     export enum PKSDriverRGB {
         //% block="red_value"
         R,
@@ -866,6 +946,9 @@ namespace pksdriver {
         B
     }
 
+    /**
+     * RGBC color sensor values
+     */
     export enum PKSDriverRGBC {
         //% block="clear_light_value"
         C,
@@ -877,6 +960,9 @@ namespace pksdriver {
         B
     }
 
+    /**
+     * HSL color values
+     */
     export enum PKSDriverHSL {
         //% block="hue"
         H,
@@ -886,6 +972,9 @@ namespace pksdriver {
         L
     }
 
+    /**
+     * Basic color types for color sensor
+     */
     export enum PKSDriverColor_t {
         Black = 0, White, Gray,
         Red, Green, Blue,
@@ -894,6 +983,8 @@ namespace pksdriver {
 
     /**
     * HSL read function
+    * @param hslchoose H, S, or L
+    * @returns the selected value
     */
     //% blockId=readhsl block="readHSL $hslchoose" subcategory="Edu Kit"
     //% group="Colors"
@@ -909,6 +1000,8 @@ namespace pksdriver {
 
     /**
     * RGB read function
+    * @param rgbchoose R, G or B
+    * @returns the selected value
     */
     //% blockId=readrgb block="readRGB $rgbchoose" subcategory="Edu Kit"
     //% group="Colors"
@@ -924,6 +1017,8 @@ namespace pksdriver {
 
     /**
     * RGBC read function
+    * @param choose C, R, G, or B
+    * @returns the selected value
     */
     //% blockId=readrgbc block="readRGBC $choose" subcategory="Edu Kit"
     //% group="Colors"
@@ -940,6 +1035,7 @@ namespace pksdriver {
 
     /**
     * color read function
+    * @returns the detected color (Black, White, Gray, Red, Green, Blue, Yellow, Cyan, Purple)
     */
     //% blockId=readcolor block="readColor" subcategory="Edu Kit"
     //% group="Colors"
@@ -951,6 +1047,8 @@ namespace pksdriver {
 
     /**
     * check read color
+    * @param color The color to check against
+    * @returns true if colors matches 
     */
     //% blockId=checkReadColor block="read color is %color_t" subcategory="Edu Kit"
     //% group="Colors"
@@ -961,6 +1059,8 @@ namespace pksdriver {
 
     /**
     * check get color
+    *  @param color The color to check against
+    *  @returns true if colors matches
     */
     //% blockId=checkGetColor block="get color is %color_t" subcategory="Edu Kit"
     //% group="Colors"
@@ -971,6 +1071,7 @@ namespace pksdriver {
 
     /**
     * function transfer hsl value to color 
+    * @returns color enum value
     */
     //% blockId=getcolor block="getColor" subcategory="Edu Kit"
     //% group="Colors"
@@ -997,7 +1098,9 @@ namespace pksdriver {
 
     }
 
-
+    /**
+     * Button options (B1, B2, B3)
+     */
     export enum PKSDriverButton {
         //% block="B1"
         B1,
@@ -1008,7 +1111,9 @@ namespace pksdriver {
     }
 
     /**
-     * check button B1 - B3, return true if button is pressed.  
+     * Check if button is pressed  
+     * @param Buttoncheck B1 - B3
+     * @returns true if button is pressed  
      */
     //% blockId=getbutton block="get button $Buttoncheck" subcategory="Edu Kit"
     //% group="Button"
@@ -1051,11 +1156,9 @@ namespace pksdriver {
     }
 
 
-
-
-
-
-    
+    /**
+     * I2C multiplexer channel options
+     */
     export enum PKSDriverI2cchannel {
         //% block="C1"
         C1,
@@ -1108,6 +1211,11 @@ namespace pksdriver {
         pins.i2cWriteBuffer(i2c_multiplexerAddress, buf, false);
 
     }
+
+    /**
+     * Switch I2C multiplexer channel (Edu Kit)
+     * @param channelselected C1~C8 
+     */
     //% blockId=switch_channel_edu block="switch i2cchannel %channelselected" subcategory="Edu Kit"
     //% group="I2C multiplexer"
     //% weight=70
@@ -1115,6 +1223,10 @@ namespace pksdriver {
         switchI2CMultiplexer(channelselected);
     }
 
+    /**
+     * Switch I2C multiplexer channel (Maze Car)
+     * @param channelselected C1~C8
+     */
     //% blockId=switch_channel_maze block="switch i2cchannel %channelselected" subcategory="Maze Car"
     //% group="I2C multiplexer"
     //% weight=70
@@ -1122,6 +1234,10 @@ namespace pksdriver {
         switchI2CMultiplexer(channelselected);
     }
 
+    /**
+     * Switch I2C multiplexer channel (Soccer Robot)
+     * @param channelselected C1~C8
+     */
     //% blockId=switch_channel_soccer block="switch i2cchannel %channelselected" subcategory="Soccer Robot"
     //% group="I2C multiplexer"
     //% weight=70
@@ -1129,6 +1245,10 @@ namespace pksdriver {
         switchI2CMultiplexer(channelselected);
     }
 
+    /**
+     * Switch I2C multiplexer channel (Smart Living)
+     * @param channelselected C1~C8
+     */
     //% blockId=switch_channel_smart block="switch i2cchannel %channelselected" subcategory="Smart Living"
     //% group="I2C multiplexer"
     //% weight=70
