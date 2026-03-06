@@ -467,6 +467,11 @@ namespace pksdriver {
 
     /**
     * Query data from DHT11/DHT22 sensor. It is also recommended to wait 1 (DHT11) or 2 (DHT22) seconds between each query.
+    * @param DHT DHT type (DHT11 or DHT22)
+    * @param dataPin Digital pin for data
+    * @param pullUp Enable pin pull up
+    * @param serialOutput Enable serial output
+    * @param wait Wait 2 seconds after query
     */
     //% block="query $DHT|data pin $dataPin|pin pull up $pullUp|serial output $serialOutput|wait 2 sec after query $wait"
     //% pullUp.defl=true
@@ -482,6 +487,8 @@ namespace pksdriver {
 
     /**
     * Read humidity/temperature data from lastest query of DHT11/DHT22
+    * @param data Data type (humidity or temperature)
+    * @returns the requested data value
     */
     //% weight=99
     //% block="read $data" subcategory="Smart Living"
@@ -491,7 +498,8 @@ namespace pksdriver {
     }
 
     /**
-    * Select temperature type (Celsius/Fahrenheit)"
+    * Select temperature type (Celsius/Fahrenheit)
+    * @param temp Temperature type (celsius or fahrenheit)
     */
     //% block="temperature type: $temp" subcategory="Smart Living"
     //% group="Temperature and Humidity (DHT11/DHT22)" 
@@ -502,6 +510,7 @@ namespace pksdriver {
 
     /**
     * Determind if last query is successful (checksum ok)
+    * @returns true if successful
     */
     //% block="last query successful?" subcategory="Smart Living"
     //% weight=97
@@ -512,6 +521,7 @@ namespace pksdriver {
 
     /**
     * Determind if sensor responded successfully (not disconnected, etc) in last query
+    * @returns true if successful
     */
     //% block="last query sensor responding?" subcategory="Smart Living"
     //% weight=96
@@ -530,6 +540,7 @@ namespace pksdriver {
 
     /**
      * get Year
+     * @return year
      */
     //% blockId="DS1302_get_year" block="%ds|get year" subcategory="Smart Living"
     //% weight=80 blockGap=8
@@ -553,6 +564,7 @@ namespace pksdriver {
 
     /**
      * get Month
+     * @returns month
      */
     //% blockId="DS1302_get_month" block="%ds|get month" subcategory="Smart Living"
     //% weight=78 blockGap=8
@@ -577,6 +589,7 @@ namespace pksdriver {
 
     /**
      * get Day
+     * @returns day
      */
     //% blockId="DS1302_get_day" block="%ds|get day" subcategory="Smart Living"
     //% weight=76 blockGap=8
@@ -601,6 +614,7 @@ namespace pksdriver {
 
     /**
      * get Week Day
+     * @returns weekday
      */
     //% blockId="DS1302_get_weekday" block="%ds|get weekday" subcategory="Smart Living"
     //% weight=74 blockGap=8
