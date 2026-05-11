@@ -82,10 +82,10 @@ pksdriver.initMPU6050()
 
 basic.forever(function () {
     // Read yaw rate on the Z axis in radians per second.
-    let gyroZ = pksdriver.gyroscope(axisXYZ.Z, gyroSen.Sen_250)
+    let gyroZ = pksdriver.gyroscope(axisXYZ.z, gyroSen.range_250_dps)
 
     // Read acceleration on the X axis in g.
-    let accelX = pksdriver.axisAcceleration(axisXYZ.X, accelSen.Sen_2G)
+    let accelX = pksdriver.axisAcceleration(axisXYZ.x, accelSen.range_2_g)
 
     serial.writeLine("gyroZ=" + gyroZ + ", accelX=" + accelX)
     basic.pause(200)
