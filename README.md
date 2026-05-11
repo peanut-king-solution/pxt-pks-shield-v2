@@ -24,6 +24,16 @@ It includes APIs for:
 
 Use `motorRun` to drive each motor independently, then stop everything with `motorStopAll`.
 
+```blocks
+basic.forever(function () {
+    pksdriver.motorRun(pksdriver.PKSDriverMotors.M1, pksdriver.PKSDriverDir.CW, 80)
+    pksdriver.motorRun(pksdriver.PKSDriverMotors.M2, pksdriver.PKSDriverDir.CW, 80)
+    basic.pause(1500)
+    pksdriver.motorStopAll()
+    basic.pause(500)
+})
+```
+
 ```typescript
 basic.forever(function () {
     // Drive M1 and M2 forward at moderate speed.
@@ -46,6 +56,20 @@ basic.forever(function () {
 
 Use `servo` to move a connected servo to a target angle.
 
+```blocks
+input.onButtonPressed(Button.A, function () {
+    pksdriver.servo(pksdriver.PKSDriverServos.S1, 0)
+})
+
+input.onButtonPressed(Button.B, function () {
+    pksdriver.servo(pksdriver.PKSDriverServos.S1, 180)
+})
+
+input.onButtonPressed(Button.AB, function () {
+    pksdriver.servoOff(pksdriver.PKSDriverServos.S1)
+})
+```
+
 ```typescript
 input.onButtonPressed(Button.A, function () {
     // Move servo S1 to 0 degrees.
@@ -67,6 +91,17 @@ input.onButtonPressed(Button.AB, function () {
 
 Initialize the MPU6050 once, then read gyroscope and acceleration values inside a loop.
 
+```blocks
+pksdriver.initMPU6050()
+
+basic.forever(function () {
+    let gyroZ = pksdriver.gyroscope(axisXYZ.Z, gyroSen.Sen_250)
+    let accelX = pksdriver.axisAcceleration(axisXYZ.X, accelSen.Sen_2G)
+    serial.writeLine("gyroZ=" + gyroZ + ", accelX=" + accelX)
+    basic.pause(200)
+})
+```
+
 ```typescript
 pksdriver.initMPU6050()
 
@@ -86,6 +121,15 @@ basic.forever(function () {
 
 The shield supports both AHT20 and DHT sensors. Use the API that matches the sensor you connected.
 
+```blocks
+basic.forever(function () {
+    let tempC = pksdriver.aht20ReadTemperatureC()
+    let humidity = pksdriver.aht20ReadHumidity()
+    serial.writeLine("AHT20 temp=" + tempC + "C, humidity=" + humidity + "%")
+    basic.pause(1000)
+})
+```
+
 ```typescript
 basic.forever(function () {
     // Read the AHT20 sensor over I2C.
@@ -94,6 +138,17 @@ basic.forever(function () {
 
     serial.writeLine("AHT20 temp=" + tempC + "C, humidity=" + humidity + "%")
     basic.pause(1000)
+})
+```
+
+```blocks
+input.onButtonPressed(Button.A, function () {
+    pksdriver.queryData(DHTtype.DHT11, DigitalPin.P1, true, false, true)
+    if (pksdriver.readDataSuccessful()) {
+        let temperature = pksdriver.readData(dataType.temperature)
+        let humidity = pksdriver.readData(dataType.humidity)
+        serial.writeLine("DHT temp=" + temperature + ", humidity=" + humidity)
+    }
 })
 ```
 
@@ -115,6 +170,18 @@ input.onButtonPressed(Button.A, function () {
 
 Use the color sensor helpers to inspect raw channels or compare the detected color directly.
 
+```blocks
+basic.forever(function () {
+    let detected = pksdriver.readColor()
+    if (pksdriver.checkReadColor(pksdriver.PKSDriverColor_t.Red)) {
+        basic.showString("R")
+    } else {
+        basic.clearScreen()
+    }
+    basic.pause(100)
+})
+```
+
 ```typescript
 basic.forever(function () {
     // Read the detected color enum from the sensor.
@@ -134,6 +201,19 @@ basic.forever(function () {
 ## Example: Create and Read the RTC
 
 Create the DS1302 instance once, then use the helper blocks exposed by this package.
+
+```blocks
+let rtc = pksdriver.create(DigitalPin.P13, DigitalPin.P14, DigitalPin.P15)
+pksdriver.DateTime(2026, 5, 11, 2, 8, 30, 0)
+
+basic.forever(function () {
+    let hour = pksdriver.getHour()
+    let minute = pksdriver.getMinute()
+    let second = pksdriver.getSecond()
+    serial.writeLine("time=" + hour + ":" + minute + ":" + second)
+    basic.pause(1000)
+})
+```
 
 ```typescript
 let rtc = pksdriver.create(DigitalPin.P13, DigitalPin.P14, DigitalPin.P15)
