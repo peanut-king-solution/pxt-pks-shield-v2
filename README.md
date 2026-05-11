@@ -4,7 +4,7 @@ Peanut King micro:bit Shield V2 extension for motors, servos, sensors, and I2C m
 
 ## URL
 
-Project URL: https://github.com/peanut-king-solution/pks-pxt-shield-v2
+Project URL: https://github.com/peanut-king-solution/pxt-pks-shield-v2
 
 ## Summary
 
@@ -20,19 +20,15 @@ It includes APIs for:
 - DS1302 real-time clock support
 - I2C channel switching for the different shield configurations
 
+```package
+pksdriver=github:peanut-king-solution/pks-pxt-shield-v2
+```
+
 ## Example: Drive Two Motors
 
 Use `motorRun` to drive each motor independently, then stop everything with `motorStopAll`.
 
-```blocks
-basic.forever(function () {
-    pksdriver.motorRun(pksdriver.PKSDriverMotors.M1, pksdriver.PKSDriverDir.CW, 80)
-    pksdriver.motorRun(pksdriver.PKSDriverMotors.M2, pksdriver.PKSDriverDir.CW, 80)
-    basic.pause(1500)
-    pksdriver.motorStopAll()
-    basic.pause(500)
-})
-```
+![Drive Two Motors blocks](image/drive-two-motors.png)
 
 ```typescript
 basic.forever(function () {
@@ -56,19 +52,7 @@ basic.forever(function () {
 
 Use `servo` to move a connected servo to a target angle.
 
-```blocks
-input.onButtonPressed(Button.A, function () {
-    pksdriver.servo(pksdriver.PKSDriverServos.S1, 0)
-})
-
-input.onButtonPressed(Button.B, function () {
-    pksdriver.servo(pksdriver.PKSDriverServos.S1, 180)
-})
-
-input.onButtonPressed(Button.AB, function () {
-    pksdriver.servoOff(pksdriver.PKSDriverServos.S1)
-})
-```
+![Position a Servo blocks](image/position-a-servo.png)
 
 ```typescript
 input.onButtonPressed(Button.A, function () {
@@ -91,16 +75,7 @@ input.onButtonPressed(Button.AB, function () {
 
 Initialize the MPU6050 once, then read gyroscope and acceleration values inside a loop.
 
-```blocks
-pksdriver.initMPU6050()
-
-basic.forever(function () {
-    let gyroZ = pksdriver.gyroscope(axisXYZ.Z, gyroSen.Sen_250)
-    let accelX = pksdriver.axisAcceleration(axisXYZ.X, accelSen.Sen_2G)
-    serial.writeLine("gyroZ=" + gyroZ + ", accelX=" + accelX)
-    basic.pause(200)
-})
-```
+![Read the MPU6050 blocks](image/read-the-mpu6050.png)
 
 ```typescript
 pksdriver.initMPU6050()
@@ -121,14 +96,7 @@ basic.forever(function () {
 
 The shield supports both AHT20 and DHT sensors. Use the API that matches the sensor you connected.
 
-```blocks
-basic.forever(function () {
-    let tempC = pksdriver.aht20ReadTemperatureC()
-    let humidity = pksdriver.aht20ReadHumidity()
-    serial.writeLine("AHT20 temp=" + tempC + "C, humidity=" + humidity + "%")
-    basic.pause(1000)
-})
-```
+![Read Temperature and Humidity AHT20 blocks](image/read-temperature-and-humidity-aht20.png)
 
 ```typescript
 basic.forever(function () {
@@ -141,16 +109,7 @@ basic.forever(function () {
 })
 ```
 
-```blocks
-input.onButtonPressed(Button.A, function () {
-    pksdriver.queryData(DHTtype.DHT11, DigitalPin.P1, true, false, true)
-    if (pksdriver.readDataSuccessful()) {
-        let temperature = pksdriver.readData(dataType.temperature)
-        let humidity = pksdriver.readData(dataType.humidity)
-        serial.writeLine("DHT temp=" + temperature + ", humidity=" + humidity)
-    }
-})
-```
+![Read Temperature and Humidity DHT blocks](image/read-temperature-and-humidity-dht.png)
 
 ```typescript
 input.onButtonPressed(Button.A, function () {
@@ -170,17 +129,7 @@ input.onButtonPressed(Button.A, function () {
 
 Use the color sensor helpers to inspect raw channels or compare the detected color directly.
 
-```blocks
-basic.forever(function () {
-    let detected = pksdriver.readColor()
-    if (pksdriver.checkReadColor(pksdriver.PKSDriverColor_t.Red)) {
-        basic.showString("R")
-    } else {
-        basic.clearScreen()
-    }
-    basic.pause(100)
-})
-```
+![Use the Color Sensor blocks](image/use-the-color-sensor.png)
 
 ```typescript
 basic.forever(function () {
@@ -202,18 +151,7 @@ basic.forever(function () {
 
 Create the DS1302 instance once, then use the helper blocks exposed by this package.
 
-```blocks
-let rtc = pksdriver.create(DigitalPin.P13, DigitalPin.P14, DigitalPin.P15)
-pksdriver.DateTime(2026, 5, 11, 2, 8, 30, 0)
-
-basic.forever(function () {
-    let hour = pksdriver.getHour()
-    let minute = pksdriver.getMinute()
-    let second = pksdriver.getSecond()
-    serial.writeLine("time=" + hour + ":" + minute + ":" + second)
-    basic.pause(1000)
-})
-```
+![Create and Read the RTC blocks](image/create-and-read-the-rtc.png)
 
 ```typescript
 let rtc = pksdriver.create(DigitalPin.P13, DigitalPin.P14, DigitalPin.P15)
@@ -233,9 +171,7 @@ basic.forever(function () {
 
 ## Notes
 
-- The block IDs in this extension are explicitly namespaced to avoid collisions with other packages.
 - Some APIs wrap functionality provided by dependencies such as `DS1302`, `AHT20`, `SEN-MPU6050`, and `pxt-DHT11_DHT22`.
-- For block-first users, these TypeScript examples correspond directly to the blocks exposed in the `PKS Drivers` category.
 
 ## License
 
@@ -244,9 +180,3 @@ MIT
 ## Supported targets
 
 - for PXT/microbit
-
-The metadata below is needed for package search.
-
-```package
-gamePad=github:peanut-king-solution/pks-pxt-shield-v2
-```
