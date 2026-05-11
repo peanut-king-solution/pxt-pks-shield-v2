@@ -174,9 +174,13 @@ basic.forever(function () {
 - Some APIs wrap functionality provided by dependencies such as `DS1302`, `AHT20`, `SEN-MPU6050`, and `pxt-DHT11_DHT22`.
 
 ## License
+This project is licensed under the **MIT License**.
 
-MIT
+This software incorporates portions of several third-party libraries. In accordance with the MIT License, the original copyright notices and permissions for these dependencies are acknowledged:
+- **AHT20**: [koudayao27/AHT20](https://github.com/alankrantas/pxt-dht11_dht22)
+- **pxt-DHT11_DHT22**: [alankrantas/pxt-dht11_dht22](https://github.com/koudayao27/AHT20)
+- **SEN-MPU6050**: [joy-it/sen-mpu6050](https://github.com/joy-it/sen-mpu6050)
+- **DS1302**: [makecode-extensions/ds1302](https://github.com/makecode-extensions/ds1302)
 
 ## Supported targets
-
 - for PXT/microbit
