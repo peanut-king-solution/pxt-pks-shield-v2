@@ -826,7 +826,7 @@ namespace pksdriver {
     //% group="Acceleration"
     //% weight=99
     export function gyroscope(axis: axisXYZ, sensitivity: gyroSen) {
-        SENMPU6050.gyroscope(axis, sensitivity)
+        return SENMPU6050.gyroscope(axis, sensitivity)
     }
 
     /**
