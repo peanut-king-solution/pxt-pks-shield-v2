@@ -399,25 +399,101 @@ namespace pksdriver {
         return temp;
     }
 
-    /**
-     * Reads humidity and temperature from the AHT20 sensor.
-     * @param aht20 The AHT20 sensor instance
-     * @returns humidity and temperature 
-     */
-    function read(aht20: AHT20.AHT20Sensor): { Humidity: number, Temperature: number } {
-        if (!aht20.GetState().Calibrated) {
-            aht20.Initialization();
-            if (!aht20.GetState().Calibrated) return null;
+
+    interface Aht20Reading {
+        humidity: number
+        temperature: number
+    }
+
+    class Aht20Sensor {
+        private address: number;
+
+        constructor(address: number = 0x38) {
+            this.address = address;
         }
 
-        aht20.TriggerMeasurement();
+        initialize(): Aht20Sensor {
+            const buf = pins.createBuffer(3);
+            buf[0] = 0xbe;
+            buf[1] = 0x08;
+            buf[2] = 0x00;
+            pins.i2cWriteBuffer(this.address, buf, false);
+            basic.pause(10);
+
+            return this;
+        }
+
+        triggerMeasurement(): Aht20Sensor {
+            const buf = pins.createBuffer(3);
+            buf[0] = 0xac;
+            buf[1] = 0x33;
+            buf[2] = 0x00;
+            pins.i2cWriteBuffer(this.address, buf, false);
+            basic.pause(80);
+
+            return this;
+        }
+
+        getState(): { busy: boolean, calibrated: boolean } {
+            const buf = pins.i2cReadBuffer(this.address, 1, false);
+            const busy = buf[0] & 0x80 ? true : false;
+            const calibrated = buf[0] & 0x08 ? true : false;
+
+            return { busy: busy, calibrated: calibrated };
+        }
+
+        read(): Aht20Reading | undefined {
+            const buf = pins.i2cReadBuffer(this.address, 7, false);
+
+            const crc8 = Aht20Sensor.calcCrc8(buf, 0, 6);
+            if (buf[6] != crc8) return undefined;
+
+            const humidity = ((buf[1] << 12) + (buf[2] << 4) + (buf[3] >> 4)) * 100 / 1048576;
+            const temperature = (((buf[3] & 0x0f) << 16) + (buf[4] << 8) + buf[5]) * 200 / 1048576 - 50;
+
+            return { humidity: humidity, temperature: temperature };
+        }
+
+        private static calcCrc8(buf: Buffer, offset: number, size: number): number {
+            let crc8 = 0xff;
+            for (let i = 0; i < size; ++i) {
+                crc8 ^= buf[offset + i];
+                for (let j = 0; j < 8; ++j) {
+                    if (crc8 & 0x80) {
+                        crc8 <<= 1;
+                        crc8 ^= 0x31;
+                    }
+                    else {
+                        crc8 <<= 1;
+                    }
+                    crc8 &= 0xff;
+                }
+            }
+
+            return crc8;
+        }
+    }
+
+
+    /**
+     * Reads humidity and temperature from the AHT20 sensor.
+     * @param sensor The AHT20 sensor instance
+     * @returns humidity and temperature 
+     */
+    function readAht20(sensor: Aht20Sensor): Aht20Reading | undefined {
+        if (!sensor.getState().calibrated) {
+            sensor.initialize();
+            if (!sensor.getState().calibrated) return undefined;
+        }
+
+        sensor.triggerMeasurement();
         for (let i = 0; ; ++i) {
-            if (!aht20.GetState().Busy) break;
-            if (i >= 500) return null;
+            if (!sensor.getState().busy) break;
+            if (i >= 500) return undefined;
             basic.pause(10);
         }
 
-        return aht20.Read();
+        return sensor.read();
     }
 
     /**
@@ -428,11 +504,11 @@ namespace pksdriver {
     //% block="read temperature(°C))"
     //% weight=3
     export function aht20ReadTemperatureC(): number {
-        const aht20 = new AHT20.AHT20Sensor();
-        const val = read(aht20);
-        if (val == null) return null;
+        const sensor = new Aht20Sensor();
+        const val = readAht20(sensor);
+        if (!val) return NaN;
 
-        return val.Temperature;
+        return val.temperature;
     }
 
     /**
@@ -443,11 +519,11 @@ namespace pksdriver {
     //% block="read temperature(°F))"
     //% weight=2
     export function aht20ReadTemperatureF(): number {
-        const aht20 = new AHT20.AHT20Sensor();
-        const val = read(aht20);
-        if (val == null) return null;
+        const sensor = new Aht20Sensor();
+        const val = readAht20(sensor);
+        if (!val) return NaN;
 
-        return val.Temperature * 9 / 5 + 32;
+        return val.temperature * 9 / 5 + 32;
     }
 
     /**
@@ -458,11 +534,11 @@ namespace pksdriver {
     //% group="Temperature and Humidity (AHT20)" 
     //% weight=1
     export function aht20ReadHumidity(): number {
-        const aht20 = new AHT20.AHT20Sensor();
-        const val = read(aht20);
-        if (val == null) return null;
+        const sensor = new Aht20Sensor();
+        const val = readAht20(sensor);
+        if (!val) return NaN;
 
-        return val.Humidity;
+        return val.humidity;
     }
 
     let _temperature: number = -999.0
@@ -1130,7 +1206,9 @@ namespace pksdriver {
             return PKSDriverColor_t.Blue
         } else if (temp1[PKSDriverHSL.H] >= 210 && temp1[PKSDriverHSL.H] < 330) {
             return PKSDriverColor_t.Purple
-        } return null
+        }
+
+        return -1
 
     }
 
