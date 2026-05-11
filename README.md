@@ -21,7 +21,7 @@ It includes APIs for:
 - I2C channel switching for the different shield configurations
 
 ```package
-pksdriver=github:peanut-king-solution/pks-pxt-shield-v2
+pksdriver=github:peanut-king-solution/pxt-pks-shield-v2
 ```
 
 ## Example: Drive Two Motors
