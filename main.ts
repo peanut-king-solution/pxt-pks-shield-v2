@@ -821,11 +821,12 @@ namespace pksdriver {
       * Get gyroscope values
       * @param axis which axis to read 
       * @param sensitivity gyroscope sensitivity setting (rad/s)
+      * @return gyroscope value in rad/s
       */
     //% block="gyroscope value of %axisXYZ axis with %gyroSen sensitivity (Unit: rad/s)" subcategory="Edu Kit"
     //% group="Acceleration"
     //% weight=99
-    export function gyroscope(axis: axisXYZ, sensitivity: gyroSen) {
+    export function gyroscope(axis: axisXYZ, sensitivity: gyroSen): number {
         return SENMPU6050.gyroscope(axis, sensitivity)
     }
 
