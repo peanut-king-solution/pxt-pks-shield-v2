@@ -28,7 +28,7 @@ pksdriver=github:peanut-king-solution/pxt-pks-shield-v2
 
 Use `motorRun` to drive each motor independently, then stop everything with `motorStopAll`.
 
-![Drive Two Motors blocks](image/drive-two-motors.png)
+![Drive Two Motors blocks](image/pxt-pks-shield-v2-example_1.png)
 
 ```typescript
 basic.forever(function () {
@@ -52,7 +52,7 @@ basic.forever(function () {
 
 Use `servo` to move a connected servo to a target angle.
 
-![Position a Servo blocks](image/position-a-servo.png)
+![Position a Servo blocks](image/pxt-pks-shield-v2-example_2.png)
 
 ```typescript
 input.onButtonPressed(Button.A, function () {
@@ -75,7 +75,7 @@ input.onButtonPressed(Button.AB, function () {
 
 Initialize the MPU6050 once, then read gyroscope and acceleration values inside a loop.
 
-![Read the MPU6050 blocks](image/read-the-mpu6050.png)
+![Read the MPU6050 blocks](image/pxt-pks-shield-v2-example_3.png)
 
 ```typescript
 pksdriver.initMPU6050()
@@ -96,7 +96,7 @@ basic.forever(function () {
 
 The shield supports both AHT20 and DHT sensors. Use the API that matches the sensor you connected.
 
-![Read Temperature and Humidity AHT20 blocks](image/read-temperature-and-humidity-aht20.png)
+![Read Temperature and Humidity AHT20 blocks](image/pxt-pks-shield-v2-example_4.png)
 
 ```typescript
 basic.forever(function () {
@@ -109,7 +109,7 @@ basic.forever(function () {
 })
 ```
 
-![Read Temperature and Humidity DHT blocks](image/read-temperature-and-humidity-dht.png)
+![Read Temperature and Humidity DHT blocks](image/pxt-pks-shield-v2-example_5.png)
 
 ```typescript
 input.onButtonPressed(Button.A, function () {
@@ -129,7 +129,7 @@ input.onButtonPressed(Button.A, function () {
 
 Use the color sensor helpers to inspect raw channels or compare the detected color directly.
 
-![Use the Color Sensor blocks](image/use-the-color-sensor.png)
+![Use the Color Sensor blocks](image/pxt-pks-shield-v2-example_6.png)
 
 ```typescript
 basic.forever(function () {
@@ -151,7 +151,7 @@ basic.forever(function () {
 
 Create the DS1302 instance once, then use the helper blocks exposed by this package.
 
-![Create and Read the RTC blocks](image/create-and-read-the-rtc.png)
+![Create and Read the RTC blocks](image/pxt-pks-shield-v2-example_7.png)
 
 ```typescript
 let rtc = pksdriver.create(DigitalPin.P13, DigitalPin.P14, DigitalPin.P15)
