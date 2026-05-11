@@ -44,9 +44,9 @@ namespace pksdriver {
      * the motor rotation direction
      */
     export enum PKSDriverDir {
-        //% blockId="CW" block="CW"
+        //% blockId="pksdriver_CW" block="CW"
         CW = 1,
-        //% blockId="CCW" block="CCW"
+        //% blockId="pksdriver_CCW" block="CCW"
         CCW = -1
     }
 
@@ -130,7 +130,7 @@ namespace pksdriver {
      * @param idnex S1~S8.
      * @param degree 0°~180°.
     */
-    //% blockId=motor_servo block="servo|%index|degree|%degree" subcategory="Edu Kit"
+    //% blockId=pksdriver_motor_servo block="servo|%index|degree|%degree" subcategory="Edu Kit"
     //% group="Servo"
     //% weight=100
     //% degree.min=0 degree.max=180
@@ -151,7 +151,7 @@ namespace pksdriver {
      * @param idnex S1~S8.
      * @param degree 0°~180°.
      */ 
-    //% blockId=smart_servo block="smart servo|%index|degree|%degree" subcategory="Smart Living"
+    //% blockId=pksdriver_smart_servo block="smart servo|%index|degree|%degree" subcategory="Smart Living"
     //% group="Servo"
     //% weight=99
     //% degree.min=0 degree.max=180
@@ -164,7 +164,7 @@ namespace pksdriver {
      * set servo off
      * @param idnex S1~S8.
     */
-    //% blockId=motor_servoOff block="servo off|%index" subcategory="Edu Kit"
+    //% blockId=pksdriver_motor_servoOff block="servo off|%index" subcategory="Edu Kit"
     //% group="Servos"
     //% weight=99
     //% index.fieldEditor="gridpicker" index.fieldOptions.columns=4
@@ -179,7 +179,7 @@ namespace pksdriver {
      * set servo on
      * @param index S1~S8.
     */
-    //% blockId=motor_servoOn block="servo on|%index" subcategory="Edu Kit"
+    //% blockId=pksdriver_motor_servoOn block="servo on|%index" subcategory="Edu Kit"
     //% group="Servos"
     //% weight=98
     //% index.fieldEditor="gridpicker" index.fieldOptions.columns=4
@@ -197,7 +197,7 @@ namespace pksdriver {
      * @param speed speed(0~255).
     */
     //% weight=130
-    //% blockId=motor_MotorRun block="motor|%index|dir|%dir|speed|%speed" subcategory="Edu Kit"
+    //% blockId=pksdriver_motor_MotorRun block="motor|%index|dir|%dir|speed|%speed" subcategory="Edu Kit"
     //% speed.min=0 speed.max=255
     //% index.fieldEditor="gridpicker" index.fieldOptions.columns=2
     //% direction.fieldEditor="gridpicker" direction.fieldOptions.columns=2
@@ -234,7 +234,7 @@ namespace pksdriver {
      * @param speed speed(0~255).
      */
     //% weight=130
-    //% blockId=maze_motor_MotorRun block="motor|%index|dir|%dir|speed|%speed" subcategory="Maze Car"
+    //% blockId=pksdriver_maze_motor_MotorRun block="motor|%index|dir|%dir|speed|%speed" subcategory="Maze Car"
     //% speed.min=0 speed.max=255
     //% index.fieldEditor="gridpicker" index.fieldOptions.columns=2
     //% direction.fieldEditor="gridpicker" direction.fieldOptions.columns=2
@@ -249,7 +249,7 @@ namespace pksdriver {
      * @param index M1~M4
     */
     //% weight=129
-    //% blockId=motor_motorStop block="motor stop|%index" subcategory="Edu Kit"
+    //% blockId=pksdriver_motor_motorStop block="motor stop|%index" subcategory="Edu Kit"
     //% group="Motors"
     //% index.fieldEditor="gridpicker" index.fieldOptions.columns=2
     export function motorStop(index: PKSDriverMotors) {
@@ -268,7 +268,7 @@ namespace pksdriver {
      * Stop all motors
     */
     //% weight=128
-    //% blockId=motor_motorStopAll block="motor stop all" subcategory="Edu Kit"
+    //% blockId=pksdriver_motor_motorStopAll block="motor stop all" subcategory="Edu Kit"
     //% group="Motors"
     export function motorStopAll(): void {
         for (let idx = 1; idx <= 4; idx++) {
@@ -280,7 +280,7 @@ namespace pksdriver {
     * Stop all motors
     */
     //% weight=128
-    //% blockId=maze_motor_motorStopAll block="motor stop all" subcategory="Maze Car"
+    //% blockId=pksdriver_maze_motor_motorStopAll block="motor stop all" subcategory="Maze Car"
     //% group="Motors"
     export function mazeMotorStopAll(): void {
         motorStopAll();
@@ -291,7 +291,7 @@ namespace pksdriver {
      * @param index M1~M4.
      */
     //% weight=90
-    //% blockId=light_lighton block="light on|%index" subcategory="Smart Living"
+    //% blockId=pksdriver_light_lighton block="light on|%index" subcategory="Smart Living"
     //% group="Grow Lights"
     export function lightOn(index: PKSDriverMotors): void {
         motorRun(index, 1, 255);
@@ -302,7 +302,7 @@ namespace pksdriver {
      * @param index M1~M4. 
      */
     //% weight=90
-    //% blockId=fan_fanon block="fan on|%index" subcategory="Smart Living"
+    //% blockId=pksdriver_fan_fanon block="fan on|%index" subcategory="Smart Living"
     //% group="Fan"
     export function fanOn(index: PKSDriverMotors): void {
         lightOn(index);
@@ -313,7 +313,7 @@ namespace pksdriver {
      * @param index M1~M4.
      */
     //% weight=90
-    //% blockId=light_lightoff block="light off|%index" subcategory="Smart Living"
+    //% blockId=pksdriver_light_lightoff block="light off|%index" subcategory="Smart Living"
     //% group="Grow Lights"
     export function lightOff(index: PKSDriverMotors) {
         motorStop(index);
@@ -325,7 +325,7 @@ namespace pksdriver {
      * @param index M1~M4.
      */
     //% weight=90
-    //% blockId=fan_fanoff block="fan off|%index" subcategory="Smart Living"
+    //% blockId=pksdriver_fan_fanoff block="fan off|%index" subcategory="Smart Living"
     //% group="Fan"
     export function fanOff(index: PKSDriverMotors) {
         lightOff(index);
@@ -378,7 +378,7 @@ namespace pksdriver {
      * @param compound_eye_data The type of data to read
      * @returns sensor value, -1 if there is error
      */
-    //% blockId=compoundEye block="compound eye $compound_eye_data"  subcategory="Soccer Robot"
+    //% blockId=pksdriver_compoundEye block="compound eye $compound_eye_data"  subcategory="Soccer Robot"
     //% group="Compound Eye"
     //% weight=50
     export function compoundEyeRead(compound_eye_data: PKSDriverCompoundEyeData): number {
@@ -548,7 +548,7 @@ namespace pksdriver {
      * get Year
      * @return year
      */
-    //% blockId="DS1302_get_year" block="%ds|get year" subcategory="Smart Living"
+    //% blockId="pksdriver_DS1302_get_year" block="%ds|get year" subcategory="Smart Living"
     //% weight=80 blockGap=8
     //% parts="DS1302"
     //% group="Date and Time"
@@ -560,7 +560,7 @@ namespace pksdriver {
      * set year
      * @param dat is the Year will be set, eg: 2018
      */
-    //% blockId="DS1302_set_year" block="%ds|set year %dat" subcategory="Smart Living"
+    //% blockId="pksdriver_DS1302_set_year" block="%ds|set year %dat" subcategory="Smart Living"
     //% weight=81 blockGap=8
     //% group="Date and Time"
     //% parts="DS1302"
@@ -572,7 +572,7 @@ namespace pksdriver {
      * get Month
      * @returns month
      */
-    //% blockId="DS1302_get_month" block="%ds|get month" subcategory="Smart Living"
+    //% blockId="pksdriver_DS1302_get_month" block="%ds|get month" subcategory="Smart Living"
     //% weight=78 blockGap=8
     //% group="Date and Time"
     //% parts="DS1302"
@@ -584,7 +584,7 @@ namespace pksdriver {
      * set month
      * @param dat is Month will be set.  eg: 2
      */
-    //% blockId="DS1302_set_month" block="%ds|set month %dat" subcategory="Smart Living"
+    //% blockId="pksdriver_DS1302_set_month" block="%ds|set month %dat" subcategory="Smart Living"
     //% weight=79 blockGap=8
     //% group="Date and Time"
     //% parts="DS1302"
@@ -597,7 +597,7 @@ namespace pksdriver {
      * get Day
      * @returns day
      */
-    //% blockId="DS1302_get_day" block="%ds|get day" subcategory="Smart Living"
+    //% blockId="pksdriver_DS1302_get_day" block="%ds|get day" subcategory="Smart Living"
     //% weight=76 blockGap=8
     //% group="Date and Time"
     //% parts="DS1302"
@@ -609,7 +609,7 @@ namespace pksdriver {
      * set day
      * @param dat is the Day will be set, eg: 15
      */
-    //% blockId="DS1302_set_day" block="%ds|set day %dat" subcategory="Smart Living"
+    //% blockId="pksdriver_DS1302_set_day" block="%ds|set day %dat" subcategory="Smart Living"
     //% weight=77 blockGap=8
     //% parts="DS1302"
     //% group="Date and Time"
@@ -622,7 +622,7 @@ namespace pksdriver {
      * get Week Day
      * @returns weekday
      */
-    //% blockId="DS1302_get_weekday" block="%ds|get weekday" subcategory="Smart Living"
+    //% blockId="pksdriver_DS1302_get_weekday" block="%ds|get weekday" subcategory="Smart Living"
     //% weight=74 blockGap=8
     //% parts="DS1302"
     //% group="Date and Time"
@@ -634,7 +634,7 @@ namespace pksdriver {
      * set weekday
      * @param dat is the Week Day will be set, eg: 4
      */
-    //% blockId="DS1302_set_weekday" block="%ds|set weekday %dat" subcategory="Smart Living"
+    //% blockId="pksdriver_DS1302_set_weekday" block="%ds|set weekday %dat" subcategory="Smart Living"
     //% weight=75 blockGap=8
     //% parts="DS1302"
     //% dat.min=1 dat.max=7
@@ -646,7 +646,7 @@ namespace pksdriver {
     /**
      * get Hour
      */
-    //% blockId="DS1302_get_hour" block="%ds|get hour" subcategory="Smart Living"
+    //% blockId="pksdriver_DS1302_get_hour" block="%ds|get hour" subcategory="Smart Living"
     //% weight=72 blockGap=8
     //% parts="DS1302"
     //% group="Date and Time"
@@ -658,7 +658,7 @@ namespace pksdriver {
      * set hour
      * @param dat is the Hour will be set, eg: 0
      */
-    //% blockId="DS1302_set_hour" block="%ds|set hour %dat" subcategory="Smart Living"
+    //% blockId="pksdriver_DS1302_set_hour" block="%ds|set hour %dat" subcategory="Smart Living"
     //% weight=73 blockGap=8
     //% parts="DS1302"
     //% dat.min=0 dat.max=23
@@ -671,7 +671,7 @@ namespace pksdriver {
      * get Minute
      * @returns minute
      */
-    //% blockId="DS1302_get_minute" block="%ds|get minute" subcategory="Smart Living"
+    //% blockId="pksdriver_DS1302_get_minute" block="%ds|get minute" subcategory="Smart Living"
     //% weight=70 blockGap=8
     //% parts="DS1302"
     //% group="Date and Time"
@@ -683,7 +683,7 @@ namespace pksdriver {
      * set minute
      * @param dat is the Minute will be set, eg: 0
      */
-    //% blockId="DS1302_set_minute" block="%ds|set minute %dat" subcategory="Smart Living"
+    //% blockId="pksdriver_DS1302_set_minute" block="%ds|set minute %dat" subcategory="Smart Living"
     //% weight=71 blockGap=8
     //% parts="DS1302"
     //% dat.min=0 dat.max=59
@@ -696,7 +696,7 @@ namespace pksdriver {
      * get Second
      * @returns second
      */
-    //% blockId="DS1302_get_second" block="%ds|get second" subcategory="Smart Living"
+    //% blockId="pksdriver_DS1302_get_second" block="%ds|get second" subcategory="Smart Living"
     //% weight=67 blockGap=8
     //% parts="DS1302"
     //% group="Date and Time"
@@ -708,7 +708,7 @@ namespace pksdriver {
      * set second
      * @param dat is the Second will be set, eg: 0
      */
-    //% blockId="DS1302_set_second" block="%ds|set second %dat" subcategory="Smart Living"
+    //% blockId="pksdriver_DS1302_set_second" block="%ds|set second %dat" subcategory="Smart Living"
     //% weight=68 blockGap=8
     //% parts="DS1302"
     //% dat.min=0 dat.max=59
@@ -727,7 +727,7 @@ namespace pksdriver {
      * @param minute is the Minute will be set, eg: 0
      * @param second is the Second will be set, eg: 0
      */
-    //% blockId="DS1302_set_DateTime" block="%ds|set date and time: year %year|month %month|day %day|weekday %weekday|hour %hour|minute %minute|second %second" subcategory="Smart Living"
+    //% blockId="pksdriver_DS1302_set_DateTime" block="%ds|set date and time: year %year|month %month|day %day|weekday %weekday|hour %hour|minute %minute|second %second" subcategory="Smart Living"
     //% weight=50 blockGap=8
     //% parts="DS1302"
     //% year.min=2000 year.max=2100
@@ -745,7 +745,7 @@ namespace pksdriver {
     /**
      * start ds1302 RTC (go on)
      */
-    //% blockId="DS1302_start" block="%ds|start RTC" subcategory="Smart Living"
+    //% blockId="pksdriver_DS1302_start" block="%ds|start RTC" subcategory="Smart Living"
     //% weight=41 blockGap=8
     //% parts="DS1302"
     //% group="Date and Time"
@@ -756,7 +756,7 @@ namespace pksdriver {
     /**
      * pause ds1302 RTC
      */
-    //% blockId="DS1302_pause" block="%ds|pause RTC" subcategory="Smart Living"
+    //% blockId="pksdriver_DS1302_pause" block="%ds|pause RTC" subcategory="Smart Living"
     //% weight=40 blockGap=8
     //% parts="DS1302"
     //% group="Date and Time"
@@ -769,7 +769,7 @@ namespace pksdriver {
      * @param reg RAM register address
      * @returns value read from RAM
      */
-    //% blockId="DS1302_read_ram" block="%ds|read ram %reg" subcategory="Smart Living"
+    //% blockId="pksdriver_DS1302_read_ram" block="%ds|read ram %reg" subcategory="Smart Living"
     //% weight=43 blockGap=8
     //% parts="DS1302"
     //% reg.min=0 reg.max=30
@@ -783,7 +783,7 @@ namespace pksdriver {
      * @param reg RAM register address
      * @param dat data to write
      */
-    //% blockId="DS1302_write_ram" block="%ds|write ram %reg|with %dat" subcategory="Smart Living"
+    //% blockId="pksdriver_DS1302_write_ram" block="%ds|write ram %reg|with %dat" subcategory="Smart Living"
     //% weight=42 blockGap=8
     //% parts="DS1302"
     //% reg.min=0 reg.max=30
@@ -799,7 +799,7 @@ namespace pksdriver {
      * @param cs the CS pin for DS1302, eg: DigitalPin.P15
      */
     //% weight=95 blockGap=8
-    //% blockId="DS1302_create" block="CLK %clk|DIO %dio|CS %cs" subcategory="Smart Living"
+    //% blockId="pksdriver_DS1302_create" block="CLK %clk|DIO %dio|CS %cs" subcategory="Smart Living"
     export function create(clk: DigitalPin, dio: DigitalPin, cs: DigitalPin): DS1302.DS1302RTC {
         return DS1302.create(clk, dio, cs);
     }
@@ -1021,7 +1021,7 @@ namespace pksdriver {
     * @param hslchoose H, S, or L
     * @returns the selected value
     */
-    //% blockId=readhsl block="readHSL $hslchoose" subcategory="Edu Kit"
+    //% blockId=pksdriver_readhsl block="readHSL $hslchoose" subcategory="Edu Kit"
     //% group="Colors"
     //% weight=80
     export function readhsl(hslchoose: PKSDriverHSL): number {
@@ -1038,7 +1038,7 @@ namespace pksdriver {
     * @param rgbchoose R, G or B
     * @returns the selected value
     */
-    //% blockId=readrgb block="readRGB $rgbchoose" subcategory="Edu Kit"
+    //% blockId=pksdriver_readrgb block="readRGB $rgbchoose" subcategory="Edu Kit"
     //% group="Colors"
     //% weight=60
     export function readrgb(rgbchoose: PKSDriverRGB): number {
@@ -1055,7 +1055,7 @@ namespace pksdriver {
     * @param choose C, R, G, or B
     * @returns the selected value
     */
-    //% blockId=readrgbc block="readRGBC $choose" subcategory="Edu Kit"
+    //% blockId=pksdriver_readrgbc block="readRGBC $choose" subcategory="Edu Kit"
     //% group="Colors"
     //% weight=70
     export function readrgbc(choose: PKSDriverRGBC): number {
@@ -1072,7 +1072,7 @@ namespace pksdriver {
     * color read function
     * @returns the detected color (Black, White, Gray, Red, Green, Blue, Yellow, Cyan, Purple)
     */
-    //% blockId=readcolor block="readColor" subcategory="Edu Kit"
+    //% blockId=pksdriver_readcolor block="readColor" subcategory="Edu Kit"
     //% group="Colors"
     //% weight=70
     export function readColor(): PKSDriverColor_t {
@@ -1085,7 +1085,7 @@ namespace pksdriver {
     * @param color The color to check against
     * @returns true if colors matches 
     */
-    //% blockId=checkReadColor block="read color is %color_t" subcategory="Edu Kit"
+    //% blockId=pksdriver_checkReadColor block="read color is %color_t" subcategory="Edu Kit"
     //% group="Colors"
     //% weight=70
     export function checkReadColor(color: PKSDriverColor_t): boolean {
@@ -1097,7 +1097,7 @@ namespace pksdriver {
     *  @param color The color to check against
     *  @returns true if colors matches
     */
-    //% blockId=checkGetColor block="get color is %color_t" subcategory="Edu Kit"
+    //% blockId=pksdriver_checkGetColor block="get color is %color_t" subcategory="Edu Kit"
     //% group="Colors"
     //% weight=70
     export function checkGetColor(color: PKSDriverColor_t): boolean {
@@ -1108,7 +1108,7 @@ namespace pksdriver {
     * function transfer hsl value to color 
     * @returns color enum value
     */
-    //% blockId=getcolor block="getColor" subcategory="Edu Kit"
+    //% blockId=pksdriver_getcolor block="getColor" subcategory="Edu Kit"
     //% group="Colors"
     //% weight=70
     export function getColor(): number {
@@ -1150,7 +1150,7 @@ namespace pksdriver {
      * @param Buttoncheck B1 - B3
      * @returns true if button is pressed  
      */
-    //% blockId=getbutton block="get button $Buttoncheck" subcategory="Edu Kit"
+    //% blockId=pksdriver_getbutton block="get button $Buttoncheck" subcategory="Edu Kit"
     //% group="Button"
     //% weight=70
     export function checkButton(Buttoncheck: PKSDriverButton): boolean {
@@ -1252,7 +1252,7 @@ namespace pksdriver {
      * Switch I2C multiplexer channel (Edu Kit)
      * @param channelselected C1~C8 
      */
-    //% blockId=switch_channel_edu block="switch i2cchannel %channelselected" subcategory="Edu Kit"
+    //% blockId=pksdriver_switch_channel_edu block="switch i2cchannel %channelselected" subcategory="Edu Kit"
     //% group="I2C multiplexer"
     //% weight=70
     export function switchI2CChannelEdu(channelselected: PKSDriverI2cchannel): void {
@@ -1263,7 +1263,7 @@ namespace pksdriver {
      * Switch I2C multiplexer channel (Maze Car)
      * @param channelselected C1~C8
      */
-    //% blockId=switch_channel_maze block="switch i2cchannel %channelselected" subcategory="Maze Car"
+    //% blockId=pksdriver_switch_channel_maze block="switch i2cchannel %channelselected" subcategory="Maze Car"
     //% group="I2C multiplexer"
     //% weight=70
     export function switchI2CChannelMaze(channelselected: PKSDriverI2cchannel): void {
@@ -1274,7 +1274,7 @@ namespace pksdriver {
      * Switch I2C multiplexer channel (Soccer Robot)
      * @param channelselected C1~C8
      */
-    //% blockId=switch_channel_soccer block="switch i2cchannel %channelselected" subcategory="Soccer Robot"
+    //% blockId=pksdriver_switch_channel_soccer block="switch i2cchannel %channelselected" subcategory="Soccer Robot"
     //% group="I2C multiplexer"
     //% weight=70
     export function switchI2CChannelSoccer(channelselected: PKSDriverI2cchannel): void {
@@ -1285,7 +1285,7 @@ namespace pksdriver {
      * Switch I2C multiplexer channel (Smart Living)
      * @param channelselected C1~C8
      */
-    //% blockId=switch_channel_smart block="switch i2cchannel %channelselected" subcategory="Smart Living"
+    //% blockId=pksdriver_switch_channel_smart block="switch i2cchannel %channelselected" subcategory="Smart Living"
     //% group="I2C multiplexer"
     //% weight=70
     export function switchI2CChannelSmart(channelselected: PKSDriverI2cchannel): void {
