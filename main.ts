@@ -1377,9 +1377,9 @@ namespace pksdriver {
          */
         export enum i2cSpeed {
             //% block="standard mode (100kbps)"
-            Standard = 100,
+            Standard = 100000,
             //% block="fast mode (400kbps)"
-            Fast = 400
+            Fast = 400000
         }
 
         //% block="set I2C speed to %speed Hz"
