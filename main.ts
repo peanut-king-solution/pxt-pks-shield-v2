@@ -1371,4 +1371,26 @@ namespace pksdriver {
         switchI2CMultiplexer(channelselected);
     }
 
+    namespace custom_i2c {
+        /**
+         * define i2c speed for custom i2c blocks
+         */
+        export enum i2cSpeed {
+            //% block="standard mode (100kbps)"
+            Standard = 100,
+            //% block="fast mode (400kbps)"
+            Fast = 400
+        }
+
+        //% block="set I2C speed to %speed Hz"
+        //% shim=customI2C::setI2CSpeed
+        export function setI2CSpeed(speed: i2cSpeed): void {
+            return;
+        }
+        
+    }
+
+    export const seti2cSpeed = custom_i2c.setI2CSpeed;
+        
+
 }
