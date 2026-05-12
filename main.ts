@@ -135,7 +135,7 @@ namespace pksdriver {
     //% weight=100
     //% degree.min=0 degree.max=180
     //% index.fieldEditor="gridpicker" index.fieldOptions.columns=4
-    export function servo(index: PKSDriverServos, degree: number): void {
+    export function pks_servo(index: PKSDriverServos, degree: number): void {
         if (!initialized) {
             initPCA9685()
         }
@@ -157,7 +157,7 @@ namespace pksdriver {
     //% degree.min=0 degree.max=180
     //% index.fieldEditor="gridpicker" index.fieldOptions.columns=4
     export function smartServo(index: PKSDriverServos, degree: number): void {
-        servo(index, degree)
+        pks_servo(index, degree)
     }
 
     /**
