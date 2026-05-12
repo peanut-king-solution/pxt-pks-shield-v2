@@ -112,7 +112,7 @@ namespace pksdriver {
      * @param on On time
      * @param off Off time
      */
-    function setPwm(channel: number, on: number, off: number): void {
+    export function setPwm(channel: number, on: number, off: number): void {
         if (channel < 0 || channel > 15)
             return;
 
@@ -135,7 +135,7 @@ namespace pksdriver {
     //% weight=100
     //% degree.min=0 degree.max=180
     //% index.fieldEditor="gridpicker" index.fieldOptions.columns=4
-    export function pks_servo(index: PKSDriverServos, degree: number): void {
+    export function servo(index: PKSDriverServos, degree: number): void {
         if (!initialized) {
             initPCA9685()
         }
@@ -157,7 +157,7 @@ namespace pksdriver {
     //% degree.min=0 degree.max=180
     //% index.fieldEditor="gridpicker" index.fieldOptions.columns=4
     export function smartServo(index: PKSDriverServos, degree: number): void {
-        pks_servo(index, degree)
+        servo(index, degree)
     }
 
     /**
