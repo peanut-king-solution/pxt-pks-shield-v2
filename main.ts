@@ -79,7 +79,7 @@ namespace pksdriver {
      * @param reg Register address
      * @param value Value to write 
      */
-    function i2cWrite(addr: number, reg: number, value: number) {
+    export function i2cWrite(addr: number, reg: number, value: number) {
         let buf = pins.createBuffer(2)
         buf[0] = reg
         buf[1] = value
@@ -90,7 +90,7 @@ namespace pksdriver {
      * Set PWM frequency for PCA9685
      * @param freq Frequency in Hz (default 50)
      */
-    function setFreq(freq: number): void {
+    export function setFreq(freq: number): void {
         // Constrain the frequency
         let prescaleval = 25000000;
         prescaleval /= 4096;
@@ -879,9 +879,6 @@ namespace pksdriver {
     export function create(clk: DigitalPin, dio: DigitalPin, cs: DigitalPin): DS1302.DS1302RTC {
         return DS1302.create(clk, dio, cs);
     }
-
-
-
 
     /**
      * Initialize MPU6050
