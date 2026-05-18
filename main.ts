@@ -65,7 +65,6 @@ namespace pksdriver {
      * Read data from I2C device
      * @param addr I2C device address  
      * @param reg Register address
-     * @returns data read from device
      */
     function i2cRead(addr: number, reg: number) {
         pins.i2cWriteNumber(addr, reg, NumberFormat.UInt8BE);
