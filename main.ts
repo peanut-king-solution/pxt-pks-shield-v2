@@ -126,7 +126,7 @@ namespace pksdriver {
 
     /**
      * Steering gear control function 
-     * @param idnex S1~S8.
+     * @param index S1~S8.
      * @param degree 0°~180°.
     */
     //% blockId=pksdriver_motor_servo block="servo|%index|degree|%degree" subcategory="Edu Kit"
@@ -147,7 +147,7 @@ namespace pksdriver {
 
     /**
      * Steering gear control function 
-     * @param idnex S1~S8.
+     * @param index S1~S8.
      * @param degree 0°~180°.
      */ 
     //% blockId=pksdriver_smart_servo block="smart servo|%index|degree|%degree" subcategory="Smart Living"
