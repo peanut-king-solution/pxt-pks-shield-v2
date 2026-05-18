@@ -162,7 +162,7 @@ namespace pksdriver {
 
     /**
      * set servo off
-     * @param idnex S1~S8.
+     * @param index S1~S8.
     */
     //% blockId=pksdriver_motor_servoOff block="servo off|%index" subcategory="Edu Kit"
     //% group="Servos"
@@ -360,23 +360,23 @@ namespace pksdriver {
         Ir_11,
         //% block="eye 12"
         Ir_12,
-        //% block="max eye value"
+        //% block="eye max eye value"
         //% weight=99
         MaxEyeValue,
-        //% block="max eye"
+        //% block="eye max eye number"
         //% weight=100
         MaxEye,
-        //% block="angle"
+        //% block="eye angle"
         //% weight=98
         Angle,
-        //% block="mode"
+        //% block="eye mode"
         Mode
     }
 
     /**
      * Reads data from the compound eye sensor.
+     * gets -1 if there is error
      * @param compound_eye_data The type of data to read
-     * @returns sensor value, -1 if there is error
      */
     //% blockId=pksdriver_compoundEye block="compound $compound_eye_data"  subcategory="Soccer Robot"
     //% group="Compound Eye"
@@ -478,7 +478,6 @@ namespace pksdriver {
     /**
      * Reads humidity and temperature from the AHT20 sensor.
      * @param sensor The AHT20 sensor instance
-     * @returns humidity and temperature 
      */
     function readAht20(sensor: Aht20Sensor): Aht20Reading | undefined {
         if (!sensor.getState().calibrated) {
@@ -498,7 +497,6 @@ namespace pksdriver {
 
     /**
      * Read temperature in Celsius from AHT20 sensor
-     * @returns temperature in °C
      */
     //% group="Temperature and Humidity (AHT20)"  subcategory="Smart Living"
     //% block="read temperature (°C)"
@@ -513,10 +511,9 @@ namespace pksdriver {
 
     /**
      * Read temperature in Fahrenheit from AHT20 sensor
-     * @returns temperature in °F
      */
     //% group="Temperature and Humidity (AHT20)" subcategory="Smart Living"
-    //% block="read temperature(°F))"
+    //% block="read temperature (°F)"
     //% weight=2
     export function aht20ReadTemperatureF(): number {
         const sensor = new Aht20Sensor();
@@ -528,7 +525,6 @@ namespace pksdriver {
 
     /**
      * Read humidity from AHT20 sensor
-     * @returns humidity percentage
      */
     //% block="read humidity" subcategory="Smart Living"
     //% group="Temperature and Humidity (AHT20)" 
@@ -570,7 +566,6 @@ namespace pksdriver {
     /**
     * Read humidity/temperature data from lastest query of DHT11/DHT22
     * @param data Data type (humidity or temperature)
-    * @returns the requested data value
     */
     //% weight=99
     //% block="read $data" subcategory="Smart Living"
@@ -592,7 +587,6 @@ namespace pksdriver {
 
     /**
     * Determind if last query is successful (checksum ok)
-    * @returns true if successful
     */
     //% block="last query successful?" subcategory="Smart Living"
     //% weight=97
@@ -603,7 +597,6 @@ namespace pksdriver {
 
     /**
     * Determind if sensor responded successfully (not disconnected, etc) in last query
-    * @returns true if successful
     */
     //% block="last query sensor responding?" subcategory="Smart Living"
     //% weight=96
@@ -622,7 +615,6 @@ namespace pksdriver {
 
     /**
      * get Year
-     * @return year
      */
     //% blockId="pksdriver_DS1302_get_year" block="%ds|get year" subcategory="Smart Living"
     //% weight=80 blockGap=8
@@ -646,7 +638,6 @@ namespace pksdriver {
 
     /**
      * get Month
-     * @returns month
      */
     //% blockId="pksdriver_DS1302_get_month" block="%ds|get month" subcategory="Smart Living"
     //% weight=78 blockGap=8
@@ -671,7 +662,6 @@ namespace pksdriver {
 
     /**
      * get Day
-     * @returns day
      */
     //% blockId="pksdriver_DS1302_get_day" block="%ds|get day" subcategory="Smart Living"
     //% weight=76 blockGap=8
@@ -696,7 +686,6 @@ namespace pksdriver {
 
     /**
      * get Week Day
-     * @returns weekday
      */
     //% blockId="pksdriver_DS1302_get_weekday" block="%ds|get weekday" subcategory="Smart Living"
     //% weight=74 blockGap=8
@@ -745,7 +734,6 @@ namespace pksdriver {
 
     /**
      * get Minute
-     * @returns minute
      */
     //% blockId="pksdriver_DS1302_get_minute" block="%ds|get minute" subcategory="Smart Living"
     //% weight=70 blockGap=8
@@ -770,7 +758,6 @@ namespace pksdriver {
 
     /**
      * get Second
-     * @returns second
      */
     //% blockId="pksdriver_DS1302_get_second" block="%ds|get second" subcategory="Smart Living"
     //% weight=67 blockGap=8
@@ -843,7 +830,6 @@ namespace pksdriver {
     /**
      * read RAM
      * @param reg RAM register address
-     * @returns value read from RAM
      */
     //% blockId="pksdriver_DS1302_read_ram" block="%ds|read ram %reg" subcategory="Smart Living"
     //% weight=43 blockGap=8
@@ -894,10 +880,9 @@ namespace pksdriver {
     }
 
     /**
-      * Get gyroscope values
+      * Get gyroscope values in rad/s
       * @param axis which axis to read 
       * @param sensitivity gyroscope sensitivity setting (rad/s)
-      * @return gyroscope value in rad/s
       */
     //% block="gyroscope value of %axisXYZ axis with %gyroSen sensitivity (Unit: rad/s)" subcategory="Edu Kit"
     //% group="Acceleration"
@@ -907,10 +892,9 @@ namespace pksdriver {
     }
 
     /**
-     * Get rotation of the corresponding Axis
+     * Get rotation angle of the corresponding Axis
      * @param axis select axis
      * @param sensitivity accelerator sensitivity setting 
-     * @returns angle in Degree 
      */
     //% block="angle of %xaxisXYZ axis with %accelSen sensitivity (Unit: Degrees)" subcategory="Edu Kit"
     //% group="Acceleration"
@@ -923,7 +907,6 @@ namespace pksdriver {
      * Get acceleration of the corresponding Axis
      * @param axis select axis
      * @param sensitivity accelerator sensitivity setting
-     * @returns acceleration
      */
     //% block="acceleration of %xaxisXYZ axis with %accelSen sensitivity (Unit: g)" subcategory="Edu Kit"
     //% group="Acceleration"
@@ -934,7 +917,6 @@ namespace pksdriver {
 
     /**
      * Get temperature
-     * @returns temperature 
      */
     //% block="temperature (Unit: Celsius)" subcategory="Smart Living"
     //% group="Temperature and Humidity (DHT11/DHT22)" 
@@ -965,8 +947,7 @@ namespace pksdriver {
     };
 
     /**
-     * Get ultrasonic distance 
-     * @returns distance in mm
+     * Get ultrasonic distance in mm
      */
     //% block="dist (Unit: mm)" subcategory="Maze Car"
     //% group="Ultrasound"
@@ -983,7 +964,6 @@ namespace pksdriver {
 
     /**
     * Compass read function, to get the yaw angle
-    * @returns yaw angle in degrees
     */
     //% block="yaw (Unit: deg)" subcategory="Soccer Robot"
     //% group="Compass"
@@ -1001,7 +981,6 @@ namespace pksdriver {
     /**
      * Select a direction for maze car
      * @param wantedDirection FRONT, BACK, LEFT or RIGHT
-     * @returns the selected direction 
      */
     //% block="direction $wantedDirection" subcategory="Maze Car"
     //% group="Directions"
@@ -1111,7 +1090,6 @@ namespace pksdriver {
     /**
     * HSL read function
     * @param hslchoose H, S, or L
-    * @returns the selected value
     */
     //% blockId=pksdriver_readhsl block="read HSL $hslchoose" subcategory="Edu Kit"
     //% group="Colors"
@@ -1128,7 +1106,6 @@ namespace pksdriver {
     /**
     * RGB read function
     * @param rgbchoose R, G or B
-    * @returns the selected value
     */
     //% blockId=pksdriver_readrgb block="read RGB $rgbchoose" subcategory="Edu Kit"
     //% group="Colors"
@@ -1145,7 +1122,6 @@ namespace pksdriver {
     /**
     * RGBC read function
     * @param choose C, R, G, or B
-    * @returns the selected value
     */
     //% blockId=pksdriver_readrgbc block="read RGBC $choose" subcategory="Edu Kit"
     //% group="Colors"
@@ -1162,7 +1138,7 @@ namespace pksdriver {
 
     /**
     * color read function
-    * @returns the detected color (Black, White, Gray, Red, Green, Blue, Yellow, Cyan, Purple)
+    * return the detected color (Black, White, Gray, Red, Green, Blue, Yellow, Cyan, Purple)
     */
     //% blockId=pksdriver_readcolor block="read Color" subcategory="Edu Kit"
     //% group="Colors"
@@ -1175,7 +1151,6 @@ namespace pksdriver {
     /**
     * check read color
     * @param color The color to check against
-    * @returns true if colors matches 
     */
     //% blockId=pksdriver_checkReadColor block="read color is %color_t" subcategory="Edu Kit"
     //% group="Colors"
@@ -1185,9 +1160,8 @@ namespace pksdriver {
     }
 
     /**
-    * check get color
+    * check if colors matches
     *  @param color The color to check against
-    *  @returns true if colors matches
     */
     //% blockId=pksdriver_checkGetColor block="get color is %color_t" subcategory="Edu Kit"
     //% group="Colors"
@@ -1198,7 +1172,6 @@ namespace pksdriver {
 
     /**
     * function transfer hsl value to color 
-    * @returns color enum value
     */
     //% blockId=pksdriver_getcolor block="getColor" subcategory="Edu Kit"
     //% group="Colors"
@@ -1240,7 +1213,6 @@ namespace pksdriver {
     /**
      * Check if button is pressed  
      * @param Buttoncheck B1 - B3
-     * @returns true if button is pressed  
      */
     //% blockId=pksdriver_getbutton block="get button $Buttoncheck" subcategory="Edu Kit"
     //% group="Button"
