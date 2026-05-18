@@ -44,9 +44,9 @@ namespace pksdriver {
      * the motor rotation direction
      */
     export enum PKSDriverDir {
-        //% blockId="pksdriver_CW" block="CW"
+        //% blockId="pksdriver_CW" block="ClockWise"
         CW = 1,
-        //% blockId="pksdriver_CCW" block="CCW"
+        //% blockId="pksdriver_CCW" block="CounterClockWise"
         CCW = -1
     }
 
@@ -336,34 +336,34 @@ namespace pksdriver {
      * Compound eye sensor data types
      */
     export enum PKSDriverCompoundEyeData {
-        //% block="eye_1"
+        //% block="eye 1"
         Ir_1,
-        //% block="eye_2"
+        //% block="eye 2"
         Ir_2,
-        //% block="eye_3"
+        //% block="eye 3"
         Ir_3,
-        //% block="eye_4"
+        //% block="eye 4"
         Ir_4,
-        //% block="eye_5"
+        //% block="eye 5"
         Ir_5,
-        //% block="eye_6"
+        //% block="eye 6"
         Ir_6,
-        //% block="eye_7"
+        //% block="eye 7"
         Ir_7,
-        //% block="eye_8"
+        //% block="eye 8"
         Ir_8,
-        //% block="eye_9"
+        //% block="eye 9"
         Ir_9,
-        //% block="eye_10"
+        //% block="eye 10"
         Ir_10,
-        //% block="eye_11"
+        //% block="eye 11"
         Ir_11,
-        //% block="eye_12"
+        //% block="eye 12"
         Ir_12,
-        //% block="max_eye_value"
+        //% block="max eye value"
         //% weight=99
         MaxEyeValue,
-        //% block="max_eye"
+        //% block="max eye"
         //% weight=100
         MaxEye,
         //% block="angle"
@@ -378,7 +378,7 @@ namespace pksdriver {
      * @param compound_eye_data The type of data to read
      * @returns sensor value, -1 if there is error
      */
-    //% blockId=pksdriver_compoundEye block="compound eye $compound_eye_data"  subcategory="Soccer Robot"
+    //% blockId=pksdriver_compoundEye block="compound $compound_eye_data"  subcategory="Soccer Robot"
     //% group="Compound Eye"
     //% weight=50
     export function compoundEyeRead(compound_eye_data: PKSDriverCompoundEyeData): number {
@@ -501,7 +501,7 @@ namespace pksdriver {
      * @returns temperature in °C
      */
     //% group="Temperature and Humidity (AHT20)"  subcategory="Smart Living"
-    //% block="read temperature(°C))"
+    //% block="read temperature (°C)"
     //% weight=3
     export function aht20ReadTemperatureC(): number {
         const sensor = new Aht20Sensor();
@@ -968,7 +968,7 @@ namespace pksdriver {
      * Get ultrasonic distance 
      * @returns distance in mm
      */
-    //% block="get_dist (Unit: mm)" subcategory="Maze Car"
+    //% block="dist (Unit: mm)" subcategory="Maze Car"
     //% group="Ultrasound"
     //% weight=70
     export function ultraResult(): number {
@@ -985,7 +985,7 @@ namespace pksdriver {
     * Compass read function, to get the yaw angle
     * @returns yaw angle in degrees
     */
-    //% block="get_yaw (Unit: deg)" subcategory="Soccer Robot"
+    //% block="yaw (Unit: deg)" subcategory="Soccer Robot"
     //% group="Compass"
     //% weight=70
     export function compassGetYaw(): number {
@@ -1050,11 +1050,11 @@ namespace pksdriver {
      * Color Sensor
      */
     export enum PKSDriverRGB {
-        //% block="red_value"
+        //% block="red"
         R,
-        //% block="green_value"
+        //% block="green"
         G,
-        //% block="blue_value"
+        //% block="blue"
         B
     }
 
@@ -1062,13 +1062,13 @@ namespace pksdriver {
      * RGBC color sensor values
      */
     export enum PKSDriverRGBC {
-        //% block="clear_light_value"
+        //% block="clear"
         C,
-        //% block="red_light_value"
+        //% block="red"
         R,
-        //% block="green_light_value"
+        //% block="green"
         G,
-        //% block="blue_light_value"
+        //% block="blue"
         B
     }
 
@@ -1088,9 +1088,24 @@ namespace pksdriver {
      * Basic color types for color sensor
      */
     export enum PKSDriverColor_t {
-        Black = 0, White, Gray,
-        Red, Green, Blue,
-        Yellow, Cyan, Purple
+        //% block="black"
+        Black = 0,
+        //% block="white"
+        White,
+        //% block="gray"
+        Gray,
+        //% block="red"
+        Red,
+        //% block="green"
+        Green,
+        //% block="blue"
+        Blue,
+        //% block="yellow"
+        Yellow,
+        //% block="cyan"
+        Cyan,
+        //% block="purple"
+        Purple
     }
 
     /**
@@ -1098,7 +1113,7 @@ namespace pksdriver {
     * @param hslchoose H, S, or L
     * @returns the selected value
     */
-    //% blockId=pksdriver_readhsl block="readHSL $hslchoose" subcategory="Edu Kit"
+    //% blockId=pksdriver_readhsl block="read HSL $hslchoose" subcategory="Edu Kit"
     //% group="Colors"
     //% weight=80
     export function readhsl(hslchoose: PKSDriverHSL): number {
@@ -1115,7 +1130,7 @@ namespace pksdriver {
     * @param rgbchoose R, G or B
     * @returns the selected value
     */
-    //% blockId=pksdriver_readrgb block="readRGB $rgbchoose" subcategory="Edu Kit"
+    //% blockId=pksdriver_readrgb block="read RGB $rgbchoose" subcategory="Edu Kit"
     //% group="Colors"
     //% weight=60
     export function readrgb(rgbchoose: PKSDriverRGB): number {
@@ -1132,7 +1147,7 @@ namespace pksdriver {
     * @param choose C, R, G, or B
     * @returns the selected value
     */
-    //% blockId=pksdriver_readrgbc block="readRGBC $choose" subcategory="Edu Kit"
+    //% blockId=pksdriver_readrgbc block="read RGBC $choose" subcategory="Edu Kit"
     //% group="Colors"
     //% weight=70
     export function readrgbc(choose: PKSDriverRGBC): number {
@@ -1149,7 +1164,7 @@ namespace pksdriver {
     * color read function
     * @returns the detected color (Black, White, Gray, Red, Green, Blue, Yellow, Cyan, Purple)
     */
-    //% blockId=pksdriver_readcolor block="readColor" subcategory="Edu Kit"
+    //% blockId=pksdriver_readcolor block="read Color" subcategory="Edu Kit"
     //% group="Colors"
     //% weight=70
     export function readColor(): PKSDriverColor_t {
@@ -1207,9 +1222,7 @@ namespace pksdriver {
         } else if (temp1[PKSDriverHSL.H] >= 210 && temp1[PKSDriverHSL.H] < 330) {
             return PKSDriverColor_t.Purple
         }
-
         return -1
-
     }
 
     /**
@@ -1274,21 +1287,21 @@ namespace pksdriver {
      * I2C multiplexer channel options
      */
     export enum PKSDriverI2cchannel {
-        //% block="C1"
+        //% block="channel 1"
         C1,
-        //% block="C2"
+        //% block="channel 2"
         C2,
-        //% block="C3"
+        //% block="channel 3"
         C3,
-        //% block="C4"
+        //% block="channel 4"
         C4,
-        //% block="C5"
+        //% block="channel 5"
         C5,
-        //% block="C6"
+        //% block="channel 6"
         C6,
-        //% block="C7"
+        //% block="channel 7"
         C7,
-        //% block="C8"
+        //% block="channel 8"
         C8
     }
 
@@ -1331,7 +1344,7 @@ namespace pksdriver {
      * Switch I2C multiplexer channel (Edu Kit)
      * @param channelselected C1~C8 
      */
-    //% blockId=pksdriver_switch_channel_edu block="switch i2cchannel %channelselected" subcategory="Edu Kit"
+    //% blockId=pksdriver_switch_channel_edu block="switch i2c %channelselected" subcategory="Edu Kit"
     //% group="I2C multiplexer"
     //% weight=70
     export function switchI2CChannelEdu(channelselected: PKSDriverI2cchannel): void {
@@ -1342,7 +1355,7 @@ namespace pksdriver {
      * Switch I2C multiplexer channel (Maze Car)
      * @param channelselected C1~C8
      */
-    //% blockId=pksdriver_switch_channel_maze block="switch i2cchannel %channelselected" subcategory="Maze Car"
+    //% blockId=pksdriver_switch_channel_maze block="switch i2c %channelselected" subcategory="Maze Car"
     //% group="I2C multiplexer"
     //% weight=70
     export function switchI2CChannelMaze(channelselected: PKSDriverI2cchannel): void {
@@ -1353,7 +1366,7 @@ namespace pksdriver {
      * Switch I2C multiplexer channel (Soccer Robot)
      * @param channelselected C1~C8
      */
-    //% blockId=pksdriver_switch_channel_soccer block="switch i2cchannel %channelselected" subcategory="Soccer Robot"
+    //% blockId=pksdriver_switch_channel_soccer block="switch i2c %channelselected" subcategory="Soccer Robot"
     //% group="I2C multiplexer"
     //% weight=70
     export function switchI2CChannelSoccer(channelselected: PKSDriverI2cchannel): void {
@@ -1364,7 +1377,7 @@ namespace pksdriver {
      * Switch I2C multiplexer channel (Smart Living)
      * @param channelselected C1~C8
      */
-    //% blockId=pksdriver_switch_channel_smart block="switch i2cchannel %channelselected" subcategory="Smart Living"
+    //% blockId=pksdriver_switch_channel_smart block="switch i2c %channelselected" subcategory="Smart Living"
     //% group="I2C multiplexer"
     //% weight=70
     export function switchI2CChannelSmart(channelselected: PKSDriverI2cchannel): void {
