@@ -72,9 +72,7 @@ input.onButtonPressed(Button.AB, function () {
 
 Initialize the MPU6050 once, then read gyroscope and acceleration values inside a loop.
 
-![Read the MPU6050 blocks](image/pxt-pks-shield-v2-example_3.png)
-
-```typescript
+```blocks
 pksdriver.initMPU6050()
 
 basic.forever(function () {
@@ -93,9 +91,7 @@ basic.forever(function () {
 
 The shield supports both AHT20 and DHT sensors. Use the API that matches the sensor you connected.
 
-![Read Temperature and Humidity AHT20 blocks](image/pxt-pks-shield-v2-example_4.png)
-
-```typescript
+```blocks
 basic.forever(function () {
     // Read the AHT20 sensor over I2C.
     let tempC = pksdriver.aht20ReadTemperatureC()
@@ -106,9 +102,8 @@ basic.forever(function () {
 })
 ```
 
-![Read Temperature and Humidity DHT blocks](image/pxt-pks-shield-v2-example_5.png)
 
-```typescript
+```blocks
 input.onButtonPressed(Button.A, function () {
     // Query a DHT11 or DHT22 sensor connected to pin P1.
     pksdriver.queryData(DHTtype.DHT11, DigitalPin.P1, true, false, true)
@@ -126,9 +121,7 @@ input.onButtonPressed(Button.A, function () {
 
 Use the color sensor helpers to inspect raw channels or compare the detected color directly.
 
-![Use the Color Sensor blocks](image/pxt-pks-shield-v2-example_6.png)
-
-```typescript
+```blocks
 basic.forever(function () {
     // Read the detected color enum from the sensor.
     let detected = pksdriver.readColor()
@@ -148,9 +141,7 @@ basic.forever(function () {
 
 Create the DS1302 instance once, then use the helper blocks exposed by this package.
 
-![Create and Read the RTC blocks](image/pxt-pks-shield-v2-example_7.png)
-
-```typescript
+```blocks
 let rtc = pksdriver.create(DigitalPin.P13, DigitalPin.P14, DigitalPin.P15)
 
 // Set the RTC to 2026-05-11 Tuesday 08:30:00.
