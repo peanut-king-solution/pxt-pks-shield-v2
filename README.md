@@ -2,9 +2,9 @@
 
 Peanut King micro:bit Shield V2 extension for motors, servos, sensors, and I2C modules.
 
-## URL
+## Product URL
 
-Project URL: https://github.com/peanut-king-solution/pxt-pks-shield-v2
+Product URL: https://www.peanutkingsolution.com/en/product-page/peanut-king-micro-bit-shield-v2-%E6%93%B4%E5%B1%95%E6%9D%BF
 
 ## Summary
 
@@ -28,9 +28,8 @@ pksdriver=github:peanut-king-solution/pxt-pks-shield-v2
 
 Use `motorRun` to drive each motor independently, then stop everything with `motorStopAll`.
 
-![Drive Two Motors blocks](image/pxt-pks-shield-v2-example_1.png)
 
-```typescript
+```blocks
 basic.forever(function () {
     // Drive M1 and M2 forward at moderate speed.
     pksdriver.motorRun(pksdriver.PKSDriverMotors.M1, pksdriver.PKSDriverDir.CW, 80)
@@ -52,9 +51,7 @@ basic.forever(function () {
 
 Use `servo` to move a connected servo to a target angle.
 
-![Position a Servo blocks](image/pxt-pks-shield-v2-example_2.png)
-
-```typescript
+```blocks
 input.onButtonPressed(Button.A, function () {
     // Move servo S1 to 0 degrees.
     pksdriver.servo(pksdriver.PKSDriverServos.S1, 0)
