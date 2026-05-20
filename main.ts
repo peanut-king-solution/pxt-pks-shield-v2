@@ -399,61 +399,60 @@ namespace pksdriver {
     }
 
 
-    interface Aht20Reading {
-        humidity: number
-        temperature: number
-    }
+    //*************************************************************************************************//
+    //AHT20 related code, adapted from https://github.com/koudayao27/AHT20                             //
+    //*************************************************************************************************//
 
-    class Aht20Sensor {
-        private address: number;
-
-        constructor(address: number = 0x38) {
-            this.address = address;
+    export class AHT20Sensor {
+        public constructor(address: number = 0x38) {
+            this._Address = address;
         }
 
-        initialize(): Aht20Sensor {
+        public Initialization(): AHT20Sensor {
             const buf = pins.createBuffer(3);
             buf[0] = 0xbe;
             buf[1] = 0x08;
             buf[2] = 0x00;
-            pins.i2cWriteBuffer(this.address, buf, false);
+            pins.i2cWriteBuffer(this._Address, buf, false);
             basic.pause(10);
 
             return this;
         }
 
-        triggerMeasurement(): Aht20Sensor {
+        public TriggerMeasurement(): AHT20Sensor {
             const buf = pins.createBuffer(3);
             buf[0] = 0xac;
             buf[1] = 0x33;
             buf[2] = 0x00;
-            pins.i2cWriteBuffer(this.address, buf, false);
+            pins.i2cWriteBuffer(this._Address, buf, false);
             basic.pause(80);
 
             return this;
         }
 
-        getState(): { busy: boolean, calibrated: boolean } {
-            const buf = pins.i2cReadBuffer(this.address, 1, false);
+        public GetState(): { Busy: boolean, Calibrated: boolean } {
+            const buf = pins.i2cReadBuffer(this._Address, 1, false);
             const busy = buf[0] & 0x80 ? true : false;
             const calibrated = buf[0] & 0x08 ? true : false;
 
-            return { busy: busy, calibrated: calibrated };
+            return { Busy: busy, Calibrated: calibrated };
         }
 
-        read(): Aht20Reading | undefined {
-            const buf = pins.i2cReadBuffer(this.address, 7, false);
+        public Read(): { Humidity: number, Temperature: number } {
+            const buf = pins.i2cReadBuffer(this._Address, 7, false);
 
-            const crc8 = Aht20Sensor.calcCrc8(buf, 0, 6);
-            if (buf[6] != crc8) return undefined;
+            const crc8 = AHT20Sensor.CalcCRC8(buf, 0, 6);
+            if (buf[6] != crc8) return null;
 
             const humidity = ((buf[1] << 12) + (buf[2] << 4) + (buf[3] >> 4)) * 100 / 1048576;
             const temperature = (((buf[3] & 0x0f) << 16) + (buf[4] << 8) + buf[5]) * 200 / 1048576 - 50;
 
-            return { humidity: humidity, temperature: temperature };
+            return { Humidity: humidity, Temperature: temperature };
         }
 
-        private static calcCrc8(buf: Buffer, offset: number, size: number): number {
+        private _Address: number;
+
+        private static CalcCRC8(buf: Buffer, offset: number, size: number): number {
             let crc8 = 0xff;
             for (let i = 0; i < size; ++i) {
                 crc8 ^= buf[offset + i];
@@ -471,27 +470,49 @@ namespace pksdriver {
 
             return crc8;
         }
+
     }
 
-
+    /**
+     * AHT20 Custom Block
+     */
+    const crc_table = [
+        0x00, 0x31, 0x62, 0x53, 0xC4, 0xF5, 0xA6, 0x97, 0xB9, 0x88, 0xDB, 0xEA, 0x7D, 0x4C, 0x1F, 0x2E,
+        0x43, 0x72, 0x21, 0x10, 0x87, 0xB6, 0xE5, 0xD4, 0xFA, 0xCB, 0x98, 0xA9, 0x3E, 0x0F, 0x5C, 0x6D,
+        0x86, 0xB7, 0xE4, 0xD5, 0x42, 0x73, 0x20, 0x11, 0x3F, 0x0E, 0x5D, 0x6C, 0xFB, 0xCA, 0x99, 0xA8,
+        0xC5, 0xF4, 0xA7, 0x96, 0x01, 0x30, 0x63, 0x52, 0x7C, 0x4D, 0x1E, 0x2F, 0xB8, 0x89, 0xDA, 0xEB,
+        0x3D, 0x0C, 0x5F, 0x6E, 0xF9, 0xC8, 0x9B, 0xAA, 0x84, 0xB5, 0xE6, 0xD7, 0x40, 0x71, 0x22, 0x13,
+        0x7E, 0x4F, 0x1C, 0x2D, 0xBA, 0x8B, 0xD8, 0xE9, 0xC7, 0xF6, 0xA5, 0x94, 0x03, 0x32, 0x61, 0x50,
+        0xBB, 0x8A, 0xD9, 0xE8, 0x7F, 0x4E, 0x1D, 0x2C, 0x02, 0x33, 0x60, 0x51, 0xC6, 0xF7, 0xA4, 0x95,
+        0xF8, 0xC9, 0x9A, 0xAB, 0x3C, 0x0D, 0x5E, 0x6F, 0x41, 0x70, 0x23, 0x12, 0x85, 0xB4, 0xE7, 0xD6,
+        0x7A, 0x4B, 0x18, 0x29, 0xBE, 0x8F, 0xDC, 0xED, 0xC3, 0xF2, 0xA1, 0x90, 0x07, 0x36, 0x65, 0x54,
+        0x39, 0x08, 0x5B, 0x6A, 0xFD, 0xCC, 0x9F, 0xAE, 0x80, 0xB1, 0xE2, 0xD3, 0x44, 0x75, 0x26, 0x17,
+        0xFC, 0xCD, 0x9E, 0xAF, 0x38, 0x09, 0x5A, 0x6B, 0x45, 0x74, 0x27, 0x16, 0x81, 0xB0, 0xE3, 0xD2,
+        0xBF, 0x8E, 0xDD, 0xEC, 0x7B, 0x4A, 0x19, 0x28, 0x06, 0x37, 0x64, 0x55, 0xC2, 0xF3, 0xA0, 0x91,
+        0x47, 0x76, 0x25, 0x14, 0x83, 0xB2, 0xE1, 0xD0, 0xFE, 0xCF, 0x9C, 0xAD, 0x3A, 0x0B, 0x58, 0x69,
+        0x04, 0x35, 0x66, 0x57, 0xC0, 0xF1, 0xA2, 0x93, 0xBD, 0x8C, 0xDF, 0xEE, 0x79, 0x48, 0x1B, 0x2A,
+        0xC1, 0xF0, 0xA3, 0x92, 0x05, 0x34, 0x67, 0x56, 0x78, 0x49, 0x1A, 0x2B, 0xBC, 0x8D, 0xDE, 0xEF,
+        0x82, 0xB3, 0xE0, 0xD1, 0x46, 0x77, 0x24, 0x15, 0x3B, 0x0A, 0x59, 0x68, 0xFF, 0xCE, 0x9D, 0xAC
+    ];
+    
     /**
      * Reads humidity and temperature from the AHT20 sensor.
      * @param sensor The AHT20 sensor instance
      */
-    function readAht20(sensor: Aht20Sensor): Aht20Reading | undefined {
-        if (!sensor.getState().calibrated) {
-            sensor.initialize();
-            if (!sensor.getState().calibrated) return undefined;
+    function readAht20(aht20: AHT20Sensor): { Humidity: number, Temperature: number } {
+        if (!aht20.GetState().Calibrated) {
+            aht20.Initialization();
+            if (!aht20.GetState().Calibrated) return null;
         }
 
-        sensor.triggerMeasurement();
+        aht20.TriggerMeasurement();
         for (let i = 0; ; ++i) {
-            if (!sensor.getState().busy) break;
-            if (i >= 500) return undefined;
+            if (!aht20.GetState().Busy) break;
+            if (i >= 500) return null;
             basic.pause(10);
         }
 
-        return sensor.read();
+        return aht20.Read();
     }
 
     /**
@@ -501,11 +522,11 @@ namespace pksdriver {
     //% block="read temperature (°C)"
     //% weight=3
     export function aht20ReadTemperatureC(): number {
-        const sensor = new Aht20Sensor();
+        const sensor = new AHT20Sensor();
         const val = readAht20(sensor);
         if (!val) return NaN;
 
-        return val.temperature;
+        return val.Temperature;
     }
 
     /**
@@ -515,11 +536,11 @@ namespace pksdriver {
     //% block="read temperature (°F)"
     //% weight=2
     export function aht20ReadTemperatureF(): number {
-        const sensor = new Aht20Sensor();
+        const sensor = new AHT20Sensor();
         const val = readAht20(sensor);
         if (!val) return NaN;
 
-        return val.temperature * 9 / 5 + 32;
+        return val.Temperature * 9 / 5 + 32;
     }
 
     /**
@@ -529,15 +550,56 @@ namespace pksdriver {
     //% group="Temperature and Humidity (AHT20)" 
     //% weight=1
     export function aht20ReadHumidity(): number {
-        const sensor = new Aht20Sensor();
-        const val = readAht20(sensor);
-        if (!val) return NaN;
+        const aht20 = new AHT20Sensor();
+        const val = readAht20(aht20);
+        if (val == null) return null;
 
-        return val.humidity;
+        return val.Humidity;
     }
 
+    /**
+     * Read the absolute humidity
+     */
+    //% block="Read the absolute humidity (g/m³) || as fixed-point 8.8bit %fp88" subcategory="Smart Living"
+    //% weight=0
+    export function readAbsHumidity(fp88?: boolean): uint16 {
+        const aht20 = new AHT20Sensor();
+        const val = readAht20(aht20);
+        if (val == null) return null;
+        const T = val.Temperature;
+        const rh = val.Humidity;
+        const ret = 6.112 * Math.exp((17.67 * T) / (T + 243.5)) * rh * 2.1674 / (273.15 + T);
+        if (!fp88) {
+            return ret;
+        }
+        const byte0 = Math.floor(ret);
+        const byte1 = Math.floor(256 * (ret - byte0));
+        return byte0 << 8 | byte1 & 0xffff;
+    }
+
+    /**
+     * Caclulate crc8
+     */
+    //% block="Caclulate crc" subcategory="Smart Living"
+    //% weight=0 
+    export function crc8(n: number): uint8 {
+        const byte1 = n & 0xff;
+        const byte0 = (n >> 8) & 0xff;
+        let crc = 0xff ^ byte0;
+        crc = crc_table[crc];
+        crc = crc ^ byte1;
+        crc = crc_table[crc];
+        return crc;
+    }
+
+    //************************************************************************************************//
+    //AHT20 related code end                                                                          //
+    //************************************************************************************************//
+
+
+
     //*************************************************************************************************//
-    //DHT11/DHT22 related code, adapted from https://github.com/alankrantas/pxt-dht11_dht22          //
+    //DHT11/DHT22 related code, adapted from https://github.com/alankrantas/pxt-dht11_dht22            //
     //*************************************************************************************************//
     enum DHTtype {
         //% block="DHT11"
@@ -1310,6 +1372,8 @@ namespace pksdriver {
     //MPU6050 related code finished                                                                    //
     //*************************************************************************************************//
 
+
+
     /**
      * Compass I2C register addresses
      */
@@ -1451,7 +1515,7 @@ namespace pksdriver {
     /**
      * Basic color types for color sensor
      */
-    export enum PKSDriverColor_t {
+    export enum PKSDriverColorType {
         //% block="black"
         Black = 0,
         //% block="white"
@@ -1495,7 +1559,7 @@ namespace pksdriver {
     //% blockId=pksdriver_readrgb block="read RGB $rgbchoose" subcategory="Edu Kit"
     //% group="Colors"
     //% weight=60
-    export function readrgb(rgbchoose: PKSDriverRGB): number {
+    export function readRGB(rgbchoose: PKSDriverRGB): number {
         pins.i2cWriteNumber(PKSDriverColor.ADDR, PKSDriverColor.RGB, NumberFormat.UInt8BE, false);
         let rgb = pins.i2cReadBuffer(PKSDriverColor.ADDR, 3, false);
         let temp = [rgb.getNumber(NumberFormat.UInt8LE, 0),  //r
@@ -1511,7 +1575,7 @@ namespace pksdriver {
     //% blockId=pksdriver_readrgbc block="read RGBC $choose" subcategory="Edu Kit"
     //% group="Colors"
     //% weight=70
-    export function readrgbc(choose: PKSDriverRGBC): number {
+    export function readRGBC(choose: PKSDriverRGBC): number {
         pins.i2cWriteNumber(PKSDriverColor.ADDR, PKSDriverColor.RGBC, NumberFormat.UInt8BE, false);
         let rgbc = pins.i2cReadBuffer(PKSDriverColor.ADDR, 16, false);
         let temp = [rgbc.getNumber(NumberFormat.UInt32LE, 0),  //c                 
@@ -1525,10 +1589,10 @@ namespace pksdriver {
     * color read function
     * return the detected color (Black, White, Gray, Red, Green, Blue, Yellow, Cyan, Purple)
     */
-    //% blockId=pksdriver_readcolor block="read Color" subcategory="Edu Kit"
+    //% blockId=pksdriver_readcolor block="read color" subcategory="Edu Kit"
     //% group="Colors"
     //% weight=70
-    export function readColor(): PKSDriverColor_t {
+    export function readColor(): PKSDriverColorType {
         pins.i2cWriteNumber(PKSDriverColor.ADDR, PKSDriverColor.COLOR, NumberFormat.UInt8BE, false);
         return pins.i2cReadBuffer(PKSDriverColor.ADDR, 1, false).getNumber(NumberFormat.UInt8LE, 0);
     }
@@ -1537,10 +1601,10 @@ namespace pksdriver {
     * check read color
     * @param color The color to check against
     */
-    //% blockId=pksdriver_checkReadColor block="read color is %color_t" subcategory="Edu Kit"
+    //% blockId=pksdriver_checkReadColor block="is read color %color" subcategory="Edu Kit"
     //% group="Colors"
     //% weight=70
-    export function checkReadColor(color: PKSDriverColor_t): boolean {
+    export function checkReadColor(color: PKSDriverColorType): boolean {
         return readColor() == color
     }
 
@@ -1548,17 +1612,17 @@ namespace pksdriver {
     * check if colors matches
     *  @param color The color to check against
     */
-    //% blockId=pksdriver_checkGetColor block="get color is %color_t" subcategory="Edu Kit"
+    //% blockId=pksdriver_checkGetColor block="is color %color" subcategory="Edu Kit"
     //% group="Colors"
     //% weight=70
-    export function checkGetColor(color: PKSDriverColor_t): boolean {
+    export function checkGetColor(color: PKSDriverColorType): boolean {
         return getColor() == color
     }
 
     /**
     * function transfer hsl value to color 
     */
-    //% blockId=pksdriver_getcolor block="getColor" subcategory="Edu Kit"
+    //% blockId=pksdriver_getcolor block="get color" subcategory="Edu Kit"
     //% group="Colors"
     //% weight=70
     export function getColor(): number {
@@ -1568,17 +1632,17 @@ namespace pksdriver {
         hsl.getNumber(NumberFormat.UInt8LE, 2), //s
         hsl.getNumber(NumberFormat.UInt8LE, 3)] //l
         if (temp1[PKSDriverHSL.H] > 330 || temp1[PKSDriverHSL.H] < 30) {
-            return PKSDriverColor_t.Red
+            return PKSDriverColorType.Red
         } else if (temp1[pksdriver.PKSDriverHSL.H] >= 30 && temp1[PKSDriverHSL.H] < 90) {
-            return PKSDriverColor_t.Yellow
+            return PKSDriverColorType.Yellow
         } else if (temp1[PKSDriverHSL.H] >= 90 && temp1[PKSDriverHSL.H] < 150) {
-            return PKSDriverColor_t.Green
+            return PKSDriverColorType.Green
         } else if (temp1[PKSDriverHSL.H] >= 150 && temp1[PKSDriverHSL.H] < 210) {
-            return PKSDriverColor_t.Blue//cyan but i find many blue color will sense as cyan color
+            return PKSDriverColorType.Blue//cyan but i find many blue color will sense as cyan color
         } else if (temp1[PKSDriverHSL.H] >= 210 && temp1[PKSDriverHSL.H] < 270) {
-            return PKSDriverColor_t.Blue
+            return PKSDriverColorType.Blue
         } else if (temp1[PKSDriverHSL.H] >= 210 && temp1[PKSDriverHSL.H] < 330) {
-            return PKSDriverColor_t.Purple
+            return PKSDriverColorType.Purple
         }
         return -1
     }
@@ -1643,7 +1707,7 @@ namespace pksdriver {
     /**
      * I2C multiplexer channel options
      */
-    export enum PKSDriverI2cchannel {
+    export enum PKSDriverI2cChannel {
         //% block="channel 1"
         C1,
         //% block="channel 2"
@@ -1664,33 +1728,33 @@ namespace pksdriver {
 
     /**
     * switch I2C multiplexer channel 
-    * @param channelselected which channel to select on the I2C multiplexer 
+    * @param channelSelected which channel to select on the I2C multiplexer 
      */
-    function switchI2CMultiplexer(channelselected: PKSDriverI2cchannel): void {
+    function switchI2CMultiplexer(channelSelected: PKSDriverI2cChannel): void {
         let i2c_multiplexerAddress = 0x70;
         const buf = pins.createBuffer(1);
-        if (channelselected == PKSDriverI2cchannel.C1) {
+        if (channelSelected == PKSDriverI2cChannel.C1) {
             buf[0] = 0x08
         }
-        else if (channelselected == PKSDriverI2cchannel.C2) {
+        else if (channelSelected == PKSDriverI2cChannel.C2) {
             buf[0] = 0x04
         }
-        else if (channelselected == PKSDriverI2cchannel.C3) {
+        else if (channelSelected == PKSDriverI2cChannel.C3) {
             buf[0] = 0x02
         }
-        else if (channelselected == PKSDriverI2cchannel.C4) {
+        else if (channelSelected == PKSDriverI2cChannel.C4) {
             buf[0] = 0x01
         }
-        else if (channelselected == PKSDriverI2cchannel.C5) {
+        else if (channelSelected == PKSDriverI2cChannel.C5) {
             buf[0] = 0x10
         }
-        else if (channelselected == PKSDriverI2cchannel.C6) {
+        else if (channelSelected == PKSDriverI2cChannel.C6) {
             buf[0] = 0x20
         }
-        else if (channelselected == PKSDriverI2cchannel.C7) {
+        else if (channelSelected == PKSDriverI2cChannel.C7) {
             buf[0] = 0x40
         }
-        else if (channelselected == PKSDriverI2cchannel.C8) {
+        else if (channelSelected == PKSDriverI2cChannel.C8) {
             buf[0] = 0x80
         }
         pins.i2cWriteBuffer(i2c_multiplexerAddress, buf, false);
@@ -1699,46 +1763,46 @@ namespace pksdriver {
 
     /**
      * Switch I2C multiplexer channel (Edu Kit)
-     * @param channelselected C1~C8 
+     * @param channelSelected C1~C8 
      */
-    //% blockId=pksdriver_switch_channel_edu block="switch i2c %channelselected" subcategory="Edu Kit"
+    //% blockId=pksdriver_switch_channel_edu block="switch i2c %channelSelected" subcategory="Edu Kit"
     //% group="I2C multiplexer"
     //% weight=70
-    export function switchI2CChannelEdu(channelselected: PKSDriverI2cchannel): void {
-        switchI2CMultiplexer(channelselected);
+    export function switchI2CChannelEdu(channelSelected: PKSDriverI2cChannel): void {
+        switchI2CMultiplexer(channelSelected);
     }
 
     /**
      * Switch I2C multiplexer channel (Maze Car)
-     * @param channelselected C1~C8
+     * @param channelSelected C1~C8
      */
-    //% blockId=pksdriver_switch_channel_maze block="switch i2c %channelselected" subcategory="Maze Car"
+    //% blockId=pksdriver_switch_channel_maze block="switch i2c %channelSelected" subcategory="Maze Car"
     //% group="I2C multiplexer"
     //% weight=70
-    export function switchI2CChannelMaze(channelselected: PKSDriverI2cchannel): void {
-        switchI2CMultiplexer(channelselected);
+    export function switchI2CChannelMaze(channelSelected: PKSDriverI2cChannel): void {
+        switchI2CMultiplexer(channelSelected);
     }
 
     /**
      * Switch I2C multiplexer channel (Soccer Robot)
-     * @param channelselected C1~C8
+     * @param channelSelected C1~C8
      */
-    //% blockId=pksdriver_switch_channel_soccer block="switch i2c %channelselected" subcategory="Soccer Robot"
+    //% blockId=pksdriver_switch_channel_soccer block="switch i2c %channelSelected" subcategory="Soccer Robot"
     //% group="I2C multiplexer"
     //% weight=70
-    export function switchI2CChannelSoccer(channelselected: PKSDriverI2cchannel): void {
-        switchI2CMultiplexer(channelselected);
+    export function switchI2CChannelSoccer(channelSelected: PKSDriverI2cChannel): void {
+        switchI2CMultiplexer(channelSelected);
     }
 
     /**
      * Switch I2C multiplexer channel (Smart Living)
-     * @param channelselected C1~C8
+     * @param channelSelected C1~C8
      */
-    //% blockId=pksdriver_switch_channel_smart block="switch i2c %channelselected" subcategory="Smart Living"
+    //% blockId=pksdriver_switch_channel_smart block="switch i2c %channelSelected" subcategory="Smart Living"
     //% group="I2C multiplexer"
     //% weight=70
-    export function switchI2CChannelSmart(channelselected: PKSDriverI2cchannel): void {
-        switchI2CMultiplexer(channelselected);
+    export function switchI2CChannelSmart(channelSelected: PKSDriverI2cChannel): void {
+        switchI2CMultiplexer(channelSelected);
     }
 
 }

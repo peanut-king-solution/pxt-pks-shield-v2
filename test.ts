@@ -171,9 +171,9 @@ function test_readhsl() {
 }
 
 function test_readrgb() {
-    let r = pksdriver.readrgb(pksdriver.PKSDriverRGB.R)
-    let g = pksdriver.readrgb(pksdriver.PKSDriverRGB.G)
-    let b = pksdriver.readrgb(pksdriver.PKSDriverRGB.B)
+    let r = pksdriver.readRGB(pksdriver.PKSDriverRGB.R)
+    let g = pksdriver.readRGB(pksdriver.PKSDriverRGB.G)
+    let b = pksdriver.readRGB(pksdriver.PKSDriverRGB.B)
     basic.showNumber(r)
     basic.pause(300)
     basic.showNumber(g)
@@ -183,10 +183,10 @@ function test_readrgb() {
 }
 
 function test_readrgbc() {
-    let c = pksdriver.readrgbc(pksdriver.PKSDriverRGBC.C)
-    let r = pksdriver.readrgbc(pksdriver.PKSDriverRGBC.R)
-    let g = pksdriver.readrgbc(pksdriver.PKSDriverRGBC.G)
-    let b = pksdriver.readrgbc(pksdriver.PKSDriverRGBC.B)
+    let c = pksdriver.readRGBC(pksdriver.PKSDriverRGBC.C)
+    let r = pksdriver.readRGBC(pksdriver.PKSDriverRGBC.R)
+    let g = pksdriver.readRGBC(pksdriver.PKSDriverRGBC.G)
+    let b = pksdriver.readRGBC(pksdriver.PKSDriverRGBC.B)
     basic.showNumber(c)
     basic.pause(500)
     basic.clearScreen()
@@ -200,11 +200,11 @@ function test_readColor() {
 }
 
 function test_checkReadColor() {
-    let isRed = pksdriver.checkReadColor(pksdriver.PKSDriverColor_t.Red)
-    let isGreen = pksdriver.checkReadColor(pksdriver.PKSDriverColor_t.Green)
-    let isBlue = pksdriver.checkReadColor(pksdriver.PKSDriverColor_t.Blue)
-    let isWhite = pksdriver.checkReadColor(pksdriver.PKSDriverColor_t.White)
-    let isBlack = pksdriver.checkReadColor(pksdriver.PKSDriverColor_t.Black)
+    let isRed = pksdriver.checkReadColor(pksdriver.PKSDriverColorType.Red)
+    let isGreen = pksdriver.checkReadColor(pksdriver.PKSDriverColorType.Green)
+    let isBlue = pksdriver.checkReadColor(pksdriver.PKSDriverColorType.Blue)
+    let isWhite = pksdriver.checkReadColor(pksdriver.PKSDriverColorType.White)
+    let isBlack = pksdriver.checkReadColor(pksdriver.PKSDriverColorType.Black)
     if (isRed) basic.showString("R")
     if (isGreen) basic.showString("G")
     if (isBlue) basic.showString("B")
@@ -220,9 +220,9 @@ function test_getColor() {
 }
 
 function test_checkGetColor() {
-    let isRed = pksdriver.checkGetColor(pksdriver.PKSDriverColor_t.Red)
-    let isGreen = pksdriver.checkGetColor(pksdriver.PKSDriverColor_t.Green)
-    let isBlue = pksdriver.checkGetColor(pksdriver.PKSDriverColor_t.Blue)
+    let isRed = pksdriver.checkGetColor(pksdriver.PKSDriverColorType.Red)
+    let isGreen = pksdriver.checkGetColor(pksdriver.PKSDriverColorType.Green)
+    let isBlue = pksdriver.checkGetColor(pksdriver.PKSDriverColorType.Blue)
     if (isRed) basic.showString("R")
     if (isGreen) basic.showString("G")
     if (isBlue) basic.showString("B")
@@ -240,51 +240,51 @@ function test_checkButton() {
 
 // I2C multiplexer functions
 function test_switchI2CChannelEdu() {
-    pksdriver.switchI2CChannelEdu(pksdriver.PKSDriverI2cchannel.C1)
+    pksdriver.switchI2CChannelEdu(pksdriver.PKSDriverI2cChannel.C1)
     basic.pause(100)
-    pksdriver.switchI2CChannelEdu(pksdriver.PKSDriverI2cchannel.C2)
+    pksdriver.switchI2CChannelEdu(pksdriver.PKSDriverI2cChannel.C2)
     basic.pause(100)
-    pksdriver.switchI2CChannelEdu(pksdriver.PKSDriverI2cchannel.C3)
+    pksdriver.switchI2CChannelEdu(pksdriver.PKSDriverI2cChannel.C3)
     basic.pause(100)
-    pksdriver.switchI2CChannelEdu(pksdriver.PKSDriverI2cchannel.C4)
+    pksdriver.switchI2CChannelEdu(pksdriver.PKSDriverI2cChannel.C4)
     basic.pause(100)
-    pksdriver.switchI2CChannelEdu(pksdriver.PKSDriverI2cchannel.C5)
+    pksdriver.switchI2CChannelEdu(pksdriver.PKSDriverI2cChannel.C5)
     basic.pause(100)
-    pksdriver.switchI2CChannelEdu(pksdriver.PKSDriverI2cchannel.C6)
+    pksdriver.switchI2CChannelEdu(pksdriver.PKSDriverI2cChannel.C6)
     basic.pause(100)
-    pksdriver.switchI2CChannelEdu(pksdriver.PKSDriverI2cchannel.C7)
+    pksdriver.switchI2CChannelEdu(pksdriver.PKSDriverI2cChannel.C7)
     basic.pause(100)
-    pksdriver.switchI2CChannelEdu(pksdriver.PKSDriverI2cchannel.C8)
+    pksdriver.switchI2CChannelEdu(pksdriver.PKSDriverI2cChannel.C8)
 }
 
 function test_switchI2CChannelMaze() {
-    pksdriver.switchI2CChannelMaze(pksdriver.PKSDriverI2cchannel.C1)
+    pksdriver.switchI2CChannelMaze(pksdriver.PKSDriverI2cChannel.C1)
     basic.pause(100)
-    pksdriver.switchI2CChannelMaze(pksdriver.PKSDriverI2cchannel.C2)
+    pksdriver.switchI2CChannelMaze(pksdriver.PKSDriverI2cChannel.C2)
     basic.pause(100)
-    pksdriver.switchI2CChannelMaze(pksdriver.PKSDriverI2cchannel.C3)
+    pksdriver.switchI2CChannelMaze(pksdriver.PKSDriverI2cChannel.C3)
     basic.pause(100)
-    pksdriver.switchI2CChannelMaze(pksdriver.PKSDriverI2cchannel.C4)
+    pksdriver.switchI2CChannelMaze(pksdriver.PKSDriverI2cChannel.C4)
 }
 
 function test_switchI2CChannelSoccer() {
-    pksdriver.switchI2CChannelSoccer(pksdriver.PKSDriverI2cchannel.C1)
+    pksdriver.switchI2CChannelSoccer(pksdriver.PKSDriverI2cChannel.C1)
     basic.pause(100)
-    pksdriver.switchI2CChannelSoccer(pksdriver.PKSDriverI2cchannel.C2)
+    pksdriver.switchI2CChannelSoccer(pksdriver.PKSDriverI2cChannel.C2)
     basic.pause(100)
-    pksdriver.switchI2CChannelSoccer(pksdriver.PKSDriverI2cchannel.C3)
+    pksdriver.switchI2CChannelSoccer(pksdriver.PKSDriverI2cChannel.C3)
     basic.pause(100)
-    pksdriver.switchI2CChannelSoccer(pksdriver.PKSDriverI2cchannel.C4)
+    pksdriver.switchI2CChannelSoccer(pksdriver.PKSDriverI2cChannel.C4)
 }
 
 function test_switchI2CChannelSmart() {
-    pksdriver.switchI2CChannelSmart(pksdriver.PKSDriverI2cchannel.C1)
+    pksdriver.switchI2CChannelSmart(pksdriver.PKSDriverI2cChannel.C1)
     basic.pause(100)
-    pksdriver.switchI2CChannelSmart(pksdriver.PKSDriverI2cchannel.C2)
+    pksdriver.switchI2CChannelSmart(pksdriver.PKSDriverI2cChannel.C2)
     basic.pause(100)
-    pksdriver.switchI2CChannelSmart(pksdriver.PKSDriverI2cchannel.C3)
+    pksdriver.switchI2CChannelSmart(pksdriver.PKSDriverI2cChannel.C3)
     basic.pause(100)
-    pksdriver.switchI2CChannelSmart(pksdriver.PKSDriverI2cchannel.C4)
+    pksdriver.switchI2CChannelSmart(pksdriver.PKSDriverI2cChannel.C4)
 }
 
 // MPU6050 functions
