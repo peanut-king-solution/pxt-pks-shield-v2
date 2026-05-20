@@ -45,9 +45,9 @@ namespace pksdriver {
      */
     export enum PKSDriverDirection {
         //% blockId="pksdriver_CW" block="ClockWise"
-        CW = 1,
+        CLOCKWISE = 1,
         //% blockId="pksdriver_CCW" block="CounterClockWise"
-        CCW = -1
+        COUNTERCLOCKWISE = -1
     }
 
     let initialized = false
@@ -601,24 +601,24 @@ namespace pksdriver {
     //*************************************************************************************************//
     //DHT11/DHT22 related code, adapted from https://github.com/alankrantas/pxt-dht11_dht22            //
     //*************************************************************************************************//
-    enum DHTtype {
+    export enum DHTtype {
         //% block="DHT11"
         DHT11,
         //% block="DHT22"
         DHT22,
     }
 
-    enum dataType {
+    export enum dataType {
         //% block="humidity"
         humidity,
         //% block="temperature"
         temperature,
     }
 
-    enum tempType {
-        //% block="Celsius (*C)"
+    export enum tempType {
+        //% block="Celsius (°C)"
         celsius,
-        //% block="Fahrenheit (*F)"
+        //% block="Fahrenheit (°F)"
         fahrenheit,
     }
 
@@ -733,7 +733,7 @@ namespace pksdriver {
                 if (_readSuccessful) {
                     serial.writeLine("Checksum ok")
                     serial.writeLine("Humidity: " + _humidity + " %")
-                    serial.writeLine("Temperature: " + _temperature + (_temptype == tempType.celsius ? " *C" : " *F"))
+                    serial.writeLine("Temperature: " + _temperature + (_temptype == tempType.celsius ? " °C" : " °F"))
                 } else {
                     serial.writeLine("Checksum error")
                 }
@@ -839,7 +839,10 @@ namespace pksdriver {
         /**
          * write a byte to DS1302
          */
-        write_byte(dat: number) {
+        /**
+         * name
+         */
+        writeByte(dat: number) {
             for (let i = 0; i < 8; i++) {
                 pins.digitalWritePin(this.dio, (dat >> i) & 1);
                 pins.digitalWritePin(this.clk, 1);
@@ -850,7 +853,7 @@ namespace pksdriver {
         /**
          * read a byte from DS1302
          */
-        read_byte(): number {
+        readByte(): number {
             let d = 0;
             for (let i = 0; i < 8; i++) {
                 d = d | (pins.digitalReadPin(this.dio) << i);
@@ -866,8 +869,8 @@ namespace pksdriver {
         getReg(reg: number): number {
             let t = 0;
             pins.digitalWritePin(this.cs, 1);
-            this.write_byte(reg);
-            t = this.read_byte();
+            this.writeByte(reg);
+            t = this.readByte();
             pins.digitalWritePin(this.cs, 0);
             return t;
         }
@@ -877,15 +880,15 @@ namespace pksdriver {
          */
         setReg(reg: number, dat: number) {
             pins.digitalWritePin(this.cs, 1);
-            this.write_byte(reg);
-            this.write_byte(dat);
+            this.writeByte(reg);
+            this.writeByte(dat);
             pins.digitalWritePin(this.cs, 0);
         }
 
         /**
          * write reg with WP protect
          */
-        wr(reg: number, dat: number) {
+        writeReg(reg: number, dat: number) {
             this.setReg(DS1302_REG_WP, 0)
             this.setReg(reg, dat)
             this.setReg(DS1302_REG_WP, 0)
@@ -909,7 +912,7 @@ namespace pksdriver {
         //% weight=81 blockGap=8
         //% parts="DS1302"
         setYear(dat: number): void {
-            this.wr(DS1302_REG_YEAR, DecToHex(dat % 100))
+            this.writeReg(DS1302_REG_YEAR, DecToHex(dat % 100))
         }
 
         /**
@@ -931,7 +934,7 @@ namespace pksdriver {
         //% parts="DS1302"
         //% dat.min=1 dat.max=12
         setMonth(dat: number): void {
-            this.wr(DS1302_REG_MONTH, DecToHex(dat % 13))
+            this.writeReg(DS1302_REG_MONTH, DecToHex(dat % 13))
         }
 
         /**
@@ -953,7 +956,7 @@ namespace pksdriver {
         //% parts="DS1302"
         //% dat.min=1 dat.max=31
         setDay(dat: number): void {
-            this.wr(DS1302_REG_DAY, DecToHex(dat % 32))
+            this.writeReg(DS1302_REG_DAY, DecToHex(dat % 32))
         }
 
         /**
@@ -975,7 +978,7 @@ namespace pksdriver {
         //% parts="DS1302"
         //% dat.min=1 dat.max=7
         setWeekday(dat: number): void {
-            this.wr(DS1302_REG_WEEKDAY, DecToHex(dat % 8))
+            this.writeReg(DS1302_REG_WEEKDAY, DecToHex(dat % 8))
         }
 
         /**
@@ -997,7 +1000,7 @@ namespace pksdriver {
         //% parts="DS1302"
         //% dat.min=0 dat.max=23
         setHour(dat: number): void {
-            this.wr(DS1302_REG_HOUR, DecToHex(dat % 24))
+            this.writeReg(DS1302_REG_HOUR, DecToHex(dat % 24))
         }
 
         /**
@@ -1019,7 +1022,7 @@ namespace pksdriver {
         //% parts="DS1302"
         //% dat.min=0 dat.max=59
         setMinute(dat: number): void {
-            this.wr(DS1302_REG_MINUTE, DecToHex(dat % 60))
+            this.writeReg(DS1302_REG_MINUTE, DecToHex(dat % 60))
         }
 
         /**
@@ -1041,7 +1044,7 @@ namespace pksdriver {
         //% parts="DS1302"
         //% dat.min=0 dat.max=59
         setSecond(dat: number): void {
-            this.wr(DS1302_REG_SECOND, DecToHex(dat % 60))
+            this.writeReg(DS1302_REG_SECOND, DecToHex(dat % 60))
         }
 
         /**
@@ -1054,7 +1057,7 @@ namespace pksdriver {
          * @param minute is the Minute will be set, eg: 0
          * @param second is the Second will be set, eg: 0
          */
-        //% blockId="DS1302_set_DateTime" block="%ds|set Date and Time: Year %year|Month %month|Day %day|WeekDay %weekday|Hour %hour|Minute %minute|Second %second"
+        //% blockId="DS1302_set_dateTime" block="%ds|set Date and Time: Year %year|Month %month|Day %day|WeekDay %weekday|Hour %hour|Minute %minute|Second %second"
         //% weight=50 blockGap=8
         //% parts="DS1302"
         //% year.min=2000 year.max=2100
@@ -1064,7 +1067,7 @@ namespace pksdriver {
         //% hour.min=0 hour.max=23
         //% minute.min=0 minute.max=59
         //% second.min=0 second.max=59
-        DateTime(year: number, month: number, day: number, weekday: number, hour: number, minute: number, second: number): void {
+        dateTime(year: number, month: number, day: number, weekday: number, hour: number, minute: number, second: number): void {
             this.setYear(year);
             this.setMonth(month);
             this.setDay(day);
@@ -1080,7 +1083,7 @@ namespace pksdriver {
         //% blockId="DS1302_start" block="%ds|start RTC"
         //% weight=41 blockGap=8
         //% parts="DS1302"
-        start() {
+        start(): void {
             let t = this.getSecond()
             this.setSecond(t & 0x7f)
         }
@@ -1091,7 +1094,7 @@ namespace pksdriver {
         //% blockId="DS1302_pause" block="%ds|pause RTC"
         //% weight=40 blockGap=8
         //% parts="DS1302"
-        pause() {
+        pause(): void {
             let t = this.getSecond()
             this.setSecond(t | 0x80)
         }
@@ -1103,7 +1106,7 @@ namespace pksdriver {
         //% weight=43 blockGap=8
         //% parts="DS1302"
         //% reg.min=0 reg.max=30
-        readRam(reg: number): number {
+        public readRam(reg: number): number {
             return this.getReg(DS1302_REG_RAM + 1 + (reg % 31) * 2)
         }
 
@@ -1114,8 +1117,8 @@ namespace pksdriver {
         //% weight=42 blockGap=8
         //% parts="DS1302"
         //% reg.min=0 reg.max=30
-        writeRam(reg: number, dat: number) {
-            this.wr(DS1302_REG_RAM + (reg % 31) * 2, dat)
+        public writeRam(reg: number, dat: number): void {
+            this.writeReg(DS1302_REG_RAM + (reg % 31) * 2, dat)
         }
     }
 
@@ -1149,19 +1152,19 @@ namespace pksdriver {
     /**
      * Enumeration of Axis (X, Y & Z)
      */
-    enum axisXYZ {
-        //% block="X"
+    export enum AxisXYZ {
+        //% block="x"
         x,
-        //% block="Y"
+        //% block="y"
         y,
-        //% block="Z"
+        //% block="z"
         z
     }
 
     /**
      * Sensitivity of Accelerometer
      */
-    enum accelSen {
+    export enum AccelSen {
         //% block="2g"
         range_2_g,
         //% block="4g"
@@ -1175,7 +1178,7 @@ namespace pksdriver {
     /**
      * Sensitivity of Gyroscope
      */
-    enum gyroSen {
+    export enum GyroSen {
         //% block="250dps"
         range_250_dps,
         //% block="500dps"
@@ -1206,7 +1209,7 @@ namespace pksdriver {
     let xGyro = 0;
     let yGyro = 0;
     let zGyro = 0;
-    
+
     function MPUI2cRead(reg: number): number {
         pins.i2cWriteNumber(i2cAddress, reg, NumberFormat.UInt8BE);
         return pins.i2cReadNumber(i2cAddress, NumberFormat.UInt8BE);;
@@ -1233,19 +1236,19 @@ namespace pksdriver {
     function updateAcceleration(sensitivity: number) {
         // Set sensitivity of acceleration range, according to selection and datasheet value
         let accelRange = 0;
-        if(sensitivity == accelSen.range_2_g) {
+        if(sensitivity == AccelSen.range_2_g) {
             // +- 2g
             accelRange = 16384;
         }
-        else if(sensitivity == accelSen.range_4_g) {
+        else if(sensitivity == AccelSen.range_4_g) {
             // +- 4g
             accelRange = 8192;
         }
-        else if(sensitivity == accelSen.range_8_g) {
+        else if(sensitivity == AccelSen.range_8_g) {
             // +- 8g
             accelRange = 4096;
         }
-        else if(sensitivity == accelSen.range_16_g) {
+        else if(sensitivity == AccelSen.range_16_g) {
             // +- 16g
             accelRange = 2048;
         }
@@ -1255,22 +1258,22 @@ namespace pksdriver {
     }
 
     // Update gyroscope data via I2C
-    function updateGyroscope(sensitivity: gyroSen) {
+    function updateGyroscope(sensitivity: GyroSen) {
         // Set sensitivity of gyroscope range, according to selection and datasheet value
         let gyroRange = 0;
-        if(sensitivity == gyroSen.range_250_dps) {
+        if(sensitivity == GyroSen.range_250_dps) {
             // +- 250dps
             gyroRange = 131;
         }
-        else if(sensitivity == gyroSen.range_500_dps) {
+        else if(sensitivity == GyroSen.range_500_dps) {
             // +- 500dps
             gyroRange = 65.5;
         }
-        else if(sensitivity == gyroSen.range_1000_dps) {
+        else if(sensitivity == GyroSen.range_1000_dps) {
             // +- 1000dps
             gyroRange = 32.8;
         }
-        else if(sensitivity == gyroSen.range_2000_dps) {
+        else if(sensitivity == GyroSen.range_2000_dps) {
             // +- 2000dps
             gyroRange = 16.4;
         }
@@ -1292,18 +1295,18 @@ namespace pksdriver {
     }
 
     /**
-      * Get gyroscope values in rad/s of the corresponding Axis, with selected sensitivity
+      * Get gyroscope values in radian per second of the corresponding Axis, with selected sensitivity
       * @param axis select X, Y or Z axis
       * @param sensitivity select sensitivity of gyroscope (250, 500, 1000 or 2000 dps)
       */
-    //% block="Gyroscope value of %axisXYZ axis with %gyroSen sensitivity (Unit: rad/s)"
+    //% block="Gyroscope value of %AxisXYZ axis with %GyroSen sensitivity (Unit: rad/s)"
     //%weight=95
-    export function gyroscope(axis: axisXYZ, sensitivity: gyroSen) {
+    export function gyroscope(axis: AxisXYZ, sensitivity: GyroSen): number {
         updateGyroscope(sensitivity);
-        if(axis == axisXYZ.x) {
+        if(axis == AxisXYZ.x) {
             return xGyro;
         }
-        else if(axis == axisXYZ.y) {
+        else if(axis == AxisXYZ.y) {
             return yGyro;
         }
         else {
@@ -1316,19 +1319,19 @@ namespace pksdriver {
      * @param axis select X, Y or Z axis
      * @param sensitivity select sensitivity of accelerometer (2, 4, 8 or 16 g)
      */
-    //% block="Angle of %xaxisXYZ axis with %accelSen sensitivity (Unit: Degrees)"
+    //% block="Angle of %AxisXYZ axis with %AccelSen sensitivity (Unit: Degrees)"
     //% weight=90
-    export function axisRotation(axis: axisXYZ, sensitivity: accelSen): number {
+    export function axisRotation(axis: AxisXYZ, sensitivity: AccelSen): number {
         updateAcceleration(sensitivity);
 
         let radians;
-        if(axis == axisXYZ.x) {
+        if(axis == AxisXYZ.x) {
             radians = Math.atan2(yAccel, dist(xAccel,zAccel));
         }
-        else if(axis == axisXYZ.y) {
+        else if(axis == AxisXYZ.y) {
             radians = -Math.atan2(xAccel, dist(yAccel,zAccel));
         }
-        else if(axis == axisXYZ.z) {
+        else if(axis == AxisXYZ.z) {
             radians = Math.atan2(zAccel, dist(xAccel, yAccel));
         }
 
@@ -1343,15 +1346,15 @@ namespace pksdriver {
      * @param axis select X, Y or Z axis
      * @param sensitivity select sensitivity of accelerometer (2, 4, 8 or 16 g)
      */
-    //% block="Acceleration of %xaxisXYZ axis with %accelSen sensitivity (Unit: g)"
+    //% block="Acceleration of %AxisXYZ axis with %AccelSen sensitivity (Unit: g)"
     //% weight=85
-    export function axisAcceleration(axis: axisXYZ, sensitivity: accelSen): number {
+    export function axisAcceleration(axis: AxisXYZ, sensitivity: AccelSen): number {
         updateAcceleration(sensitivity);
         // Return acceleration of specific axis
-        if(axis == axisXYZ.x) {
+        if(axis == AxisXYZ.x) {
             return xAccel;
         }
-        else if(axis == axisXYZ.y) {
+        else if(axis == AxisXYZ.y) {
             return yAccel;
         }
         else {
@@ -1544,7 +1547,7 @@ namespace pksdriver {
     //% blockId=pksdriver_readhsl block="read HSL $hslchoose" subcategory="Edu Kit"
     //% group="Colors"
     //% weight=80
-    export function readhsl(hslchoose: PKSDriverHSL): number {
+    export function readHSL(hslchoose: PKSDriverHSL): number {
         pins.i2cWriteNumber(PKSDriverColor.ADDR, PKSDriverColor.HSL, NumberFormat.UInt8BE, false);
         let hsl = pins.i2cReadBuffer(PKSDriverColor.ADDR, 4, false);
         let temp = [hsl.getNumber(NumberFormat.UInt16LE, 0), //h
