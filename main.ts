@@ -692,7 +692,7 @@ namespace pksdriver {
     //% weight=99
     //% block="read $data" subcategory="Smart Living"
     //% group="Temperature and Humidity (DHT11/DHT22)" 
-    export function readData(data: dataType): number {
+    export function DHTReadData(data: dataType): number {
         return data == dataType.humidity ? _humidity : _temperature
     }
 
@@ -713,7 +713,7 @@ namespace pksdriver {
     //% block="last query successful?" subcategory="Smart Living"
     //% weight=97
     //% group="Temperature and Humidity (DHT11/DHT22)" 
-    export function readDataSuccessful(): boolean {
+    export function DHTReadDataSuccessful(): boolean {
         return _readSuccessful
     }
 
@@ -1144,15 +1144,14 @@ namespace pksdriver {
     let xGyro = 0;
     let yGyro = 0;
     let zGyro = 0;
-
-    function i2cRead(reg: number): number {
+    function MPUI2cRead(reg: number): number {
         pins.i2cWriteNumber(i2cAddress, reg, NumberFormat.UInt8BE);
         return pins.i2cReadNumber(i2cAddress, NumberFormat.UInt8BE);;
     }
 
-    function readData(reg: number) {
-        let h = i2cRead(reg);
-        let l = i2cRead(reg+1);
+    function MPUReadData(reg: number) {
+        let h = MPUI2cRead(reg);
+        let l = MPUI2cRead(reg+1);
         let value = (h << 8) + l;
 
         if (value >= 0x8000) {
@@ -1187,9 +1186,9 @@ namespace pksdriver {
             // +- 16g
             accelRange = 2048;
         }
-        xAccel = readData(xAccelAddr) / accelRange;
-        yAccel = readData(yAccelAddr) / accelRange;
-        zAccel = readData(zAccelAddr) / accelRange;
+        xAccel = MPUReadData(xAccelAddr) / accelRange;
+        yAccel = MPUReadData(yAccelAddr) / accelRange;
+        zAccel = MPUReadData(zAccelAddr) / accelRange;
     }
 
     // Update gyroscope data via I2C
@@ -1212,9 +1211,9 @@ namespace pksdriver {
             // +- 2000dps
             gyroRange = 16.4;
         }
-        xGyro = readData(xGyroAddr) / gyroRange;
-        yGyro = readData(yGyroAddr) / gyroRange;
-        zGyro = readData(zGyroAddr) / gyroRange;
+        xGyro = MPUReadData(xGyroAddr) / gyroRange;
+        yGyro = MPUReadData(yGyroAddr) / gyroRange;
+        zGyro = MPUReadData(zGyroAddr) / gyroRange;
     }
 
     /**
@@ -1303,7 +1302,7 @@ namespace pksdriver {
     //% block="Temperature (Unit: Celsius)"
     //% weight=80
     export function readTemperature(): number {
-        let rawTemp = readData(tempAddr);
+        let rawTemp = MPUReadData(tempAddr);
         return 36.53 + rawTemp / 340;
     }
 
