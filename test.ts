@@ -2,22 +2,22 @@
 
 // Motor functions
 function test_motorRun() {
-    pksdriver.motorRun(pksdriver.PKSDriverMotors.M1, pksdriver.PKSDriverDir.CW, 100)
+    pksdriver.motorRun(pksdriver.PKSDriverMotors.M1, pksdriver.PKSDriverDirection.CW, 100)
     basic.pause(500)
     pksdriver.motorStop(pksdriver.PKSDriverMotors.M1)
 }
 
 function test_motorRunAll() {
-    pksdriver.motorRun(pksdriver.PKSDriverMotors.M1, pksdriver.PKSDriverDir.CW, 80)
-    pksdriver.motorRun(pksdriver.PKSDriverMotors.M2, pksdriver.PKSDriverDir.CCW, 80)
-    pksdriver.motorRun(pksdriver.PKSDriverMotors.M3, pksdriver.PKSDriverDir.CW, 80)
-    pksdriver.motorRun(pksdriver.PKSDriverMotors.M4, pksdriver.PKSDriverDir.CCW, 80)
+    pksdriver.motorRun(pksdriver.PKSDriverMotors.M1, pksdriver.PKSDriverDirection.CW, 80)
+    pksdriver.motorRun(pksdriver.PKSDriverMotors.M2, pksdriver.PKSDriverDirection.CCW, 80)
+    pksdriver.motorRun(pksdriver.PKSDriverMotors.M3, pksdriver.PKSDriverDirection.CW, 80)
+    pksdriver.motorRun(pksdriver.PKSDriverMotors.M4, pksdriver.PKSDriverDirection.CCW, 80)
     basic.pause(1000)
     pksdriver.motorStopAll()
 }
 
 function test_motorStop() {
-    pksdriver.motorRun(pksdriver.PKSDriverMotors.M1, pksdriver.PKSDriverDir.CW, 100)
+    pksdriver.motorRun(pksdriver.PKSDriverMotors.M1, pksdriver.PKSDriverDirection.CW, 100)
     basic.pause(500)
     pksdriver.motorStop(pksdriver.PKSDriverMotors.M1)
 }
@@ -28,7 +28,7 @@ function test_motorStopAll() {
 
 // Maze motor functions
 function test_mazeMotorRun() {
-    pksdriver.mazeMotorRun(pksdriver.PKSDriverMotors.M1, pksdriver.PKSDriverDir.CW, 100)
+    pksdriver.mazeMotorRun(pksdriver.PKSDriverMotors.M1, pksdriver.PKSDriverDirection.CW, 100)
     basic.pause(500)
     pksdriver.mazeMotorStopAll()
 }
@@ -135,7 +135,7 @@ function test_chooseDirection() {
 
 // Ultra sensor function
 function test_ultraResult() {
-    let dist = pksdriver.ultraResult()
+    let dist = pksdriver.ultrasoundResult()
     basic.showNumber(dist)
     basic.pause(500)
     basic.clearScreen()
