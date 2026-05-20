@@ -1206,6 +1206,7 @@ namespace pksdriver {
     let xGyro = 0;
     let yGyro = 0;
     let zGyro = 0;
+    
     function MPUI2cRead(reg: number): number {
         pins.i2cWriteNumber(i2cAddress, reg, NumberFormat.UInt8BE);
         return pins.i2cReadNumber(i2cAddress, NumberFormat.UInt8BE);;
