@@ -341,7 +341,7 @@ function testReadTemperatureMPU6050() {
 
 // DHT11/DHT22 functions
 function testQueryData() {
-    pksdriver.queryData(pksdriver.DHTtype.DHT11, DigitalPin.P0, true, false, true)
+    pksdriver.queryData(pksdriver.DHTType.DHT11, DigitalPin.P0, true, false, true)
 }
 
 function testReadData() {

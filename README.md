@@ -106,12 +106,12 @@ basic.forever(function () {
 ```blocks
 input.onButtonPressed(Button.A, function () {
     // Query a DHT11 or DHT22 sensor connected to pin P1.
-    pksdriver.queryData(DHTtype.DHT11, DigitalPin.P1, true, false, true)
+    pksdriver.queryData(pksdriver.DHTtype.DHT11, DigitalPin.P1, true, false, true)
 
     // Only read values after a successful query.
     if (pksdriver.DHTReadDataSuccessful()) {
-        let temperature = pksdriver.DHTReadData(DataType.temperature)
-        let humidity = pksdriver.DHTReadData(DataType.humidity)
+        let temperature = pksdriver.DHTReadData(pksdriver.DataType.Temperature)
+        let humidity = pksdriver.DHTReadData(pksdriver.DataType.Humidity)
         serial.writeLine("DHT temp=" + temperature + ", humidity=" + humidity)
     }
 })

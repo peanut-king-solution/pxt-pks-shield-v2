@@ -622,7 +622,7 @@ namespace pksdriver {
     //*************************************************************************************************//
     //DHT11/DHT22 related code, adapted from https://github.com/alankrantas/pxt-dht11_dht22            //
     //*************************************************************************************************//
-    export enum DHTtype {
+    export enum DHTType {
         //% block="DHT11"
         DHT11,
         //% block="DHT22"
@@ -665,7 +665,7 @@ namespace pksdriver {
     //% weight=100
     //% subcategory="Smart Living"
     //% group="Temperature and Humidity (DHT11/DHT22)" 
-    export function queryData(DHT: DHTtype, dataPin: DigitalPin, pullUp: boolean, serialOutput: boolean, wait: boolean) {
+    export function queryData(DHT: DHTType, dataPin: DigitalPin, pullUp: boolean, serialOutput: boolean, wait: boolean) {
         //initialize
         let startTime: number = 0
         let endTime: number = 0
@@ -673,7 +673,7 @@ namespace pksdriver {
         let checksumTmp: number = 0
         let dataArray: boolean[] = []
         let resultArray: number[] = []
-        let DHTstr: string = (DHT == DHTtype.DHT11) ? "DHT11" : "DHT22"
+        let DHTstr: string = (DHT == DHTType.DHT11) ? "DHT11" : "DHT22"
 
         for (let index = 0; index < 40; index++) dataArray.push(false)
         for (let index = 0; index < 5; index++) resultArray.push(0)
@@ -730,7 +730,7 @@ namespace pksdriver {
 
             //read data if checksum ok
             if (_readSuccessful) {
-                if (DHT == DHTtype.DHT11) {
+                if (DHT == DHTType.DHT11) {
                     //DHT11
                     _humidity = resultArray[0] + resultArray[1] / 100
                     _temperature = resultArray[2] + resultArray[3] / 100
