@@ -1,5 +1,5 @@
 {
-    "name": "pxt-pks-shield-v2",
+    "name": "PKS Driver",
     "version": "1.0.0",
     "description": "This is a library for Peanut KING Micro:bit Robot Shield",
     "license": "MIT",
@@ -13,7 +13,7 @@
     "testFiles": [
         "test.ts"
     ],
-    "public": true,
+    "public": false,
     "targetVersions": {
         "target": "6.0.25",
         "targetId": "microbit"
