@@ -219,7 +219,7 @@ function testCheckReadColor() {
 }
 
 function testGetColor() {
-    let color = pksdriver.getColor()
+    let color = pksdriver.reAnalysisColor()
     basic.showNumber(color)
     basic.pause(500)
     basic.clearScreen()
@@ -299,19 +299,19 @@ function testInitMPU6050() {
 }
 
 function testGyroscope() {
-    pksdriver.gyroscope(pksdriver.AxisXYZ.x, pksdriver.GyroSen.range_250_dps)
+    pksdriver.gyroscope(pksdriver.AxisXYZ.X, pksdriver.GyroSen.Range_250_dps)
     basic.pause(300)
-    pksdriver.gyroscope(pksdriver.AxisXYZ.y, pksdriver.GyroSen.range_250_dps)
+    pksdriver.gyroscope(pksdriver.AxisXYZ.Y, pksdriver.GyroSen.Range_250_dps)
     basic.pause(300)
-    pksdriver.gyroscope(pksdriver.AxisXYZ.z, pksdriver.GyroSen.range_250_dps)
+    pksdriver.gyroscope(pksdriver.AxisXYZ.Z, pksdriver.GyroSen.Range_250_dps)
     basic.pause(300)
     basic.clearScreen()
 }
 
 function testAxisRotation() {
-    let rx = pksdriver.axisRotation(pksdriver.AxisXYZ.x, pksdriver.AccelSen.range_2_g)
-    let ry = pksdriver.axisRotation(pksdriver.AxisXYZ.y, pksdriver.AccelSen.range_2_g)
-    let rz = pksdriver.axisRotation(pksdriver.AxisXYZ.z, pksdriver.AccelSen.range_2_g)
+    let rx = pksdriver.axisRotation(pksdriver.AxisXYZ.X, pksdriver.AccelSen.Range_2_g)
+    let ry = pksdriver.axisRotation(pksdriver.AxisXYZ.Y, pksdriver.AccelSen.Range_2_g)
+    let rz = pksdriver.axisRotation(pksdriver.AxisXYZ.Z, pksdriver.AccelSen.Range_2_g)
     basic.showNumber(rx)
     basic.pause(300)
     basic.showNumber(ry)
@@ -321,9 +321,9 @@ function testAxisRotation() {
 }
 
 function testAxisAcceleration() {
-    let ax = pksdriver.axisAcceleration(pksdriver.AxisXYZ.x, pksdriver.AccelSen.range_2_g)
-    let ay = pksdriver.axisAcceleration(pksdriver.AxisXYZ.y, pksdriver.AccelSen.range_2_g)
-    let az = pksdriver.axisAcceleration(pksdriver.AxisXYZ.z, pksdriver.AccelSen.range_2_g)
+    let ax = pksdriver.axisAcceleration(pksdriver.AxisXYZ.X, pksdriver.AccelSen.Range_2_g)
+    let ay = pksdriver.axisAcceleration(pksdriver.AxisXYZ.Y, pksdriver.AccelSen.Range_2_g)
+    let az = pksdriver.axisAcceleration(pksdriver.AxisXYZ.Z, pksdriver.AccelSen.Range_2_g)
     basic.showNumber(ax)
     basic.pause(300)
     basic.showNumber(ay)
@@ -345,17 +345,17 @@ function testQueryData() {
 }
 
 function testReadData() {
-    let humidity = pksdriver.DHTReadData(pksdriver.dataType.humidity)
-    let tempC = pksdriver.DHTReadData(pksdriver.dataType.temperature)
-    let tempF = pksdriver.DHTReadData(pksdriver.dataType.temperature)
+    let humidity = pksdriver.DHTReadData(pksdriver.DataType.Humidity)
+    let tempC = pksdriver.DHTReadData(pksdriver.DataType.Temperature)
+    let tempF = pksdriver.DHTReadData(pksdriver.DataType.Temperature)
     basic.showNumber(humidity)
     basic.pause(500)
     basic.clearScreen()
 }
 
 function testSelectTempType() {
-    pksdriver.selectTempType(pksdriver.tempType.celsius)
-    pksdriver.selectTempType(pksdriver.tempType.fahrenheit)
+    pksdriver.selectTempType(pksdriver.TempType.Celsius)
+    pksdriver.selectTempType(pksdriver.TempType.Fahrenheit)
 }
 
 function testReadDataSuccessful() {
@@ -402,13 +402,13 @@ function testDS1302() {
     rtc.start()
     
     // Get values
-    let year = rtc.getYear()
-    let month = rtc.getMonth()
-    let day = rtc.getDay()
-    let weekday = rtc.getWeekday()
-    let hour = rtc.getHour()
-    let minute = rtc.getMinute()
-    let second = rtc.getSecond()
+    let year = rtc.year()
+    let month = rtc.month()
+    let day = rtc.day()
+    let weekday = rtc.weekday()
+    let hour = rtc.hour()
+    let minute = rtc.minute()
+    let second = rtc.second()
     
     basic.showNumber(year)
     basic.pause(500)

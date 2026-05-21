@@ -14,19 +14,36 @@ namespace pksdriver {
      * For maze car's use only
      * Maze car direction options
      */
-    export enum MazeCarDirection { FRONT, BACK, LEFT, RIGHT }
+    export enum MazeCarDirection {
+        //% block="front"
+        FRONT,
+        //% block="back"
+        BACK,
+        //% block="left"
+        LEFT,
+        //% block="right"
+        RIGHT
+    }
 
     /**
      * The user can select the 8 steering gear controller.
      */
     export enum PKSDriverServos {
+        //% block="S1"
         S1 = 0x08,
+        //% block="S2"
         S2 = 0x07,
+        //% block="S3"
         S3 = 0x06,
+        //% block="S4"
         S4 = 0x05,
+        //% block="S5"
         S5 = 0x04,
+        //% block="S6"
         S6 = 0x03,
+        //% block="S7"
         S7 = 0x02,
+        //% block="S8"
         S8 = 0x01
     }
 
@@ -34,9 +51,13 @@ namespace pksdriver {
      * The user selects the 4-way dc motor.
      */
     export enum PKSDriverMotors {
+        //% block="M1"
         M1 = 0x1,
+        //% block="M2"
         M2 = 0x2,
+        //% block="M3"
         M3 = 0x3,
+        //% block="M4"
         M4 = 0x4
     }
 
@@ -44,9 +65,9 @@ namespace pksdriver {
      * the motor rotation direction
      */
     export enum PKSDriverDirection {
-        //% blockId="pksdriver_CW" block="ClockWise"
+        //% blockId="pksdriver_CW" block="clockwise"
         CLOCKWISE = 1,
-        //% blockId="pksdriver_CCW" block="CounterClockWise"
+        //% blockId="pksdriver_CCW" block="counterclockwise"
         COUNTERCLOCKWISE = -1
     }
 
@@ -89,7 +110,7 @@ namespace pksdriver {
      * Set PWM frequency for PCA9685
      * @param freq Frequency in Hz (default 50)
      */
-    function setFreq(freq: number): void {
+    export function setFreq(freq: number): void {
         // Constrain the frequency
         let prescaleval = 25000000;
         prescaleval /= 4096;
@@ -111,7 +132,7 @@ namespace pksdriver {
      * @param on On time
      * @param off Off time
      */
-    function setPwm(channel: number, on: number, off: number): void {
+    export function setPwm(channel: number, on: number, off: number): void {
         if (channel < 0 || channel > 15)
             return;
 
@@ -192,7 +213,7 @@ namespace pksdriver {
     /**
      * Execute a motor
      * @param index M1~M4.
-     * @param direction CW/CCW
+     * @param direction clockwise/counterclockwise
      * @param speed speed(0~255).
     */
     //% weight=130
@@ -229,7 +250,7 @@ namespace pksdriver {
     /**
      * Execute a motor 
      * @param index M1~M4.
-     * @param direction CW/CCW
+     * @param direction clockwise/counterclockwise
      * @param speed speed(0~255).
      */
     //% weight=130
@@ -267,7 +288,7 @@ namespace pksdriver {
      * Stop all motors
     */
     //% weight=128
-    //% blockId=pksdriver_motor_motorStopAll block="motor stop all" subcategory="Edu Kit"
+    //% blockId=pksdriver_motor_motorStopAll block="stop all motors" subcategory="Edu Kit"
     //% group="Motors"
     export function motorStopAll(): void {
         for (let idx = 1; idx <= 4; idx++) {
@@ -279,7 +300,7 @@ namespace pksdriver {
     * Stop all motors
     */
     //% weight=128
-    //% blockId=pksdriver_maze_motor_motorStopAll block="motor stop all" subcategory="Maze Car"
+    //% blockId=pksdriver_maze_motor_motorStopAll block="stop all motors" subcategory="Maze Car"
     //% group="Motors"
     export function mazeMotorStopAll(): void {
         motorStopAll();
@@ -430,7 +451,7 @@ namespace pksdriver {
             return this;
         }
 
-        public GetState(): { Busy: boolean, Calibrated: boolean } {
+        public State(): { Busy: boolean, Calibrated: boolean } {
             const buf = pins.i2cReadBuffer(this._Address, 1, false);
             const busy = buf[0] & 0x80 ? true : false;
             const calibrated = buf[0] & 0x08 ? true : false;
@@ -500,14 +521,14 @@ namespace pksdriver {
      * @param sensor The AHT20 sensor instance
      */
     function readAht20(aht20: AHT20Sensor): { Humidity: number, Temperature: number } {
-        if (!aht20.GetState().Calibrated) {
+        if (!aht20.State().Calibrated) {
             aht20.Initialization();
-            if (!aht20.GetState().Calibrated) return null;
+            if (!aht20.State().Calibrated) return null;
         }
 
         aht20.TriggerMeasurement();
         for (let i = 0; ; ++i) {
-            if (!aht20.GetState().Busy) break;
+            if (!aht20.State().Busy) break;
             if (i >= 500) return null;
             basic.pause(10);
         }
@@ -560,7 +581,7 @@ namespace pksdriver {
     /**
      * Read the absolute humidity
      */
-    //% block="Read the absolute humidity (g/m³) || as fixed-point 8.8bit %fp88" subcategory="Smart Living"
+    //% block="read the absolute humidity (g/m³) || as fixed-point 8.8bit %fp88" subcategory="Smart Living"
     //% weight=0
     export function readAbsHumidity(fp88?: boolean): uint16 {
         const aht20 = new AHT20Sensor();
@@ -578,9 +599,9 @@ namespace pksdriver {
     }
 
     /**
-     * Caclulate crc8
+     * Calculate crc8
      */
-    //% block="Caclulate crc" subcategory="Smart Living"
+    //% block="calculate crc" subcategory="Smart Living"
     //% weight=0 
     export function crc8(n: number): uint8 {
         const byte1 = n & 0xff;
@@ -608,23 +629,23 @@ namespace pksdriver {
         DHT22,
     }
 
-    export enum dataType {
+    export enum DataType {
         //% block="humidity"
-        humidity,
+        Humidity,
         //% block="temperature"
-        temperature,
+        Temperature,
     }
 
-    export enum tempType {
-        //% block="Celsius (°C)"
-        celsius,
-        //% block="Fahrenheit (°F)"
-        fahrenheit,
+    export enum TempType {
+        //% block="celsius (°C)"
+        Celsius,
+        //% block="fahrenheit (°F)"
+        Fahrenheit,
     }
 
     let _temperature: number = -999.0
     let _humidity: number = -999.0
-    let _temptype: tempType = tempType.celsius
+    let _temptype: TempType = TempType.Celsius
     let _readSuccessful: boolean = false
     let _sensorresponding: boolean = false
 
@@ -723,7 +744,7 @@ namespace pksdriver {
                     _humidity = (resultArray[0] * 256 + resultArray[1]) / 10
                     _temperature = (resultArray[2] * 256 + resultArray[3]) / 10 * temp_sign
                 }
-                if (_temptype == tempType.fahrenheit)
+                if (_temptype == TempType.Fahrenheit)
                     _temperature = _temperature * 9 / 5 + 32
             }
 
@@ -733,7 +754,7 @@ namespace pksdriver {
                 if (_readSuccessful) {
                     serial.writeLine("Checksum ok")
                     serial.writeLine("Humidity: " + _humidity + " %")
-                    serial.writeLine("Temperature: " + _temperature + (_temptype == tempType.celsius ? " °C" : " °F"))
+                    serial.writeLine("Temperature: " + _temperature + (_temptype == TempType.Celsius ? " °C" : " °F"))
                 } else {
                     serial.writeLine("Checksum error")
                 }
@@ -754,8 +775,8 @@ namespace pksdriver {
     //% weight=99
     //% block="read $data" subcategory="Smart Living"
     //% group="Temperature and Humidity (DHT11/DHT22)" 
-    export function DHTReadData(data: dataType): number {
-        return data == dataType.humidity ? _humidity : _temperature
+    export function DHTReadData(data: DataType): number {
+        return data == DataType.Humidity ? _humidity : _temperature
     }
 
     /**
@@ -765,7 +786,7 @@ namespace pksdriver {
     //% block="temperature type: $temp" subcategory="Smart Living"
     //% group="Temperature and Humidity (DHT11/DHT22)" 
     //% weight=98
-    export function selectTempType(temp: tempType) {
+    export function selectTempType(temp: TempType) {
         _temptype = temp
     }
 
@@ -866,7 +887,7 @@ namespace pksdriver {
         /**
          * read reg
          */
-        getReg(reg: number): number {
+        readReg(reg: number): number {
             let t = 0;
             pins.digitalWritePin(this.cs, 1);
             this.writeByte(reg);
@@ -900,8 +921,8 @@ namespace pksdriver {
         //% blockId="DS1302_get_year" block="%ds|get year"
         //% weight=80 blockGap=8
         //% parts="DS1302"
-        getYear(): number {
-            return Math.min(HexToDec(this.getReg(DS1302_REG_YEAR + 1)), 99) + 2000
+        year(): number {
+            return Math.min(HexToDec(this.readReg(DS1302_REG_YEAR + 1)), 99) + 2000
         }
 
         /**
@@ -921,8 +942,8 @@ namespace pksdriver {
         //% blockId="DS1302_get_month" block="%ds|get month"
         //% weight=78 blockGap=8
         //% parts="DS1302"
-        getMonth(): number {
-            return Math.max(Math.min(HexToDec(this.getReg(DS1302_REG_MONTH + 1)), 12), 1)
+        month(): number {
+            return Math.max(Math.min(HexToDec(this.readReg(DS1302_REG_MONTH + 1)), 12), 1)
         }
 
         /**
@@ -943,8 +964,8 @@ namespace pksdriver {
         //% blockId="DS1302_get_day" block="%ds|get day"
         //% weight=76 blockGap=8
         //% parts="DS1302"
-        getDay(): number {
-            return Math.max(Math.min(HexToDec(this.getReg(DS1302_REG_DAY + 1)), 31), 1)
+        day(): number {
+            return Math.max(Math.min(HexToDec(this.readReg(DS1302_REG_DAY + 1)), 31), 1)
         }
 
         /**
@@ -965,8 +986,8 @@ namespace pksdriver {
         //% blockId="DS1302_get_weekday" block="%ds|get weekday"
         //% weight=74 blockGap=8
         //% parts="DS1302"
-        getWeekday(): number {
-            return Math.max(Math.min(HexToDec(this.getReg(DS1302_REG_WEEKDAY + 1)), 7), 1)
+        weekday(): number {
+            return Math.max(Math.min(HexToDec(this.readReg(DS1302_REG_WEEKDAY + 1)), 7), 1)
         }
 
         /**
@@ -987,8 +1008,8 @@ namespace pksdriver {
         //% blockId="DS1302_get_hour" block="%ds|get hour"
         //% weight=72 blockGap=8
         //% parts="DS1302"
-        getHour(): number {
-            return Math.min(HexToDec(this.getReg(DS1302_REG_HOUR + 1)), 23)
+        hour(): number {
+            return Math.min(HexToDec(this.readReg(DS1302_REG_HOUR + 1)), 23)
         }
 
         /**
@@ -1009,8 +1030,8 @@ namespace pksdriver {
         //% blockId="DS1302_get_minute" block="%ds|get minute"
         //% weight=72 blockGap=8
         //% parts="DS1302"
-        getMinute(): number {
-            return Math.min(HexToDec(this.getReg(DS1302_REG_MINUTE + 1)), 59)
+        minute(): number {
+            return Math.min(HexToDec(this.readReg(DS1302_REG_MINUTE + 1)), 59)
         }
 
         /**
@@ -1031,8 +1052,8 @@ namespace pksdriver {
         //% blockId="DS1302_get_second" block="%ds|get second"
         //% weight=70 blockGap=8
         //% parts="DS1302"
-        getSecond(): number {
-            return Math.min(HexToDec(this.getReg(DS1302_REG_SECOND + 1)), 59)
+        second(): number {
+            return Math.min(HexToDec(this.readReg(DS1302_REG_SECOND + 1)), 59)
         }
 
         /**
@@ -1084,7 +1105,7 @@ namespace pksdriver {
         //% weight=41 blockGap=8
         //% parts="DS1302"
         start(): void {
-            let t = this.getSecond()
+            let t = this.second()
             this.setSecond(t & 0x7f)
         }
 
@@ -1095,7 +1116,7 @@ namespace pksdriver {
         //% weight=40 blockGap=8
         //% parts="DS1302"
         pause(): void {
-            let t = this.getSecond()
+            let t = this.second()
             this.setSecond(t | 0x80)
         }
 
@@ -1107,7 +1128,7 @@ namespace pksdriver {
         //% parts="DS1302"
         //% reg.min=0 reg.max=30
         public readRam(reg: number): number {
-            return this.getReg(DS1302_REG_RAM + 1 + (reg % 31) * 2)
+            return this.readReg(DS1302_REG_RAM + 1 + (reg % 31) * 2)
         }
 
         /**
@@ -1154,11 +1175,11 @@ namespace pksdriver {
      */
     export enum AxisXYZ {
         //% block="x"
-        x,
+        X,
         //% block="y"
-        y,
+        Y,
         //% block="z"
-        z
+        Z
     }
 
     /**
@@ -1166,13 +1187,13 @@ namespace pksdriver {
      */
     export enum AccelSen {
         //% block="2g"
-        range_2_g,
+        Range_2_g,
         //% block="4g"
-        range_4_g,
+        Range_4_g,
         //% block="8g"
-        range_8_g,
+        Range_8_g,
         //% block="16g"
-        range_16_g
+        Range_16_g
     }
 
     /**
@@ -1180,13 +1201,13 @@ namespace pksdriver {
      */
     export enum GyroSen {
         //% block="250dps"
-        range_250_dps,
+        Range_250_dps,
         //% block="500dps"
-        range_500_dps,
+        Range_500_dps,
         //% block="1000dps"
-        range_1000_dps,
+        Range_1000_dps,
         //% block="2000dps"
-        range_2000_dps
+        Range_2000_dps
     }
 
     let i2cAddress = 0x68;
@@ -1233,22 +1254,22 @@ namespace pksdriver {
     }
 
     // Update acceleration data via I2C
-    function updateAcceleration(sensitivity: number) {
+    function updateAcceleration(sensitivity: AccelSen) {
         // Set sensitivity of acceleration range, according to selection and datasheet value
         let accelRange = 0;
-        if(sensitivity == AccelSen.range_2_g) {
+        if(sensitivity == AccelSen.Range_2_g) {
             // +- 2g
             accelRange = 16384;
         }
-        else if(sensitivity == AccelSen.range_4_g) {
+        else if(sensitivity == AccelSen.Range_4_g) {
             // +- 4g
             accelRange = 8192;
         }
-        else if(sensitivity == AccelSen.range_8_g) {
+        else if(sensitivity == AccelSen.Range_8_g) {
             // +- 8g
             accelRange = 4096;
         }
-        else if(sensitivity == AccelSen.range_16_g) {
+        else if(sensitivity == AccelSen.Range_16_g) {
             // +- 16g
             accelRange = 2048;
         }
@@ -1261,19 +1282,19 @@ namespace pksdriver {
     function updateGyroscope(sensitivity: GyroSen) {
         // Set sensitivity of gyroscope range, according to selection and datasheet value
         let gyroRange = 0;
-        if(sensitivity == GyroSen.range_250_dps) {
+        if(sensitivity == GyroSen.Range_250_dps) {
             // +- 250dps
             gyroRange = 131;
         }
-        else if(sensitivity == GyroSen.range_500_dps) {
+        else if(sensitivity == GyroSen.Range_500_dps) {
             // +- 500dps
             gyroRange = 65.5;
         }
-        else if(sensitivity == GyroSen.range_1000_dps) {
+        else if(sensitivity == GyroSen.Range_1000_dps) {
             // +- 1000dps
             gyroRange = 32.8;
         }
-        else if(sensitivity == GyroSen.range_2000_dps) {
+        else if(sensitivity == GyroSen.Range_2000_dps) {
             // +- 2000dps
             gyroRange = 16.4;
         }
@@ -1285,7 +1306,7 @@ namespace pksdriver {
     /**
      * Initialize SEN-MPU6050
      */
-    //% block="Initialize SEN-MPU6050"
+    //% block="initialize SEN-MPU6050"
     //% weight=100
     export function initMPU6050() {
         let buffer = pins.createBuffer(2);
@@ -1299,14 +1320,14 @@ namespace pksdriver {
       * @param axis select X, Y or Z axis
       * @param sensitivity select sensitivity of gyroscope (250, 500, 1000 or 2000 dps)
       */
-    //% block="Gyroscope value of %AxisXYZ axis with %GyroSen sensitivity (Unit: rad/s)"
+    //% block="gyroscope value of %AxisXYZ axis with %GyroSen sensitivity (Unit: rad/s)"
     //%weight=95
     export function gyroscope(axis: AxisXYZ, sensitivity: GyroSen): number {
         updateGyroscope(sensitivity);
-        if(axis == AxisXYZ.x) {
+        if(axis == AxisXYZ.X) {
             return xGyro;
         }
-        else if(axis == AxisXYZ.y) {
+        else if(axis == AxisXYZ.Y) {
             return yGyro;
         }
         else {
@@ -1315,23 +1336,23 @@ namespace pksdriver {
     }
 
     /**
-     * Get rotation of the corresponding Axis
+     * Get rotation of the corresponding Axis in degree
      * @param axis select X, Y or Z axis
      * @param sensitivity select sensitivity of accelerometer (2, 4, 8 or 16 g)
      */
-    //% block="Angle of %AxisXYZ axis with %AccelSen sensitivity (Unit: Degrees)"
+    //% block="angle of %AxisXYZ axis with %AccelSen sensitivity (Unit: Degrees)"
     //% weight=90
     export function axisRotation(axis: AxisXYZ, sensitivity: AccelSen): number {
         updateAcceleration(sensitivity);
 
         let radians;
-        if(axis == AxisXYZ.x) {
+        if(axis == AxisXYZ.X) {
             radians = Math.atan2(yAccel, dist(xAccel,zAccel));
         }
-        else if(axis == AxisXYZ.y) {
+        else if(axis == AxisXYZ.Y) {
             radians = -Math.atan2(xAccel, dist(yAccel,zAccel));
         }
-        else if(axis == AxisXYZ.z) {
+        else if(axis == AxisXYZ.Z) {
             radians = Math.atan2(zAccel, dist(xAccel, yAccel));
         }
 
@@ -1346,15 +1367,15 @@ namespace pksdriver {
      * @param axis select X, Y or Z axis
      * @param sensitivity select sensitivity of accelerometer (2, 4, 8 or 16 g)
      */
-    //% block="Acceleration of %AxisXYZ axis with %AccelSen sensitivity (Unit: g)"
+    //% block="acceleration of %AxisXYZ axis with %AccelSen sensitivity (Unit: g)"
     //% weight=85
     export function axisAcceleration(axis: AxisXYZ, sensitivity: AccelSen): number {
         updateAcceleration(sensitivity);
         // Return acceleration of specific axis
-        if(axis == AxisXYZ.x) {
+        if(axis == AxisXYZ.X) {
             return xAccel;
         }
-        else if(axis == AxisXYZ.y) {
+        else if(axis == AxisXYZ.Y) {
             return yAccel;
         }
         else {
@@ -1365,7 +1386,7 @@ namespace pksdriver {
     /**
      * Get temperature in degree Celsius from MPU6050
      */
-    //% block="Temperature (Unit: Celsius)"
+    //% block="temperature (Unit: Celsius)"
     //% weight=80
     export function readTemperature(): number {
         let rawTemp = MPUReadData(tempAddr);
@@ -1402,7 +1423,7 @@ namespace pksdriver {
     /**
      * Get ultrasonic distance in mm
      */
-    //% block="dist (Unit: mm)" subcategory="Maze Car"
+    //% block="distance (Unit: mm)" subcategory="Maze Car"
     //% group="Ultrasound"
     //% weight=70
     export function ultrasoundResult(): number {
@@ -1418,7 +1439,7 @@ namespace pksdriver {
     /**
     * Compass read function, to get the yaw angle
     */
-    //% block="yaw (Unit: deg)" subcategory="Soccer Robot"
+    //% block="yaw (Unit: degree)" subcategory="Soccer Robot"
     //% group="Compass"
     //% weight=70
     export function compassGetYaw(): number {
@@ -1592,6 +1613,7 @@ namespace pksdriver {
     /**
     * color read function
     * return the detected color (Black, White, Gray, Red, Green, Blue, Yellow, Cyan, Purple)
+    * the preset threshold on the color sensor may not be accurate, it is recommended to use readHSL or readRGB function to get the raw data and do the color analysis by yourself for better accuracy
     */
     //% blockId=pksdriver_readcolor block="read color" subcategory="Edu Kit"
     //% group="Colors"
@@ -1620,16 +1642,17 @@ namespace pksdriver {
     //% group="Colors"
     //% weight=70
     export function checkGetColor(color: PKSDriverColorType): boolean {
-        return getColor() == color
+        return reAnalysisColor() == color
     }
 
     /**
     * function transfer hsl value to color 
+    * redefine the color threshold 
     */
     //% blockId=pksdriver_getcolor block="get color" subcategory="Edu Kit"
     //% group="Colors"
     //% weight=70
-    export function getColor(): number {
+    export function reAnalysisColor(): number {
         pins.i2cWriteNumber(PKSDriverColor.ADDR, PKSDriverColor.HSL, NumberFormat.UInt8BE, false);
         let hsl = pins.i2cReadBuffer(PKSDriverColor.ADDR, 4, false);
         let temp1 = [hsl.getNumber(NumberFormat.UInt16LE, 0), //h
