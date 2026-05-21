@@ -1,4 +1,4 @@
-# pxt-pks-shield-v2
+# pxt-pks-shield-v2 beta
 
 Peanut King micro:bit Shield V2 extension for motors, servos, sensors, and I2C modules.
 
@@ -32,13 +32,13 @@ Use `motorRun` to drive each motor independently, then stop everything with `mot
 ```blocks
 basic.forever(function () {
     // Drive M1 and M2 forward at moderate speed.
-    pksdriver.motorRun(pksdriver.PKSDriverMotors.M1, pksdriver.PKSDriverDir.CW, 80)
-    pksdriver.motorRun(pksdriver.PKSDriverMotors.M2, pksdriver.PKSDriverDir.CW, 80)
+    pksdriver.motorRun(pksdriver.PKSDriverMotors.M1, pksdriver.PKSDriverDirection.CLOCKWISE, 80)
+    pksdriver.motorRun(pksdriver.PKSDriverMotors.M2, pksdriver.PKSDriverDirection.CLOCKWISE, 80)
     basic.pause(1500)
 
     // Reverse both motors to back away.
-    pksdriver.motorRun(pksdriver.PKSDriverMotors.M1, pksdriver.PKSDriverDir.CCW, 80)
-    pksdriver.motorRun(pksdriver.PKSDriverMotors.M2, pksdriver.PKSDriverDir.CCW, 80)
+    pksdriver.motorRun(pksdriver.PKSDriverMotors.M1, pksdriver.PKSDriverDirection.COUNTERCLOCKWISE, 80)
+    pksdriver.motorRun(pksdriver.PKSDriverMotors.M2, pksdriver.PKSDriverDirection.COUNTERCLOCKWISE, 80)
     basic.pause(1500)
 
     // Stop all motor outputs before the next cycle.
@@ -77,10 +77,10 @@ pksdriver.initMPU6050()
 
 basic.forever(function () {
     // Read yaw rate on the Z axis in radians per second.
-    let gyroZ = pksdriver.gyroscope(axisXYZ.z, gyroSen.range_250_dps)
+    let gyroZ = pksdriver.gyroscope(pksdriver.AxisXYZ.Z, pksdriver.GyroSen.Range_250_dps)
 
     // Read acceleration on the X axis in g.
-    let accelX = pksdriver.axisAcceleration(axisXYZ.x, accelSen.range_2_g)
+    let accelX = pksdriver.axisAcceleration(pksdriver.AxisXYZ.X, pksdriver.AccelSen.Range_2_g)
 
     serial.writeLine("gyroZ=" + gyroZ + ", accelX=" + accelX)
     basic.pause(200)
@@ -109,9 +109,9 @@ input.onButtonPressed(Button.A, function () {
     pksdriver.queryData(DHTtype.DHT11, DigitalPin.P1, true, false, true)
 
     // Only read values after a successful query.
-    if (pksdriver.readDataSuccessful()) {
-        let temperature = pksdriver.readData(dataType.temperature)
-        let humidity = pksdriver.readData(dataType.humidity)
+    if (pksdriver.DHTReadDataSuccessful()) {
+        let temperature = pksdriver.DHTReadData(DataType.temperature)
+        let humidity = pksdriver.DHTReadData(DataType.humidity)
         serial.writeLine("DHT temp=" + temperature + ", humidity=" + humidity)
     }
 })
@@ -127,7 +127,7 @@ basic.forever(function () {
     let detected = pksdriver.readColor()
 
     // React when red is detected.
-    if (pksdriver.checkReadColor(pksdriver.PKSDriverColor_t.Red)) {
+    if (detected == pksdriver.PKSDriverColorType.Red) {
         basic.showString("R")
     } else {
         basic.clearScreen()
@@ -145,12 +145,12 @@ Create the DS1302 instance once, then use the helper blocks exposed by this pack
 let rtc = pksdriver.create(DigitalPin.P13, DigitalPin.P14, DigitalPin.P15)
 
 // Set the RTC to 2026-05-11 Tuesday 08:30:00.
-pksdriver.DateTime(2026, 5, 11, 2, 8, 30, 0)
+rtc.dateTime(2026, 5, 11, 2, 8, 30, 0)
 
 basic.forever(function () {
-    let hour = pksdriver.getHour()
-    let minute = pksdriver.getMinute()
-    let second = pksdriver.getSecond()
+    let hour = rtc.hour()
+    let minute = rtc.minute()
+    let second = rtc.second()
 
     serial.writeLine("time=" + hour + ":" + minute + ":" + second)
     basic.pause(1000)
