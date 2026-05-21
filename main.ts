@@ -2,7 +2,7 @@
 //% weight=60
 //% color=#1c4980 
 //% icon="\uf2db" 
-//% block="PKS Drivers"
+//% block="PKS Driver"
 namespace pksdriver {
 
     const PCA9685_ADDRESS = 0x40
