@@ -1,4 +1,4 @@
-# pxt-pks-shield-v2 beta
+# pxt-pks-shield-v2
 
 Peanut King micro:bit Shield V2 extension for motors, servos, sensors, and I2C modules.
 
