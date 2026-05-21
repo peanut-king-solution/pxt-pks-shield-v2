@@ -106,7 +106,7 @@ basic.forever(function () {
 ```blocks
 input.onButtonPressed(Button.A, function () {
     // Query a DHT11 or DHT22 sensor connected to pin P1.
-    pksdriver.queryData(pksdriver.DHTtype.DHT11, DigitalPin.P1, true, false, true)
+    pksdriver.queryData(pksdriver.DHTType.DHT11, DigitalPin.P1, true, false, true)
 
     // Only read values after a successful query.
     if (pksdriver.DHTReadDataSuccessful()) {
