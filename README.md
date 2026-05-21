@@ -2,9 +2,9 @@
 
 Peanut King micro:bit Shield V2 extension for motors, servos, sensors, and I2C modules.
 
-## URL
+## Product URL
 
-Project URL: https://github.com/peanut-king-solution/pxt-pks-shield-v2
+Product URL: https://www.peanutkingsolution.com/en/product-page/peanut-king-micro-bit-shield-v2-%E6%93%B4%E5%B1%95%E6%9D%BF
 
 ## Summary
 
@@ -28,18 +28,17 @@ pksdriver=github:peanut-king-solution/pxt-pks-shield-v2
 
 Use `motorRun` to drive each motor independently, then stop everything with `motorStopAll`.
 
-![Drive Two Motors blocks](image/pxt-pks-shield-v2-example_1.png)
 
-```typescript
+```blocks
 basic.forever(function () {
     // Drive M1 and M2 forward at moderate speed.
-    pksdriver.motorRun(pksdriver.PKSDriverMotors.M1, pksdriver.PKSDriverDir.CW, 80)
-    pksdriver.motorRun(pksdriver.PKSDriverMotors.M2, pksdriver.PKSDriverDir.CW, 80)
+    pksdriver.motorRun(pksdriver.PKSDriverMotors.M1, pksdriver.PKSDriverDirection.CLOCKWISE, 80)
+    pksdriver.motorRun(pksdriver.PKSDriverMotors.M2, pksdriver.PKSDriverDirection.CLOCKWISE, 80)
     basic.pause(1500)
 
     // Reverse both motors to back away.
-    pksdriver.motorRun(pksdriver.PKSDriverMotors.M1, pksdriver.PKSDriverDir.CCW, 80)
-    pksdriver.motorRun(pksdriver.PKSDriverMotors.M2, pksdriver.PKSDriverDir.CCW, 80)
+    pksdriver.motorRun(pksdriver.PKSDriverMotors.M1, pksdriver.PKSDriverDirection.COUNTERCLOCKWISE, 80)
+    pksdriver.motorRun(pksdriver.PKSDriverMotors.M2, pksdriver.PKSDriverDirection.COUNTERCLOCKWISE, 80)
     basic.pause(1500)
 
     // Stop all motor outputs before the next cycle.
@@ -52,9 +51,7 @@ basic.forever(function () {
 
 Use `servo` to move a connected servo to a target angle.
 
-![Position a Servo blocks](image/pxt-pks-shield-v2-example_2.png)
-
-```typescript
+```blocks
 input.onButtonPressed(Button.A, function () {
     // Move servo S1 to 0 degrees.
     pksdriver.servo(pksdriver.PKSDriverServos.S1, 0)
@@ -75,17 +72,15 @@ input.onButtonPressed(Button.AB, function () {
 
 Initialize the MPU6050 once, then read gyroscope and acceleration values inside a loop.
 
-![Read the MPU6050 blocks](image/pxt-pks-shield-v2-example_3.png)
-
-```typescript
+```blocks
 pksdriver.initMPU6050()
 
 basic.forever(function () {
     // Read yaw rate on the Z axis in radians per second.
-    let gyroZ = pksdriver.gyroscope(axisXYZ.z, gyroSen.range_250_dps)
+    let gyroZ = pksdriver.gyroscope(pksdriver.AxisXYZ.Z, pksdriver.GyroSen.Range_250_dps)
 
     // Read acceleration on the X axis in g.
-    let accelX = pksdriver.axisAcceleration(axisXYZ.x, accelSen.range_2_g)
+    let accelX = pksdriver.axisAcceleration(pksdriver.AxisXYZ.X, pksdriver.AccelSen.Range_2_g)
 
     serial.writeLine("gyroZ=" + gyroZ + ", accelX=" + accelX)
     basic.pause(200)
@@ -96,9 +91,7 @@ basic.forever(function () {
 
 The shield supports both AHT20 and DHT sensors. Use the API that matches the sensor you connected.
 
-![Read Temperature and Humidity AHT20 blocks](image/pxt-pks-shield-v2-example_4.png)
-
-```typescript
+```blocks
 basic.forever(function () {
     // Read the AHT20 sensor over I2C.
     let tempC = pksdriver.aht20ReadTemperatureC()
@@ -109,17 +102,16 @@ basic.forever(function () {
 })
 ```
 
-![Read Temperature and Humidity DHT blocks](image/pxt-pks-shield-v2-example_5.png)
 
-```typescript
+```blocks
 input.onButtonPressed(Button.A, function () {
     // Query a DHT11 or DHT22 sensor connected to pin P1.
-    pksdriver.queryData(DHTtype.DHT11, DigitalPin.P1, true, false, true)
+    pksdriver.queryData(pksdriver.DHTType.DHT11, DigitalPin.P1, true, false, true)
 
     // Only read values after a successful query.
-    if (pksdriver.readDataSuccessful()) {
-        let temperature = pksdriver.readData(dataType.temperature)
-        let humidity = pksdriver.readData(dataType.humidity)
+    if (pksdriver.DHTReadDataSuccessful()) {
+        let temperature = pksdriver.DHTReadData(pksdriver.DataType.Temperature)
+        let humidity = pksdriver.DHTReadData(pksdriver.DataType.Humidity)
         serial.writeLine("DHT temp=" + temperature + ", humidity=" + humidity)
     }
 })
@@ -129,15 +121,13 @@ input.onButtonPressed(Button.A, function () {
 
 Use the color sensor helpers to inspect raw channels or compare the detected color directly.
 
-![Use the Color Sensor blocks](image/pxt-pks-shield-v2-example_6.png)
-
-```typescript
+```blocks
 basic.forever(function () {
     // Read the detected color enum from the sensor.
     let detected = pksdriver.readColor()
 
     // React when red is detected.
-    if (pksdriver.checkReadColor(pksdriver.PKSDriverColor_t.Red)) {
+    if (detected == pksdriver.PKSDriverColorType.Red) {
         basic.showString("R")
     } else {
         basic.clearScreen()
@@ -151,18 +141,16 @@ basic.forever(function () {
 
 Create the DS1302 instance once, then use the helper blocks exposed by this package.
 
-![Create and Read the RTC blocks](image/pxt-pks-shield-v2-example_7.png)
-
-```typescript
+```blocks
 let rtc = pksdriver.create(DigitalPin.P13, DigitalPin.P14, DigitalPin.P15)
 
 // Set the RTC to 2026-05-11 Tuesday 08:30:00.
-pksdriver.DateTime(2026, 5, 11, 2, 8, 30, 0)
+rtc.dateTime(2026, 5, 11, 2, 8, 30, 0)
 
 basic.forever(function () {
-    let hour = pksdriver.getHour()
-    let minute = pksdriver.getMinute()
-    let second = pksdriver.getSecond()
+    let hour = rtc.hour()
+    let minute = rtc.minute()
+    let second = rtc.second()
 
     serial.writeLine("time=" + hour + ":" + minute + ":" + second)
     basic.pause(1000)

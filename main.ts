@@ -1,32 +1,49 @@
-/**
- * For maze car's use only
- * Maze car direction options
- */
-enum MazeCarDirection { FRONT, BACK, LEFT, RIGHT }
-
 
 //% weight=60
 //% color=#1c4980 
 //% icon="\uf2db" 
-//% block="PKS Drivers"
+//% block="PKS Driver"
 namespace pksdriver {
 
     const PCA9685_ADDRESS = 0x40
     const MODE = 0x00
     const PRESCALE = 0xFE
     const LED0_ON_L = 0x06
+    
+    /**
+     * For maze car's use only
+     * Maze car direction options
+     */
+    export enum MazeCarDirection {
+        //% block="front"
+        FRONT,
+        //% block="back"
+        BACK,
+        //% block="left"
+        LEFT,
+        //% block="right"
+        RIGHT
+    }
 
     /**
      * The user can select the 8 steering gear controller.
      */
     export enum PKSDriverServos {
+        //% block="S1"
         S1 = 0x08,
+        //% block="S2"
         S2 = 0x07,
+        //% block="S3"
         S3 = 0x06,
+        //% block="S4"
         S4 = 0x05,
+        //% block="S5"
         S5 = 0x04,
+        //% block="S6"
         S6 = 0x03,
+        //% block="S7"
         S7 = 0x02,
+        //% block="S8"
         S8 = 0x01
     }
 
@@ -34,20 +51,24 @@ namespace pksdriver {
      * The user selects the 4-way dc motor.
      */
     export enum PKSDriverMotors {
+        //% block="M1"
         M1 = 0x1,
+        //% block="M2"
         M2 = 0x2,
+        //% block="M3"
         M3 = 0x3,
+        //% block="M4"
         M4 = 0x4
     }
 
     /**
      * the motor rotation direction
      */
-    export enum PKSDriverDir {
-        //% blockId="pksdriver_CW" block="CW"
-        CW = 1,
-        //% blockId="pksdriver_CCW" block="CCW"
-        CCW = -1
+    export enum PKSDriverDirection {
+        //% blockId="pksdriver_CW" block="clockwise"
+        CLOCKWISE = 1,
+        //% blockId="pksdriver_CCW" block="counterclockwise"
+        COUNTERCLOCKWISE = -1
     }
 
     let initialized = false
@@ -65,7 +86,6 @@ namespace pksdriver {
      * Read data from I2C device
      * @param addr I2C device address  
      * @param reg Register address
-     * @returns data read from device
      */
     function i2cRead(addr: number, reg: number) {
         pins.i2cWriteNumber(addr, reg, NumberFormat.UInt8BE);
@@ -90,7 +110,7 @@ namespace pksdriver {
      * Set PWM frequency for PCA9685
      * @param freq Frequency in Hz (default 50)
      */
-    function setFreq(freq: number): void {
+    export function setFreq(freq: number): void {
         // Constrain the frequency
         let prescaleval = 25000000;
         prescaleval /= 4096;
@@ -112,7 +132,7 @@ namespace pksdriver {
      * @param on On time
      * @param off Off time
      */
-    function setPwm(channel: number, on: number, off: number): void {
+    export function setPwm(channel: number, on: number, off: number): void {
         if (channel < 0 || channel > 15)
             return;
 
@@ -127,7 +147,7 @@ namespace pksdriver {
 
     /**
      * Steering gear control function 
-     * @param idnex S1~S8.
+     * @param index S1~S8.
      * @param degree 0°~180°.
     */
     //% blockId=pksdriver_motor_servo block="servo|%index|degree|%degree" subcategory="Edu Kit"
@@ -148,7 +168,7 @@ namespace pksdriver {
 
     /**
      * Steering gear control function 
-     * @param idnex S1~S8.
+     * @param index S1~S8.
      * @param degree 0°~180°.
      */ 
     //% blockId=pksdriver_smart_servo block="smart servo|%index|degree|%degree" subcategory="Smart Living"
@@ -162,7 +182,7 @@ namespace pksdriver {
 
     /**
      * set servo off
-     * @param idnex S1~S8.
+     * @param index S1~S8.
     */
     //% blockId=pksdriver_motor_servoOff block="servo off|%index" subcategory="Edu Kit"
     //% group="Servos"
@@ -193,20 +213,20 @@ namespace pksdriver {
     /**
      * Execute a motor
      * @param index M1~M4.
-     * @param dir CW/CCW
+     * @param direction clockwise/counterclockwise
      * @param speed speed(0~255).
     */
     //% weight=130
-    //% blockId=pksdriver_motor_MotorRun block="motor|%index|dir|%dir|speed|%speed" subcategory="Edu Kit"
+    //% blockId=pksdriver_motor_MotorRun block="motor|%index|direction|%direction|speed|%speed" subcategory="Edu Kit"
     //% speed.min=0 speed.max=255
     //% index.fieldEditor="gridpicker" index.fieldOptions.columns=2
     //% direction.fieldEditor="gridpicker" direction.fieldOptions.columns=2
     //% group="Motors"
-    export function motorRun(index: PKSDriverMotors, dir: PKSDriverDir, speed: number): void {
+    export function motorRun(index: PKSDriverMotors, direction: PKSDriverDirection, speed: number): void {
         if (!initialized) {
             initPCA9685()
         }
-        speed = speed * 16 * dir; // map 255 to 4096
+        speed = speed * 16 * direction; // map 255 to 4096
         if (speed >= 4096) {
             speed = 4095
         }
@@ -230,17 +250,17 @@ namespace pksdriver {
     /**
      * Execute a motor 
      * @param index M1~M4.
-     * @param dir CW/CCW
+     * @param direction clockwise/counterclockwise
      * @param speed speed(0~255).
      */
     //% weight=130
-    //% blockId=pksdriver_maze_motor_MotorRun block="motor|%index|dir|%dir|speed|%speed" subcategory="Maze Car"
+    //% blockId=pksdriver_maze_motor_MotorRun block="motor|%index|direction|%direction|speed|%speed" subcategory="Maze Car"
     //% speed.min=0 speed.max=255
     //% index.fieldEditor="gridpicker" index.fieldOptions.columns=2
     //% direction.fieldEditor="gridpicker" direction.fieldOptions.columns=2
     //% group="Motors"
-    export function mazeMotorRun(index: PKSDriverMotors, dir: PKSDriverDir, speed: number): void {
-        motorRun(index, dir, speed);
+    export function mazeMotorRun(index: PKSDriverMotors, direction: PKSDriverDirection, speed: number): void {
+        motorRun(index, direction, speed);
     }
 
 
@@ -268,7 +288,7 @@ namespace pksdriver {
      * Stop all motors
     */
     //% weight=128
-    //% blockId=pksdriver_motor_motorStopAll block="motor stop all" subcategory="Edu Kit"
+    //% blockId=pksdriver_motor_motorStopAll block="stop all motors" subcategory="Edu Kit"
     //% group="Motors"
     export function motorStopAll(): void {
         for (let idx = 1; idx <= 4; idx++) {
@@ -280,7 +300,7 @@ namespace pksdriver {
     * Stop all motors
     */
     //% weight=128
-    //% blockId=pksdriver_maze_motor_motorStopAll block="motor stop all" subcategory="Maze Car"
+    //% blockId=pksdriver_maze_motor_motorStopAll block="stop all motors" subcategory="Maze Car"
     //% group="Motors"
     export function mazeMotorStopAll(): void {
         motorStopAll();
@@ -336,125 +356,124 @@ namespace pksdriver {
      * Compound eye sensor data types
      */
     export enum PKSDriverCompoundEyeData {
-        //% block="eye_1"
-        Ir_1,
-        //% block="eye_2"
-        Ir_2,
-        //% block="eye_3"
-        Ir_3,
-        //% block="eye_4"
-        Ir_4,
-        //% block="eye_5"
-        Ir_5,
-        //% block="eye_6"
-        Ir_6,
-        //% block="eye_7"
-        Ir_7,
-        //% block="eye_8"
-        Ir_8,
-        //% block="eye_9"
-        Ir_9,
-        //% block="eye_10"
-        Ir_10,
-        //% block="eye_11"
-        Ir_11,
-        //% block="eye_12"
-        Ir_12,
-        //% block="max_eye_value"
+        //% block="eye 1"
+        Ir1,
+        //% block="eye 2"
+        Ir2,
+        //% block="eye 3"
+        Ir3,
+        //% block="eye 4"
+        Ir4,
+        //% block="eye 5"
+        Ir5,
+        //% block="eye 6"
+        Ir6,
+        //% block="eye 7"
+        Ir7,
+        //% block="eye 8"
+        Ir8,
+        //% block="eye 9"
+        Ir9,
+        //% block="eye 10"
+        Ir10,
+        //% block="eye 11"
+        Ir11,
+        //% block="eye 12"
+        Ir12,
+        //% block="eye max eye value"
         //% weight=99
         MaxEyeValue,
-        //% block="max_eye"
+        //% block="eye max eye number"
         //% weight=100
         MaxEye,
-        //% block="angle"
+        //% block="eye angle"
         //% weight=98
         Angle,
-        //% block="mode"
+        //% block="eye mode"
         Mode
     }
 
     /**
      * Reads data from the compound eye sensor.
-     * @param compound_eye_data The type of data to read
-     * @returns sensor value, -1 if there is error
+     * gets -1 if there is error
+     * @param compoundEyeData The type of data to read
      */
-    //% blockId=pksdriver_compoundEye block="compound eye $compound_eye_data"  subcategory="Soccer Robot"
+    //% blockId=pksdriver_compoundEye block="compound $compoundEyeData"  subcategory="Soccer Robot"
     //% group="Compound Eye"
     //% weight=50
-    export function compoundEyeRead(compound_eye_data: PKSDriverCompoundEyeData): number {
+    export function compoundEyeRead(compoundEyeData: PKSDriverCompoundEyeData): number {
         pins.i2cWriteNumber(
             0x13,
-            compound_eye_data,
+            compoundEyeData,
             NumberFormat.UInt8LE,
             false
         )
         let temp = pins.i2cReadNumber(0x13, NumberFormat.UInt8LE, false);
         if (temp == 255) {
             return -1;
-        } else if (compound_eye_data == PKSDriverCompoundEyeData.Angle) {
+        } else if (compoundEyeData == PKSDriverCompoundEyeData.Angle) {
             temp *= 2;
-        } else if (compound_eye_data == PKSDriverCompoundEyeData.MaxEye) {
+        } else if (compoundEyeData == PKSDriverCompoundEyeData.MaxEye) {
             temp += 1;
         }
         return temp;
     }
 
 
-    interface Aht20Reading {
-        humidity: number
-        temperature: number
-    }
+    //*************************************************************************************************//
+    //AHT20 related code, adapted from https://github.com/koudayao27/AHT20                             //
+    //*************************************************************************************************//
 
-    class Aht20Sensor {
-        private address: number;
-
-        constructor(address: number = 0x38) {
-            this.address = address;
+    export class AHT20Sensor {
+        public constructor(address: number = 0x38) {
+            this._Address = address;
         }
 
-        initialize(): Aht20Sensor {
+        public Initialization(): AHT20Sensor {
             const buf = pins.createBuffer(3);
             buf[0] = 0xbe;
             buf[1] = 0x08;
             buf[2] = 0x00;
-            pins.i2cWriteBuffer(this.address, buf, false);
+            pins.i2cWriteBuffer(this._Address, buf, false);
             basic.pause(10);
 
             return this;
         }
 
-        triggerMeasurement(): Aht20Sensor {
+        public TriggerMeasurement(): AHT20Sensor {
             const buf = pins.createBuffer(3);
             buf[0] = 0xac;
             buf[1] = 0x33;
             buf[2] = 0x00;
-            pins.i2cWriteBuffer(this.address, buf, false);
+            pins.i2cWriteBuffer(this._Address, buf, false);
             basic.pause(80);
 
             return this;
         }
 
-        getState(): { busy: boolean, calibrated: boolean } {
-            const buf = pins.i2cReadBuffer(this.address, 1, false);
+        public State(): { Busy: boolean, Calibrated: boolean } {
+            const buf = pins.i2cReadBuffer(this._Address, 1, false);
             const busy = buf[0] & 0x80 ? true : false;
             const calibrated = buf[0] & 0x08 ? true : false;
 
-            return { busy: busy, calibrated: calibrated };
+            return { Busy: busy, Calibrated: calibrated };
         }
 
-        read(): Aht20Reading | undefined {
-            const buf = pins.i2cReadBuffer(this.address, 7, false);
+        public Read(): { Humidity: number, Temperature: number } {
+            const buf = pins.i2cReadBuffer(this._Address, 7, false);
 
-            const crc8 = Aht20Sensor.calcCrc8(buf, 0, 6);
-            if (buf[6] != crc8) return undefined;
+            const crc8 = AHT20Sensor.CalcCRC8(buf, 0, 6);
+            if (buf[6] != crc8) return null;
 
             const humidity = ((buf[1] << 12) + (buf[2] << 4) + (buf[3] >> 4)) * 100 / 1048576;
             const temperature = (((buf[3] & 0x0f) << 16) + (buf[4] << 8) + buf[5]) * 200 / 1048576 - 50;
 
-            return { humidity: humidity, temperature: temperature };
+            return { Humidity: humidity, Temperature: temperature };
         }
 
-        private static calcCrc8(buf: Buffer, offset: number, size: number): number {
+        private _Address: number;
+
+        private static CalcCRC8(buf: Buffer, offset: number, size: number): number {
             let crc8 = 0xff;
             for (let i = 0; i < size; ++i) {
                 crc8 ^= buf[offset + i];
@@ -472,78 +491,161 @@ namespace pksdriver {
 
             return crc8;
         }
+
     }
 
-
+    /**
+     * AHT20 Custom Block
+     */
+    const crc_table = [
+        0x00, 0x31, 0x62, 0x53, 0xC4, 0xF5, 0xA6, 0x97, 0xB9, 0x88, 0xDB, 0xEA, 0x7D, 0x4C, 0x1F, 0x2E,
+        0x43, 0x72, 0x21, 0x10, 0x87, 0xB6, 0xE5, 0xD4, 0xFA, 0xCB, 0x98, 0xA9, 0x3E, 0x0F, 0x5C, 0x6D,
+        0x86, 0xB7, 0xE4, 0xD5, 0x42, 0x73, 0x20, 0x11, 0x3F, 0x0E, 0x5D, 0x6C, 0xFB, 0xCA, 0x99, 0xA8,
+        0xC5, 0xF4, 0xA7, 0x96, 0x01, 0x30, 0x63, 0x52, 0x7C, 0x4D, 0x1E, 0x2F, 0xB8, 0x89, 0xDA, 0xEB,
+        0x3D, 0x0C, 0x5F, 0x6E, 0xF9, 0xC8, 0x9B, 0xAA, 0x84, 0xB5, 0xE6, 0xD7, 0x40, 0x71, 0x22, 0x13,
+        0x7E, 0x4F, 0x1C, 0x2D, 0xBA, 0x8B, 0xD8, 0xE9, 0xC7, 0xF6, 0xA5, 0x94, 0x03, 0x32, 0x61, 0x50,
+        0xBB, 0x8A, 0xD9, 0xE8, 0x7F, 0x4E, 0x1D, 0x2C, 0x02, 0x33, 0x60, 0x51, 0xC6, 0xF7, 0xA4, 0x95,
+        0xF8, 0xC9, 0x9A, 0xAB, 0x3C, 0x0D, 0x5E, 0x6F, 0x41, 0x70, 0x23, 0x12, 0x85, 0xB4, 0xE7, 0xD6,
+        0x7A, 0x4B, 0x18, 0x29, 0xBE, 0x8F, 0xDC, 0xED, 0xC3, 0xF2, 0xA1, 0x90, 0x07, 0x36, 0x65, 0x54,
+        0x39, 0x08, 0x5B, 0x6A, 0xFD, 0xCC, 0x9F, 0xAE, 0x80, 0xB1, 0xE2, 0xD3, 0x44, 0x75, 0x26, 0x17,
+        0xFC, 0xCD, 0x9E, 0xAF, 0x38, 0x09, 0x5A, 0x6B, 0x45, 0x74, 0x27, 0x16, 0x81, 0xB0, 0xE3, 0xD2,
+        0xBF, 0x8E, 0xDD, 0xEC, 0x7B, 0x4A, 0x19, 0x28, 0x06, 0x37, 0x64, 0x55, 0xC2, 0xF3, 0xA0, 0x91,
+        0x47, 0x76, 0x25, 0x14, 0x83, 0xB2, 0xE1, 0xD0, 0xFE, 0xCF, 0x9C, 0xAD, 0x3A, 0x0B, 0x58, 0x69,
+        0x04, 0x35, 0x66, 0x57, 0xC0, 0xF1, 0xA2, 0x93, 0xBD, 0x8C, 0xDF, 0xEE, 0x79, 0x48, 0x1B, 0x2A,
+        0xC1, 0xF0, 0xA3, 0x92, 0x05, 0x34, 0x67, 0x56, 0x78, 0x49, 0x1A, 0x2B, 0xBC, 0x8D, 0xDE, 0xEF,
+        0x82, 0xB3, 0xE0, 0xD1, 0x46, 0x77, 0x24, 0x15, 0x3B, 0x0A, 0x59, 0x68, 0xFF, 0xCE, 0x9D, 0xAC
+    ];
+    
     /**
      * Reads humidity and temperature from the AHT20 sensor.
      * @param sensor The AHT20 sensor instance
-     * @returns humidity and temperature 
      */
-    function readAht20(sensor: Aht20Sensor): Aht20Reading | undefined {
-        if (!sensor.getState().calibrated) {
-            sensor.initialize();
-            if (!sensor.getState().calibrated) return undefined;
+    function readAht20(aht20: AHT20Sensor): { Humidity: number, Temperature: number } {
+        if (!aht20.State().Calibrated) {
+            aht20.Initialization();
+            if (!aht20.State().Calibrated) return null;
         }
 
-        sensor.triggerMeasurement();
+        aht20.TriggerMeasurement();
         for (let i = 0; ; ++i) {
-            if (!sensor.getState().busy) break;
-            if (i >= 500) return undefined;
+            if (!aht20.State().Busy) break;
+            if (i >= 500) return null;
             basic.pause(10);
         }
 
-        return sensor.read();
+        return aht20.Read();
     }
 
     /**
      * Read temperature in Celsius from AHT20 sensor
-     * @returns temperature in °C
      */
     //% group="Temperature and Humidity (AHT20)"  subcategory="Smart Living"
-    //% block="read temperature(°C))"
+    //% block="read temperature (°C)"
     //% weight=3
     export function aht20ReadTemperatureC(): number {
-        const sensor = new Aht20Sensor();
+        const sensor = new AHT20Sensor();
         const val = readAht20(sensor);
         if (!val) return NaN;
 
-        return val.temperature;
+        return val.Temperature;
     }
 
     /**
      * Read temperature in Fahrenheit from AHT20 sensor
-     * @returns temperature in °F
      */
     //% group="Temperature and Humidity (AHT20)" subcategory="Smart Living"
-    //% block="read temperature(°F))"
+    //% block="read temperature (°F)"
     //% weight=2
     export function aht20ReadTemperatureF(): number {
-        const sensor = new Aht20Sensor();
+        const sensor = new AHT20Sensor();
         const val = readAht20(sensor);
         if (!val) return NaN;
 
-        return val.temperature * 9 / 5 + 32;
+        return val.Temperature * 9 / 5 + 32;
     }
 
     /**
      * Read humidity from AHT20 sensor
-     * @returns humidity percentage
      */
     //% block="read humidity" subcategory="Smart Living"
     //% group="Temperature and Humidity (AHT20)" 
     //% weight=1
     export function aht20ReadHumidity(): number {
-        const sensor = new Aht20Sensor();
-        const val = readAht20(sensor);
-        if (!val) return NaN;
+        const aht20 = new AHT20Sensor();
+        const val = readAht20(aht20);
+        if (val == null) return null;
 
-        return val.humidity;
+        return val.Humidity;
+    }
+
+    /**
+     * Read the absolute humidity
+     */
+    //% block="read the absolute humidity (g/m³) || as fixed-point 8.8bit %fp88" subcategory="Smart Living"
+    //% weight=0
+    export function readAbsHumidity(fp88?: boolean): uint16 {
+        const aht20 = new AHT20Sensor();
+        const val = readAht20(aht20);
+        if (val == null) return null;
+        const T = val.Temperature;
+        const rh = val.Humidity;
+        const ret = 6.112 * Math.exp((17.67 * T) / (T + 243.5)) * rh * 2.1674 / (273.15 + T);
+        if (!fp88) {
+            return ret;
+        }
+        const byte0 = Math.floor(ret);
+        const byte1 = Math.floor(256 * (ret - byte0));
+        return byte0 << 8 | byte1 & 0xffff;
+    }
+
+    /**
+     * Calculate crc8
+     */
+    //% block="calculate crc" subcategory="Smart Living"
+    //% weight=0 
+    export function crc8(n: number): uint8 {
+        const byte1 = n & 0xff;
+        const byte0 = (n >> 8) & 0xff;
+        let crc = 0xff ^ byte0;
+        crc = crc_table[crc];
+        crc = crc ^ byte1;
+        crc = crc_table[crc];
+        return crc;
+    }
+
+    //************************************************************************************************//
+    //AHT20 related code end                                                                          //
+    //************************************************************************************************//
+
+
+
+    //*************************************************************************************************//
+    //DHT11/DHT22 related code, adapted from https://github.com/alankrantas/pxt-dht11_dht22            //
+    //*************************************************************************************************//
+    export enum DHTType {
+        //% block="DHT11"
+        DHT11,
+        //% block="DHT22"
+        DHT22,
+    }
+
+    export enum DataType {
+        //% block="humidity"
+        Humidity,
+        //% block="temperature"
+        Temperature,
+    }
+
+    export enum TempType {
+        //% block="celsius (°C)"
+        Celsius,
+        //% block="fahrenheit (°F)"
+        Fahrenheit,
     }
 
     let _temperature: number = -999.0
     let _humidity: number = -999.0
-    let _temptype: tempType = tempType.celsius
+    let _temptype: TempType = TempType.Celsius
     let _readSuccessful: boolean = false
     let _sensorresponding: boolean = false
 
@@ -563,20 +665,118 @@ namespace pksdriver {
     //% weight=100
     //% subcategory="Smart Living"
     //% group="Temperature and Humidity (DHT11/DHT22)" 
-    export function queryData(DHT: DHTtype, dataPin: DigitalPin, pullUp: boolean, serialOutput: boolean, wait: boolean) {
-        dht11_dht22.queryData(DHT, dataPin, pullUp, serialOutput, wait)
+    export function queryData(DHT: DHTType, dataPin: DigitalPin, pullUp: boolean, serialOutput: boolean, wait: boolean) {
+        //initialize
+        let startTime: number = 0
+        let endTime: number = 0
+        let checksum: number = 0
+        let checksumTmp: number = 0
+        let dataArray: boolean[] = []
+        let resultArray: number[] = []
+        let DHTstr: string = (DHT == DHTType.DHT11) ? "DHT11" : "DHT22"
+
+        for (let index = 0; index < 40; index++) dataArray.push(false)
+        for (let index = 0; index < 5; index++) resultArray.push(0)
+
+        _humidity = -999.0
+        _temperature = -999.0
+        _readSuccessful = false
+        _sensorresponding = false
+        startTime = input.runningTimeMicros()
+
+        //request data
+        pins.digitalWritePin(dataPin, 0) //begin protocol, pull down pin
+        basic.pause(18)
+        
+        if (pullUp) pins.setPull(dataPin, PinPullMode.PullUp) //pull up data pin if needed
+        pins.digitalReadPin(dataPin) //pull up pin
+        control.waitMicros(40)
+        
+        if (pins.digitalReadPin(dataPin) == 1) {
+            if (serialOutput) {
+                serial.writeLine(DHTstr + " not responding!")
+                serial.writeLine("----------------------------------------")
+            }
+
+        } else {
+
+            _sensorresponding = true
+
+            while (pins.digitalReadPin(dataPin) == 0); //sensor response
+            while (pins.digitalReadPin(dataPin) == 1); //sensor response
+
+            //read data (5 bytes)
+            for (let index = 0; index < 40; index++) {
+                while (pins.digitalReadPin(dataPin) == 1);
+                while (pins.digitalReadPin(dataPin) == 0);
+                control.waitMicros(28)
+                //if sensor still pull up data pin after 28 us it means 1, otherwise 0
+                if (pins.digitalReadPin(dataPin) == 1) dataArray[index] = true
+            }
+
+            endTime = input.runningTimeMicros()
+
+            //convert byte number array to integer
+            for (let index = 0; index < 5; index++)
+                for (let index2 = 0; index2 < 8; index2++)
+                    if (dataArray[8 * index + index2]) resultArray[index] += 2 ** (7 - index2)
+
+            //verify checksum
+            checksumTmp = resultArray[0] + resultArray[1] + resultArray[2] + resultArray[3]
+            checksum = resultArray[4]
+            if (checksumTmp >= 512) checksumTmp -= 512
+            if (checksumTmp >= 256) checksumTmp -= 256
+            if (checksum == checksumTmp) _readSuccessful = true
+
+            //read data if checksum ok
+            if (_readSuccessful) {
+                if (DHT == DHTType.DHT11) {
+                    //DHT11
+                    _humidity = resultArray[0] + resultArray[1] / 100
+                    _temperature = resultArray[2] + resultArray[3] / 100
+                } else {
+                    //DHT22
+                    let temp_sign: number = 1
+                    if (resultArray[2] >= 128) {
+                        resultArray[2] -= 128
+                        temp_sign = -1
+                    }
+                    _humidity = (resultArray[0] * 256 + resultArray[1]) / 10
+                    _temperature = (resultArray[2] * 256 + resultArray[3]) / 10 * temp_sign
+                }
+                if (_temptype == TempType.Fahrenheit)
+                    _temperature = _temperature * 9 / 5 + 32
+            }
+
+            //serial output
+            if (serialOutput) {
+                serial.writeLine(DHTstr + " query completed in " + (endTime - startTime) + " microseconds")
+                if (_readSuccessful) {
+                    serial.writeLine("Checksum ok")
+                    serial.writeLine("Humidity: " + _humidity + " %")
+                    serial.writeLine("Temperature: " + _temperature + (_temptype == TempType.Celsius ? " °C" : " °F"))
+                } else {
+                    serial.writeLine("Checksum error")
+                }
+                serial.writeLine("----------------------------------------")
+            }
+
+        }
+
+        //wait 2 sec after query if needed
+        if (wait) basic.pause(2000)
+
     }
 
     /**
     * Read humidity/temperature data from lastest query of DHT11/DHT22
     * @param data Data type (humidity or temperature)
-    * @returns the requested data value
     */
     //% weight=99
     //% block="read $data" subcategory="Smart Living"
     //% group="Temperature and Humidity (DHT11/DHT22)" 
-    export function readData(data: dataType): number {
-        return dht11_dht22.readData(data)
+    export function DHTReadData(data: DataType): number {
+        return data == DataType.Humidity ? _humidity : _temperature
     }
 
     /**
@@ -586,362 +786,619 @@ namespace pksdriver {
     //% block="temperature type: $temp" subcategory="Smart Living"
     //% group="Temperature and Humidity (DHT11/DHT22)" 
     //% weight=98
-    export function selectTempType(temp: tempType) {
-        dht11_dht22.selectTempType(temp)
+    export function selectTempType(temp: TempType) {
+        _temptype = temp
     }
 
     /**
     * Determind if last query is successful (checksum ok)
-    * @returns true if successful
     */
     //% block="last query successful?" subcategory="Smart Living"
     //% weight=97
     //% group="Temperature and Humidity (DHT11/DHT22)" 
-    export function readDataSuccessful(): boolean {
-        return dht11_dht22.readDataSuccessful()
+    export function DHTReadDataSuccessful(): boolean {
+        return _readSuccessful
     }
 
     /**
     * Determind if sensor responded successfully (not disconnected, etc) in last query
-    * @returns true if successful
     */
     //% block="last query sensor responding?" subcategory="Smart Living"
     //% weight=96
     //% group="Temperature and Humidity (DHT11/DHT22)" 
-    export function sensorrResponding(): boolean {
-        return dht11_dht22.sensorrResponding()
+    export function sensorResponding(): boolean {
+        return _sensorresponding
     }
 
+    //*************************************************************************************************//
+    //DHT11/DHT22 related code finished                                                                //
+    //*************************************************************************************************//
 
     
+
+
+
+    //*************************************************************************************************//
+    //DS1302 RTC related code, adapted from https://github.com/makecode-extensions/ds1302
+    //*************************************************************************************************//
+    let DS1302_REG_SECOND = 0x80
+    let DS1302_REG_MINUTE = 0x82
+    let DS1302_REG_HOUR = 0x84
+    let DS1302_REG_DAY = 0x86
+    let DS1302_REG_MONTH = 0x88
+    let DS1302_REG_WEEKDAY = 0x8A
+    let DS1302_REG_YEAR = 0x8C
+    let DS1302_REG_WP = 0x8E
+    let DS1302_REG_CTRL = 0x90
+    let DS1302_REG_RAM = 0xC0
     /**
      * DS1302 RTC class
      */
-    // Create instance of DS1302RTC
-    let _rtc = new DS1302.DS1302RTC();
 
-    /**
-     * get Year
-     * @return year
+     /**
+     * convert a Hex data to Dec
      */
-    //% blockId="pksdriver_DS1302_get_year" block="%ds|get year" subcategory="Smart Living"
-    //% weight=80 blockGap=8
-    //% parts="DS1302"
-    //% group="Date and Time"
-    export function getYear(): number {
-        return _rtc.getYear();
+    function HexToDec(dat: number): number {
+        return (dat >> 4) * 10 + (dat % 16);
     }
 
     /**
-     * set year
-     * @param dat is the Year will be set, eg: 2018
+     * convert a Dec data to Hex
      */
-    //% blockId="pksdriver_DS1302_set_year" block="%ds|set year %dat" subcategory="Smart Living"
-    //% weight=81 blockGap=8
-    //% group="Date and Time"
-    //% parts="DS1302"
-    export function setYear(dat: number): void {
-        _rtc.setYear(dat);
+    function DecToHex(dat: number): number {
+        return Math.idiv(dat, 10) * 16 + (dat % 10)
     }
 
     /**
-     * get Month
-     * @returns month
+     * DS1302 RTC class
      */
-    //% blockId="pksdriver_DS1302_get_month" block="%ds|get month" subcategory="Smart Living"
-    //% weight=78 blockGap=8
-    //% group="Date and Time"
-    //% parts="DS1302"
-    export function getMonth(): number {
-        return _rtc.getMonth();
-    }
+    export class DS1302RTC {
+        clk: DigitalPin;
+        dio: DigitalPin;
+        cs: DigitalPin;
 
-    /**
-     * set month
-     * @param dat is Month will be set.  eg: 2
-     */
-    //% blockId="pksdriver_DS1302_set_month" block="%ds|set month %dat" subcategory="Smart Living"
-    //% weight=79 blockGap=8
-    //% group="Date and Time"
-    //% parts="DS1302"
-    //% dat.min=1 dat.max=12
-    export function setMonth(dat: number): void {
-        _rtc.setMonth(dat);
-    }
+        /**
+         * write a byte to DS1302
+         */
+        /**
+         * name
+         */
+        writeByte(dat: number) {
+            for (let i = 0; i < 8; i++) {
+                pins.digitalWritePin(this.dio, (dat >> i) & 1);
+                pins.digitalWritePin(this.clk, 1);
+                pins.digitalWritePin(this.clk, 0);
+            }
+        }
 
-    /**
-     * get Day
-     * @returns day
-     */
-    //% blockId="pksdriver_DS1302_get_day" block="%ds|get day" subcategory="Smart Living"
-    //% weight=76 blockGap=8
-    //% group="Date and Time"
-    //% parts="DS1302"
-    export function getDay(): number {
-        return _rtc.getDay();
-    }
+        /**
+         * read a byte from DS1302
+         */
+        readByte(): number {
+            let d = 0;
+            for (let i = 0; i < 8; i++) {
+                d = d | (pins.digitalReadPin(this.dio) << i);
+                pins.digitalWritePin(this.clk, 1);
+                pins.digitalWritePin(this.clk, 0);
+            }
+            return d;
+        }
 
-    /**
-     * set day
-     * @param dat is the Day will be set, eg: 15
-     */
-    //% blockId="pksdriver_DS1302_set_day" block="%ds|set day %dat" subcategory="Smart Living"
-    //% weight=77 blockGap=8
-    //% parts="DS1302"
-    //% group="Date and Time"
-    //% dat.min=1 dat.max=31
-    export function setDay(dat: number): void {
-        _rtc.setDay(dat);
-    }
+        /**
+         * read reg
+         */
+        readReg(reg: number): number {
+            let t = 0;
+            pins.digitalWritePin(this.cs, 1);
+            this.writeByte(reg);
+            t = this.readByte();
+            pins.digitalWritePin(this.cs, 0);
+            return t;
+        }
 
-    /**
-     * get Week Day
-     * @returns weekday
-     */
-    //% blockId="pksdriver_DS1302_get_weekday" block="%ds|get weekday" subcategory="Smart Living"
-    //% weight=74 blockGap=8
-    //% parts="DS1302"
-    //% group="Date and Time"
-    export function getWeekday(): number {
-        return _rtc.getWeekday();
-    }
+        /**
+         * write reg
+         */
+        setReg(reg: number, dat: number) {
+            pins.digitalWritePin(this.cs, 1);
+            this.writeByte(reg);
+            this.writeByte(dat);
+            pins.digitalWritePin(this.cs, 0);
+        }
 
-    /**
-     * set weekday
-     * @param dat is the Week Day will be set, eg: 4
-     */
-    //% blockId="pksdriver_DS1302_set_weekday" block="%ds|set weekday %dat" subcategory="Smart Living"
-    //% weight=75 blockGap=8
-    //% parts="DS1302"
-    //% dat.min=1 dat.max=7
-    //% group="Date and Time"
-    export function setWeekday(dat: number): void {
-        _rtc.setWeekday(dat);
-    }
+        /**
+         * write reg with WP protect
+         */
+        writeReg(reg: number, dat: number) {
+            this.setReg(DS1302_REG_WP, 0)
+            this.setReg(reg, dat)
+            this.setReg(DS1302_REG_WP, 0)
+        }
 
-    /**
-     * get Hour
-     */
-    //% blockId="pksdriver_DS1302_get_hour" block="%ds|get hour" subcategory="Smart Living"
-    //% weight=72 blockGap=8
-    //% parts="DS1302"
-    //% group="Date and Time"
-    export function getHour(): number {
-        return _rtc.getHour();
-    }
+        /**
+         * get Year
+         */
+        //% blockId="DS1302_get_year" block="%ds|get year"
+        //% weight=80 blockGap=8
+        //% parts="DS1302"
+        year(): number {
+            return Math.min(HexToDec(this.readReg(DS1302_REG_YEAR + 1)), 99) + 2000
+        }
 
-    /**
-     * set hour
-     * @param dat is the Hour will be set, eg: 0
-     */
-    //% blockId="pksdriver_DS1302_set_hour" block="%ds|set hour %dat" subcategory="Smart Living"
-    //% weight=73 blockGap=8
-    //% parts="DS1302"
-    //% dat.min=0 dat.max=23
-    //% group="Date and Time"
-    export function setHour(dat: number): void {
-        _rtc.setHour(dat);
-    }
+        /**
+         * set year
+         * @param dat is the Year will be set, eg: 2018
+         */
+        //% blockId="DS1302_set_year" block="%ds|set year %dat"
+        //% weight=81 blockGap=8
+        //% parts="DS1302"
+        setYear(dat: number): void {
+            this.writeReg(DS1302_REG_YEAR, DecToHex(dat % 100))
+        }
 
-    /**
-     * get Minute
-     * @returns minute
-     */
-    //% blockId="pksdriver_DS1302_get_minute" block="%ds|get minute" subcategory="Smart Living"
-    //% weight=70 blockGap=8
-    //% parts="DS1302"
-    //% group="Date and Time"
-    export function getMinute(): number {
-        return _rtc.getMinute();
-    }
+        /**
+         * get Month
+         */
+        //% blockId="DS1302_get_month" block="%ds|get month"
+        //% weight=78 blockGap=8
+        //% parts="DS1302"
+        month(): number {
+            return Math.max(Math.min(HexToDec(this.readReg(DS1302_REG_MONTH + 1)), 12), 1)
+        }
 
-    /**
-     * set minute
-     * @param dat is the Minute will be set, eg: 0
-     */
-    //% blockId="pksdriver_DS1302_set_minute" block="%ds|set minute %dat" subcategory="Smart Living"
-    //% weight=71 blockGap=8
-    //% parts="DS1302"
-    //% dat.min=0 dat.max=59
-    //% group="Date and Time"
-    export function setMinute(dat: number): void {
-        _rtc.setMinute(dat);
-    }
+        /**
+         * set month
+         * @param dat is Month will be set.  eg: 2
+         */
+        //% blockId="DS1302_set_month" block="%ds|set month %dat"
+        //% weight=79 blockGap=8
+        //% parts="DS1302"
+        //% dat.min=1 dat.max=12
+        setMonth(dat: number): void {
+            this.writeReg(DS1302_REG_MONTH, DecToHex(dat % 13))
+        }
 
-    /**
-     * get Second
-     * @returns second
-     */
-    //% blockId="pksdriver_DS1302_get_second" block="%ds|get second" subcategory="Smart Living"
-    //% weight=67 blockGap=8
-    //% parts="DS1302"
-    //% group="Date and Time"
-    export function getSecond(): number {
-        return _rtc.getSecond();
-    }
+        /**
+         * get Day
+         */
+        //% blockId="DS1302_get_day" block="%ds|get day"
+        //% weight=76 blockGap=8
+        //% parts="DS1302"
+        day(): number {
+            return Math.max(Math.min(HexToDec(this.readReg(DS1302_REG_DAY + 1)), 31), 1)
+        }
 
-    /**
-     * set second
-     * @param dat is the Second will be set, eg: 0
-     */
-    //% blockId="pksdriver_DS1302_set_second" block="%ds|set second %dat" subcategory="Smart Living"
-    //% weight=68 blockGap=8
-    //% parts="DS1302"
-    //% dat.min=0 dat.max=59
-    //% group="Date and Time"
-    export function setSecond(dat: number): void {
-        _rtc.setSecond(dat);
-    }
+        /**
+         * set day
+         * @param dat is the Day will be set, eg: 15
+         */
+        //% blockId="DS1302_set_day" block="%ds|set day %dat"
+        //% weight=77 blockGap=8
+        //% parts="DS1302"
+        //% dat.min=1 dat.max=31
+        setDay(dat: number): void {
+            this.writeReg(DS1302_REG_DAY, DecToHex(dat % 32))
+        }
 
-    /**
-     * set Date and Time
-     * @param year is the Year will be set, eg: 2018
-     * @param month is the Month will be set, eg: 2
-     * @param day is the Day will be set, eg: 15
-     * @param weekday is the Weekday will be set, eg: 4
-     * @param hour is the Hour will be set, eg: 0
-     * @param minute is the Minute will be set, eg: 0
-     * @param second is the Second will be set, eg: 0
-     */
-    //% blockId="pksdriver_DS1302_set_DateTime" block="%ds|set date and time: year %year|month %month|day %day|weekday %weekday|hour %hour|minute %minute|second %second" subcategory="Smart Living"
-    //% weight=50 blockGap=8
-    //% parts="DS1302"
-    //% year.min=2000 year.max=2100
-    //% month.min=1 month.max=12
-    //% day.min=1 day.max=31
-    //% weekday.min=1 weekday.max=7
-    //% hour.min=0 hour.max=23
-    //% minute.min=0 minute.max=59
-    //% second.min=0 second.max=59
-    //% group="Date and Time"
-    export function DateTime(year: number, month: number, day: number, weekday: number, hour: number, minute: number, second: number): void {
-        _rtc.DateTime(year, month, day, weekday, hour, minute, second)
-    }
+        /**
+         * get Week Day
+         */
+        //% blockId="DS1302_get_weekday" block="%ds|get weekday"
+        //% weight=74 blockGap=8
+        //% parts="DS1302"
+        weekday(): number {
+            return Math.max(Math.min(HexToDec(this.readReg(DS1302_REG_WEEKDAY + 1)), 7), 1)
+        }
 
-    /**
-     * start ds1302 RTC (go on)
-     */
-    //% blockId="pksdriver_DS1302_start" block="%ds|start RTC" subcategory="Smart Living"
-    //% weight=41 blockGap=8
-    //% parts="DS1302"
-    //% group="Date and Time"
-    export function start() {
-        _rtc.start()
-    }
+        /**
+         * set weekday
+         * @param dat is the Week Day will be set, eg: 4
+         */
+        //% blockId="DS1302_set_weekday" block="%ds|set weekday %dat"
+        //% weight=75 blockGap=8
+        //% parts="DS1302"
+        //% dat.min=1 dat.max=7
+        setWeekday(dat: number): void {
+            this.writeReg(DS1302_REG_WEEKDAY, DecToHex(dat % 8))
+        }
 
-    /**
-     * pause ds1302 RTC
-     */
-    //% blockId="pksdriver_DS1302_pause" block="%ds|pause RTC" subcategory="Smart Living"
-    //% weight=40 blockGap=8
-    //% parts="DS1302"
-    //% group="Date and Time"
-    export function pause() {
-        _rtc.pause();
-    }
+        /**
+         * get Hour
+         */
+        //% blockId="DS1302_get_hour" block="%ds|get hour"
+        //% weight=72 blockGap=8
+        //% parts="DS1302"
+        hour(): number {
+            return Math.min(HexToDec(this.readReg(DS1302_REG_HOUR + 1)), 23)
+        }
 
-    /**
-     * read RAM
-     * @param reg RAM register address
-     * @returns value read from RAM
-     */
-    //% blockId="pksdriver_DS1302_read_ram" block="%ds|read ram %reg" subcategory="Smart Living"
-    //% weight=43 blockGap=8
-    //% parts="DS1302"
-    //% reg.min=0 reg.max=30
-    //% group="Date and Time"
-    export function readRam(reg: number): number {
-        return _rtc.readRam(reg);
-    }
+        /**
+         * set hour
+         * @param dat is the Hour will be set, eg: 0
+         */
+        //% blockId="DS1302_set_hour" block="%ds|set hour %dat"
+        //% weight=73 blockGap=8
+        //% parts="DS1302"
+        //% dat.min=0 dat.max=23
+        setHour(dat: number): void {
+            this.writeReg(DS1302_REG_HOUR, DecToHex(dat % 24))
+        }
 
-    /**
-     * write RAM
-     * @param reg RAM register address
-     * @param dat data to write
-     */
-    //% blockId="pksdriver_DS1302_write_ram" block="%ds|write ram %reg|with %dat" subcategory="Smart Living"
-    //% weight=42 blockGap=8
-    //% parts="DS1302"
-    //% reg.min=0 reg.max=30
-    //% group="Date and Time"
-    export function writeRam(reg: number, dat: number) {
-        _rtc.writeRam(reg, dat);
+        /**
+         * get Minute
+         */
+        //% blockId="DS1302_get_minute" block="%ds|get minute"
+        //% weight=72 blockGap=8
+        //% parts="DS1302"
+        minute(): number {
+            return Math.min(HexToDec(this.readReg(DS1302_REG_MINUTE + 1)), 59)
+        }
+
+        /**
+         * set minute
+         * @param dat is the Minute will be set, eg: 0
+         */
+        //% blockId="DS1302_set_minute" block="%ds|set minute %dat"
+        //% weight=71 blockGap=8
+        //% parts="DS1302"
+        //% dat.min=0 dat.max=59
+        setMinute(dat: number): void {
+            this.writeReg(DS1302_REG_MINUTE, DecToHex(dat % 60))
+        }
+
+        /**
+         * get Second
+         */
+        //% blockId="DS1302_get_second" block="%ds|get second"
+        //% weight=70 blockGap=8
+        //% parts="DS1302"
+        second(): number {
+            return Math.min(HexToDec(this.readReg(DS1302_REG_SECOND + 1)), 59)
+        }
+
+        /**
+         * set second
+         * @param dat is the Second will be set, eg: 0
+         */
+        //% blockId="DS1302_set_second" block="%ds|set second %dat"
+        //% weight=69 blockGap=8
+        //% parts="DS1302"
+        //% dat.min=0 dat.max=59
+        setSecond(dat: number): void {
+            this.writeReg(DS1302_REG_SECOND, DecToHex(dat % 60))
+        }
+
+        /**
+         * set Date and Time
+         * @param year is the Year will be set, eg: 2018
+         * @param month is the Month will be set, eg: 2
+         * @param day is the Day will be set, eg: 15
+         * @param weekday is the Weekday will be set, eg: 4
+         * @param hour is the Hour will be set, eg: 0
+         * @param minute is the Minute will be set, eg: 0
+         * @param second is the Second will be set, eg: 0
+         */
+        //% blockId="DS1302_set_dateTime" block="%ds|set Date and Time: Year %year|Month %month|Day %day|WeekDay %weekday|Hour %hour|Minute %minute|Second %second"
+        //% weight=50 blockGap=8
+        //% parts="DS1302"
+        //% year.min=2000 year.max=2100
+        //% month.min=1 month.max=12
+        //% day.min=1 day.max=31
+        //% weekday.min=1 weekday.max=7
+        //% hour.min=0 hour.max=23
+        //% minute.min=0 minute.max=59
+        //% second.min=0 second.max=59
+        dateTime(year: number, month: number, day: number, weekday: number, hour: number, minute: number, second: number): void {
+            this.setYear(year);
+            this.setMonth(month);
+            this.setDay(day);
+            this.setWeekday(weekday);
+            this.setHour(hour);
+            this.setMinute(minute);
+            this.setSecond(second);
+        }
+
+        /**
+         * start ds1302 RTC (go on)
+         */
+        //% blockId="DS1302_start" block="%ds|start RTC"
+        //% weight=41 blockGap=8
+        //% parts="DS1302"
+        start(): void {
+            let t = this.second()
+            this.setSecond(t & 0x7f)
+        }
+
+        /**
+         * pause ds1302 RTC
+         */
+        //% blockId="DS1302_pause" block="%ds|pause RTC"
+        //% weight=40 blockGap=8
+        //% parts="DS1302"
+        pause(): void {
+            let t = this.second()
+            this.setSecond(t | 0x80)
+        }
+
+        /**
+         * read RAM
+         */
+        //% blockId="DS1302_read_ram" block="%ds|read ram %reg"
+        //% weight=43 blockGap=8
+        //% parts="DS1302"
+        //% reg.min=0 reg.max=30
+        public readRam(reg: number): number {
+            return this.readReg(DS1302_REG_RAM + 1 + (reg % 31) * 2)
+        }
+
+        /**
+         * write RAM
+         */
+        //% blockId="DS1302_write_ram" block="%ds|write ram %reg|with %dat"
+        //% weight=42 blockGap=8
+        //% parts="DS1302"
+        //% reg.min=0 reg.max=30
+        public writeRam(reg: number, dat: number): void {
+            this.writeReg(DS1302_REG_RAM + (reg % 31) * 2, dat)
+        }
     }
 
     /**
      * create a DS1302 object.
+     * The CLK, DIO and CS pins can be assigned to any digital pin.
      * @param clk the CLK pin for DS1302, eg: DigitalPin.P13
      * @param dio the DIO pin for DS1302, eg: DigitalPin.P14
      * @param cs the CS pin for DS1302, eg: DigitalPin.P15
      */
-    //% weight=95 blockGap=8
-    //% blockId="pksdriver_DS1302_create" block="CLK %clk|DIO %dio|CS %cs" subcategory="Smart Living"
-    export function create(clk: DigitalPin, dio: DigitalPin, cs: DigitalPin): DS1302.DS1302RTC {
-        return DS1302.create(clk, dio, cs);
+    //% weight=200 blockGap=8
+    //% blockId="DS1302_create" block="CLK %clk|DIO %dio|CS %cs"
+    export function create(clk: DigitalPin, dio: DigitalPin, cs: DigitalPin): DS1302RTC {
+        let ds = new DS1302RTC();
+        ds.clk = clk;
+        ds.dio = dio;
+        ds.cs = cs;
+        pins.digitalWritePin(ds.clk, 0);
+        pins.digitalWritePin(ds.cs, 0);
+        return ds;
     }
 
+    //*************************************************************************************************//
+    //DS1302 RTC related code finished                                                                 //
+    //*************************************************************************************************//
 
 
+
+    //*************************************************************************************************//
+    //MPU6050 related code, adapted from https://github.com/joy-it/sen-mpu6050
+    //*************************************************************************************************//
+    /**
+     * Enumeration of Axis (X, Y & Z)
+     */
+    export enum AxisXYZ {
+        //% block="x"
+        X,
+        //% block="y"
+        Y,
+        //% block="z"
+        Z
+    }
 
     /**
-     * Initialize MPU6050
+     * Sensitivity of Accelerometer
      */
-    //% block="initialize MPU6050" subcategory="Edu Kit"
-    //% group="Acceleration"
+    export enum AccelSen {
+        //% block="2g"
+        Range_2_g,
+        //% block="4g"
+        Range_4_g,
+        //% block="8g"
+        Range_8_g,
+        //% block="16g"
+        Range_16_g
+    }
+
+    /**
+     * Sensitivity of Gyroscope
+     */
+    export enum GyroSen {
+        //% block="250dps"
+        Range_250_dps,
+        //% block="500dps"
+        Range_500_dps,
+        //% block="1000dps"
+        Range_1000_dps,
+        //% block="2000dps"
+        Range_2000_dps
+    }
+
+    let i2cAddress = 0x68;
+    let power_mgmt = 0x6b;
+    // Accelleration addresses
+    let xAccelAddr = 0x3b;
+    let yAccelAddr = 0x3d;
+    let zAccelAddr = 0x3f;
+    // Gyroscope addresses
+    let xGyroAddr = 0x43;
+    let yGyroAddr = 0x45;
+    let zGyroAddr = 0x47;
+    // Temperature address
+    let tempAddr = 0x41;
+
+    // Initialize acceleration and gyroscope values
+    let xAccel = 0;
+    let yAccel = 0;
+    let zAccel = 0;
+    let xGyro = 0;
+    let yGyro = 0;
+    let zGyro = 0;
+
+    function MPUI2cRead(reg: number): number {
+        pins.i2cWriteNumber(i2cAddress, reg, NumberFormat.UInt8BE);
+        return pins.i2cReadNumber(i2cAddress, NumberFormat.UInt8BE);;
+    }
+
+    function MPUReadData(reg: number) {
+        let h = MPUI2cRead(reg);
+        let l = MPUI2cRead(reg+1);
+        let value = (h << 8) + l;
+
+        if (value >= 0x8000) {
+            return -((65535 - value) + 1);
+        }
+        else {
+            return value;
+        }
+    }
+
+    function dist(a: number, b: number): number {
+        return Math.sqrt((a*a)+(b*b));
+    }
+
+    // Update acceleration data via I2C
+    function updateAcceleration(sensitivity: AccelSen) {
+        // Set sensitivity of acceleration range, according to selection and datasheet value
+        let accelRange = 0;
+        if(sensitivity == AccelSen.Range_2_g) {
+            // +- 2g
+            accelRange = 16384;
+        }
+        else if(sensitivity == AccelSen.Range_4_g) {
+            // +- 4g
+            accelRange = 8192;
+        }
+        else if(sensitivity == AccelSen.Range_8_g) {
+            // +- 8g
+            accelRange = 4096;
+        }
+        else if(sensitivity == AccelSen.Range_16_g) {
+            // +- 16g
+            accelRange = 2048;
+        }
+        xAccel = MPUReadData(xAccelAddr) / accelRange;
+        yAccel = MPUReadData(yAccelAddr) / accelRange;
+        zAccel = MPUReadData(zAccelAddr) / accelRange;
+    }
+
+    // Update gyroscope data via I2C
+    function updateGyroscope(sensitivity: GyroSen) {
+        // Set sensitivity of gyroscope range, according to selection and datasheet value
+        let gyroRange = 0;
+        if(sensitivity == GyroSen.Range_250_dps) {
+            // +- 250dps
+            gyroRange = 131;
+        }
+        else if(sensitivity == GyroSen.Range_500_dps) {
+            // +- 500dps
+            gyroRange = 65.5;
+        }
+        else if(sensitivity == GyroSen.Range_1000_dps) {
+            // +- 1000dps
+            gyroRange = 32.8;
+        }
+        else if(sensitivity == GyroSen.Range_2000_dps) {
+            // +- 2000dps
+            gyroRange = 16.4;
+        }
+        xGyro = MPUReadData(xGyroAddr) / gyroRange;
+        yGyro = MPUReadData(yGyroAddr) / gyroRange;
+        zGyro = MPUReadData(zGyroAddr) / gyroRange;
+    }
+
+    /**
+     * Initialize SEN-MPU6050
+     */
+    //% block="initialize SEN-MPU6050"
     //% weight=100
     export function initMPU6050() {
-        SENMPU6050.initMPU6050();
+        let buffer = pins.createBuffer(2);
+        buffer[0] = power_mgmt;
+        buffer[1] = 0;
+        pins.i2cWriteBuffer(i2cAddress, buffer);
     }
 
     /**
-      * Get gyroscope values
-      * @param axis which axis to read 
-      * @param sensitivity gyroscope sensitivity setting (rad/s)
-      * @return gyroscope value in rad/s
+      * Get gyroscope values in radian per second of the corresponding Axis, with selected sensitivity
+      * @param axis select X, Y or Z axis
+      * @param sensitivity select sensitivity of gyroscope (250, 500, 1000 or 2000 dps)
       */
-    //% block="gyroscope value of %axisXYZ axis with %gyroSen sensitivity (Unit: rad/s)" subcategory="Edu Kit"
-    //% group="Acceleration"
-    //% weight=99
-    export function gyroscope(axis: axisXYZ, sensitivity: gyroSen): number {
-        return SENMPU6050.gyroscope(axis, sensitivity)
+    //% block="gyroscope value of %AxisXYZ axis with %GyroSen sensitivity (Unit: rad/s)"
+    //%weight=95
+    export function gyroscope(axis: AxisXYZ, sensitivity: GyroSen): number {
+        updateGyroscope(sensitivity);
+        if(axis == AxisXYZ.X) {
+            return xGyro;
+        }
+        else if(axis == AxisXYZ.Y) {
+            return yGyro;
+        }
+        else {
+            return zGyro;
+        }
     }
 
     /**
-     * Get rotation of the corresponding Axis
-     * @param axis select axis
-     * @param sensitivity accelerator sensitivity setting 
-     * @returns angle in Degree 
+     * Get rotation of the corresponding Axis in degree
+     * @param axis select X, Y or Z axis
+     * @param sensitivity select sensitivity of accelerometer (2, 4, 8 or 16 g)
      */
-    //% block="angle of %xaxisXYZ axis with %accelSen sensitivity (Unit: Degrees)" subcategory="Edu Kit"
-    //% group="Acceleration"
-    //% weight=98
-    export function axisRotation(axis: axisXYZ, sensitivity: accelSen): number {
-        return SENMPU6050.axisRotation(axis, sensitivity)
+    //% block="angle of %AxisXYZ axis with %AccelSen sensitivity (Unit: Degrees)"
+    //% weight=90
+    export function axisRotation(axis: AxisXYZ, sensitivity: AccelSen): number {
+        updateAcceleration(sensitivity);
+
+        let radians;
+        if(axis == AxisXYZ.X) {
+            radians = Math.atan2(yAccel, dist(xAccel,zAccel));
+        }
+        else if(axis == AxisXYZ.Y) {
+            radians = -Math.atan2(xAccel, dist(yAccel,zAccel));
+        }
+        else if(axis == AxisXYZ.Z) {
+            radians = Math.atan2(zAccel, dist(xAccel, yAccel));
+        }
+
+        // Convert radian to degrees and return
+        let pi = Math.PI;
+        let degrees = radians * (180/pi);
+        return degrees;
     }
 
     /**
      * Get acceleration of the corresponding Axis
-     * @param axis select axis
-     * @param sensitivity accelerator sensitivity setting
-     * @returns acceleration
+     * @param axis select X, Y or Z axis
+     * @param sensitivity select sensitivity of accelerometer (2, 4, 8 or 16 g)
      */
-    //% block="acceleration of %xaxisXYZ axis with %accelSen sensitivity (Unit: g)" subcategory="Edu Kit"
-    //% group="Acceleration"
-    //% weight=97
-    export function axisAcceleration(axis: axisXYZ, sensitivity: accelSen): number {
-        return SENMPU6050.axisAcceleration(axis, sensitivity);
+    //% block="acceleration of %AxisXYZ axis with %AccelSen sensitivity (Unit: g)"
+    //% weight=85
+    export function axisAcceleration(axis: AxisXYZ, sensitivity: AccelSen): number {
+        updateAcceleration(sensitivity);
+        // Return acceleration of specific axis
+        if(axis == AxisXYZ.X) {
+            return xAccel;
+        }
+        else if(axis == AxisXYZ.Y) {
+            return yAccel;
+        }
+        else {
+            return zAccel;
+        }
     }
 
     /**
-     * Get temperature
-     * @returns temperature 
+     * Get temperature in degree Celsius from MPU6050
      */
-    //% block="temperature (Unit: Celsius)" subcategory="Smart Living"
-    //% group="Temperature and Humidity (DHT11/DHT22)" 
-    //% weight=96
+    //% block="temperature (Unit: Celsius)"
+    //% weight=80
     export function readTemperature(): number {
-        return SENMPU6050.readTemperature();
+        let rawTemp = MPUReadData(tempAddr);
+        return 36.53 + rawTemp / 340;
     }
+
+    //*************************************************************************************************//
+    //MPU6050 related code finished                                                                    //
+    //*************************************************************************************************//
+
+
 
     /**
      * Compass I2C register addresses
@@ -965,13 +1422,12 @@ namespace pksdriver {
     };
 
     /**
-     * Get ultrasonic distance 
-     * @returns distance in mm
+     * Get ultrasonic distance in mm
      */
-    //% block="get_dist (Unit: mm)" subcategory="Maze Car"
+    //% block="distance (Unit: mm)" subcategory="Maze Car"
     //% group="Ultrasound"
     //% weight=70
-    export function ultraResult(): number {
+    export function ultrasoundDistance(): number {
         let dist = 0;
         pins.i2cWriteNumber(0x57, 0x01, NumberFormat.UInt8BE, false);
         basic.pause(100);
@@ -983,9 +1439,8 @@ namespace pksdriver {
 
     /**
     * Compass read function, to get the yaw angle
-    * @returns yaw angle in degrees
     */
-    //% block="get_yaw (Unit: deg)" subcategory="Soccer Robot"
+    //% block="yaw (Unit: degree)" subcategory="Soccer Robot"
     //% group="Compass"
     //% weight=70
     export function compassGetYaw(): number {
@@ -1001,7 +1456,6 @@ namespace pksdriver {
     /**
      * Select a direction for maze car
      * @param wantedDirection FRONT, BACK, LEFT or RIGHT
-     * @returns the selected direction 
      */
     //% block="direction $wantedDirection" subcategory="Maze Car"
     //% group="Directions"
@@ -1050,11 +1504,11 @@ namespace pksdriver {
      * Color Sensor
      */
     export enum PKSDriverRGB {
-        //% block="red_value"
+        //% block="red"
         R,
-        //% block="green_value"
+        //% block="green"
         G,
-        //% block="blue_value"
+        //% block="blue"
         B
     }
 
@@ -1062,13 +1516,13 @@ namespace pksdriver {
      * RGBC color sensor values
      */
     export enum PKSDriverRGBC {
-        //% block="clear_light_value"
+        //% block="clear"
         C,
-        //% block="red_light_value"
+        //% block="red"
         R,
-        //% block="green_light_value"
+        //% block="green"
         G,
-        //% block="blue_light_value"
+        //% block="blue"
         B
     }
 
@@ -1087,21 +1541,35 @@ namespace pksdriver {
     /**
      * Basic color types for color sensor
      */
-    export enum PKSDriverColor_t {
-        Black = 0, White, Gray,
-        Red, Green, Blue,
-        Yellow, Cyan, Purple
+    export enum PKSDriverColorType {
+        //% block="black"
+        Black = 0,
+        //% block="white"
+        White,
+        //% block="gray"
+        Gray,
+        //% block="red"
+        Red,
+        //% block="green"
+        Green,
+        //% block="blue"
+        Blue,
+        //% block="yellow"
+        Yellow,
+        //% block="cyan"
+        Cyan,
+        //% block="purple"
+        Purple
     }
 
     /**
     * HSL read function
     * @param hslchoose H, S, or L
-    * @returns the selected value
     */
-    //% blockId=pksdriver_readhsl block="readHSL $hslchoose" subcategory="Edu Kit"
+    //% blockId=pksdriver_readhsl block="read HSL $hslchoose" subcategory="Edu Kit"
     //% group="Colors"
     //% weight=80
-    export function readhsl(hslchoose: PKSDriverHSL): number {
+    export function readHSL(hslchoose: PKSDriverHSL): number {
         pins.i2cWriteNumber(PKSDriverColor.ADDR, PKSDriverColor.HSL, NumberFormat.UInt8BE, false);
         let hsl = pins.i2cReadBuffer(PKSDriverColor.ADDR, 4, false);
         let temp = [hsl.getNumber(NumberFormat.UInt16LE, 0), //h
@@ -1113,12 +1581,11 @@ namespace pksdriver {
     /**
     * RGB read function
     * @param rgbchoose R, G or B
-    * @returns the selected value
     */
-    //% blockId=pksdriver_readrgb block="readRGB $rgbchoose" subcategory="Edu Kit"
+    //% blockId=pksdriver_readrgb block="read RGB $rgbchoose" subcategory="Edu Kit"
     //% group="Colors"
     //% weight=60
-    export function readrgb(rgbchoose: PKSDriverRGB): number {
+    export function readRGB(rgbchoose: PKSDriverRGB): number {
         pins.i2cWriteNumber(PKSDriverColor.ADDR, PKSDriverColor.RGB, NumberFormat.UInt8BE, false);
         let rgb = pins.i2cReadBuffer(PKSDriverColor.ADDR, 3, false);
         let temp = [rgb.getNumber(NumberFormat.UInt8LE, 0),  //r
@@ -1130,12 +1597,11 @@ namespace pksdriver {
     /**
     * RGBC read function
     * @param choose C, R, G, or B
-    * @returns the selected value
     */
-    //% blockId=pksdriver_readrgbc block="readRGBC $choose" subcategory="Edu Kit"
+    //% blockId=pksdriver_readrgbc block="read RGBC $choose" subcategory="Edu Kit"
     //% group="Colors"
     //% weight=70
-    export function readrgbc(choose: PKSDriverRGBC): number {
+    export function readRGBC(choose: PKSDriverRGBC): number {
         pins.i2cWriteNumber(PKSDriverColor.ADDR, PKSDriverColor.RGBC, NumberFormat.UInt8BE, false);
         let rgbc = pins.i2cReadBuffer(PKSDriverColor.ADDR, 16, false);
         let temp = [rgbc.getNumber(NumberFormat.UInt32LE, 0),  //c                 
@@ -1147,12 +1613,13 @@ namespace pksdriver {
 
     /**
     * color read function
-    * @returns the detected color (Black, White, Gray, Red, Green, Blue, Yellow, Cyan, Purple)
+    * return the detected color (Black, White, Gray, Red, Green, Blue, Yellow, Cyan, Purple)
+    * the preset threshold on the color sensor may not be accurate, it is recommended to use readHSL or readRGB function to get the raw data and do the color analysis by yourself for better accuracy
     */
-    //% blockId=pksdriver_readcolor block="readColor" subcategory="Edu Kit"
+    //% blockId=pksdriver_readcolor block="read color" subcategory="Edu Kit"
     //% group="Colors"
     //% weight=70
-    export function readColor(): PKSDriverColor_t {
+    export function readColor(): PKSDriverColorType {
         pins.i2cWriteNumber(PKSDriverColor.ADDR, PKSDriverColor.COLOR, NumberFormat.UInt8BE, false);
         return pins.i2cReadBuffer(PKSDriverColor.ADDR, 1, false).getNumber(NumberFormat.UInt8LE, 0);
     }
@@ -1160,56 +1627,52 @@ namespace pksdriver {
     /**
     * check read color
     * @param color The color to check against
-    * @returns true if colors matches 
     */
-    //% blockId=pksdriver_checkReadColor block="read color is %color_t" subcategory="Edu Kit"
+    //% blockId=pksdriver_checkReadColor block="is read color %color" subcategory="Edu Kit"
     //% group="Colors"
     //% weight=70
-    export function checkReadColor(color: PKSDriverColor_t): boolean {
+    export function checkReadColor(color: PKSDriverColorType): boolean {
         return readColor() == color
     }
 
     /**
-    * check get color
+    * check if colors matches
     *  @param color The color to check against
-    *  @returns true if colors matches
     */
-    //% blockId=pksdriver_checkGetColor block="get color is %color_t" subcategory="Edu Kit"
+    //% blockId=pksdriver_checkGetColor block="is color %color" subcategory="Edu Kit"
     //% group="Colors"
     //% weight=70
-    export function checkGetColor(color: PKSDriverColor_t): boolean {
-        return getColor() == color
+    export function checkGetColor(color: PKSDriverColorType): boolean {
+        return reAnalysisColor() == color
     }
 
     /**
     * function transfer hsl value to color 
-    * @returns color enum value
+    * redefine the color threshold 
     */
-    //% blockId=pksdriver_getcolor block="getColor" subcategory="Edu Kit"
+    //% blockId=pksdriver_getcolor block="get color" subcategory="Edu Kit"
     //% group="Colors"
     //% weight=70
-    export function getColor(): number {
+    export function reAnalysisColor(): number {
         pins.i2cWriteNumber(PKSDriverColor.ADDR, PKSDriverColor.HSL, NumberFormat.UInt8BE, false);
         let hsl = pins.i2cReadBuffer(PKSDriverColor.ADDR, 4, false);
         let temp1 = [hsl.getNumber(NumberFormat.UInt16LE, 0), //h
         hsl.getNumber(NumberFormat.UInt8LE, 2), //s
         hsl.getNumber(NumberFormat.UInt8LE, 3)] //l
         if (temp1[PKSDriverHSL.H] > 330 || temp1[PKSDriverHSL.H] < 30) {
-            return PKSDriverColor_t.Red
+            return PKSDriverColorType.Red
         } else if (temp1[pksdriver.PKSDriverHSL.H] >= 30 && temp1[PKSDriverHSL.H] < 90) {
-            return PKSDriverColor_t.Yellow
+            return PKSDriverColorType.Yellow
         } else if (temp1[PKSDriverHSL.H] >= 90 && temp1[PKSDriverHSL.H] < 150) {
-            return PKSDriverColor_t.Green
+            return PKSDriverColorType.Green
         } else if (temp1[PKSDriverHSL.H] >= 150 && temp1[PKSDriverHSL.H] < 210) {
-            return PKSDriverColor_t.Blue//cyan but i find many blue color will sense as cyan color
+            return PKSDriverColorType.Blue//cyan but i find many blue color will sense as cyan color
         } else if (temp1[PKSDriverHSL.H] >= 210 && temp1[PKSDriverHSL.H] < 270) {
-            return PKSDriverColor_t.Blue
+            return PKSDriverColorType.Blue
         } else if (temp1[PKSDriverHSL.H] >= 210 && temp1[PKSDriverHSL.H] < 330) {
-            return PKSDriverColor_t.Purple
+            return PKSDriverColorType.Purple
         }
-
         return -1
-
     }
 
     /**
@@ -1227,7 +1690,6 @@ namespace pksdriver {
     /**
      * Check if button is pressed  
      * @param Buttoncheck B1 - B3
-     * @returns true if button is pressed  
      */
     //% blockId=pksdriver_getbutton block="get button $Buttoncheck" subcategory="Edu Kit"
     //% group="Button"
@@ -1273,54 +1735,54 @@ namespace pksdriver {
     /**
      * I2C multiplexer channel options
      */
-    export enum PKSDriverI2cchannel {
-        //% block="C1"
+    export enum PKSDriverI2cChannel {
+        //% block="channel 1"
         C1,
-        //% block="C2"
+        //% block="channel 2"
         C2,
-        //% block="C3"
+        //% block="channel 3"
         C3,
-        //% block="C4"
+        //% block="channel 4"
         C4,
-        //% block="C5"
+        //% block="channel 5"
         C5,
-        //% block="C6"
+        //% block="channel 6"
         C6,
-        //% block="C7"
+        //% block="channel 7"
         C7,
-        //% block="C8"
+        //% block="channel 8"
         C8
     }
 
     /**
     * switch I2C multiplexer channel 
-    * @param channelselected which channel to select on the I2C multiplexer 
+    * @param channelSelected which channel to select on the I2C multiplexer 
      */
-    function switchI2CMultiplexer(channelselected: PKSDriverI2cchannel): void {
+    function switchI2CMultiplexer(channelSelected: PKSDriverI2cChannel): void {
         let i2c_multiplexerAddress = 0x70;
         const buf = pins.createBuffer(1);
-        if (channelselected == PKSDriverI2cchannel.C1) {
+        if (channelSelected == PKSDriverI2cChannel.C1) {
             buf[0] = 0x08
         }
-        else if (channelselected == PKSDriverI2cchannel.C2) {
+        else if (channelSelected == PKSDriverI2cChannel.C2) {
             buf[0] = 0x04
         }
-        else if (channelselected == PKSDriverI2cchannel.C3) {
+        else if (channelSelected == PKSDriverI2cChannel.C3) {
             buf[0] = 0x02
         }
-        else if (channelselected == PKSDriverI2cchannel.C4) {
+        else if (channelSelected == PKSDriverI2cChannel.C4) {
             buf[0] = 0x01
         }
-        else if (channelselected == PKSDriverI2cchannel.C5) {
+        else if (channelSelected == PKSDriverI2cChannel.C5) {
             buf[0] = 0x10
         }
-        else if (channelselected == PKSDriverI2cchannel.C6) {
+        else if (channelSelected == PKSDriverI2cChannel.C6) {
             buf[0] = 0x20
         }
-        else if (channelselected == PKSDriverI2cchannel.C7) {
+        else if (channelSelected == PKSDriverI2cChannel.C7) {
             buf[0] = 0x40
         }
-        else if (channelselected == PKSDriverI2cchannel.C8) {
+        else if (channelSelected == PKSDriverI2cChannel.C8) {
             buf[0] = 0x80
         }
         pins.i2cWriteBuffer(i2c_multiplexerAddress, buf, false);
@@ -1329,46 +1791,46 @@ namespace pksdriver {
 
     /**
      * Switch I2C multiplexer channel (Edu Kit)
-     * @param channelselected C1~C8 
+     * @param channelSelected C1~C8 
      */
-    //% blockId=pksdriver_switch_channel_edu block="switch i2cchannel %channelselected" subcategory="Edu Kit"
+    //% blockId=pksdriver_switch_channel_edu block="switch i2c %channelSelected" subcategory="Edu Kit"
     //% group="I2C multiplexer"
     //% weight=70
-    export function switchI2CChannelEdu(channelselected: PKSDriverI2cchannel): void {
-        switchI2CMultiplexer(channelselected);
+    export function switchI2CChannelEdu(channelSelected: PKSDriverI2cChannel): void {
+        switchI2CMultiplexer(channelSelected);
     }
 
     /**
      * Switch I2C multiplexer channel (Maze Car)
-     * @param channelselected C1~C8
+     * @param channelSelected C1~C8
      */
-    //% blockId=pksdriver_switch_channel_maze block="switch i2cchannel %channelselected" subcategory="Maze Car"
+    //% blockId=pksdriver_switch_channel_maze block="switch i2c %channelSelected" subcategory="Maze Car"
     //% group="I2C multiplexer"
     //% weight=70
-    export function switchI2CChannelMaze(channelselected: PKSDriverI2cchannel): void {
-        switchI2CMultiplexer(channelselected);
+    export function switchI2CChannelMaze(channelSelected: PKSDriverI2cChannel): void {
+        switchI2CMultiplexer(channelSelected);
     }
 
     /**
      * Switch I2C multiplexer channel (Soccer Robot)
-     * @param channelselected C1~C8
+     * @param channelSelected C1~C8
      */
-    //% blockId=pksdriver_switch_channel_soccer block="switch i2cchannel %channelselected" subcategory="Soccer Robot"
+    //% blockId=pksdriver_switch_channel_soccer block="switch i2c %channelSelected" subcategory="Soccer Robot"
     //% group="I2C multiplexer"
     //% weight=70
-    export function switchI2CChannelSoccer(channelselected: PKSDriverI2cchannel): void {
-        switchI2CMultiplexer(channelselected);
+    export function switchI2CChannelSoccer(channelSelected: PKSDriverI2cChannel): void {
+        switchI2CMultiplexer(channelSelected);
     }
 
     /**
      * Switch I2C multiplexer channel (Smart Living)
-     * @param channelselected C1~C8
+     * @param channelSelected C1~C8
      */
-    //% blockId=pksdriver_switch_channel_smart block="switch i2cchannel %channelselected" subcategory="Smart Living"
+    //% blockId=pksdriver_switch_channel_smart block="switch i2c %channelSelected" subcategory="Smart Living"
     //% group="I2C multiplexer"
     //% weight=70
-    export function switchI2CChannelSmart(channelselected: PKSDriverI2cchannel): void {
-        switchI2CMultiplexer(channelselected);
+    export function switchI2CChannelSmart(channelSelected: PKSDriverI2cChannel): void {
+        switchI2CMultiplexer(channelSelected);
     }
 
 }

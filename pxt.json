@@ -1,14 +1,10 @@
 {
-    "name": "PKS Driver",
+    "name": "pxt-pks-shield-v2",
     "version": "1.0.0",
     "description": "This is a library for Peanut KING Micro:bit Robot Shield",
     "license": "MIT",
     "dependencies": {
-        "core": "*",
-        "radio": "*",
-        "pxt-DHT11_DHT22": "github:alankrantas/pxt-dht11_dht22#v0.0.3",
-        "SEN-MPU6050": "github:joy-it/sen-mpu6050#1.0.1",
-        "DS1302": "github:makecode-extensions/ds1302#v1.1.0"
+        "core": "*"
     },
     "files": [
         "README.md",
