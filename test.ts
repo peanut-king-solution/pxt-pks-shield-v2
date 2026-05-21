@@ -135,7 +135,7 @@ function testChooseDirection() {
 
 // Ultra sensor function
 function testUltraResult() {
-    let dist = pksdriver.ultrasoundResult()
+    let dist = pksdriver.ultrasoundDistance()
     basic.showNumber(dist)
     basic.pause(500)
     basic.clearScreen()

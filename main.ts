@@ -1145,6 +1145,7 @@ namespace pksdriver {
 
     /**
      * create a DS1302 object.
+     * The CLK, DIO and CS pins can be assigned to any digital pin.
      * @param clk the CLK pin for DS1302, eg: DigitalPin.P13
      * @param dio the DIO pin for DS1302, eg: DigitalPin.P14
      * @param cs the CS pin for DS1302, eg: DigitalPin.P15
@@ -1426,7 +1427,7 @@ namespace pksdriver {
     //% block="distance (Unit: mm)" subcategory="Maze Car"
     //% group="Ultrasound"
     //% weight=70
-    export function ultrasoundResult(): number {
+    export function ultrasoundDistance(): number {
         let dist = 0;
         pins.i2cWriteNumber(0x57, 0x01, NumberFormat.UInt8BE, false);
         basic.pause(100);
