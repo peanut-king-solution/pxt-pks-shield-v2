@@ -2,22 +2,22 @@
 
 // Motor functions
 function testMotorRun() {
-    pksdriver.motorRun(pksdriver.PKSDriverMotors.M1, pksdriver.PKSDriverDirection.CLOCKWISE, 100)
+    pksdriver.motorRun(pksdriver.PKSDriverMotors.M1, pksdriver.PKSDriverDirection.Clockwise, 100)
     basic.pause(500)
     pksdriver.motorStop(pksdriver.PKSDriverMotors.M1)
 }
 
 function testMotorRunAll() {
-    pksdriver.motorRun(pksdriver.PKSDriverMotors.M1, pksdriver.PKSDriverDirection.CLOCKWISE, 80)
-    pksdriver.motorRun(pksdriver.PKSDriverMotors.M2, pksdriver.PKSDriverDirection.COUNTERCLOCKWISE, 80)
-    pksdriver.motorRun(pksdriver.PKSDriverMotors.M3, pksdriver.PKSDriverDirection.CLOCKWISE, 80)
-    pksdriver.motorRun(pksdriver.PKSDriverMotors.M4, pksdriver.PKSDriverDirection.COUNTERCLOCKWISE, 80)
+    pksdriver.motorRun(pksdriver.PKSDriverMotors.M1, pksdriver.PKSDriverDirection.Clockwise, 80)
+    pksdriver.motorRun(pksdriver.PKSDriverMotors.M2, pksdriver.PKSDriverDirection.Counterclockwise, 80)
+    pksdriver.motorRun(pksdriver.PKSDriverMotors.M3, pksdriver.PKSDriverDirection.Clockwise, 80)
+    pksdriver.motorRun(pksdriver.PKSDriverMotors.M4, pksdriver.PKSDriverDirection.Counterclockwise, 80)
     basic.pause(1000)
     pksdriver.motorStopAll()
 }
 
 function testMotorStop() {
-    pksdriver.motorRun(pksdriver.PKSDriverMotors.M1, pksdriver.PKSDriverDirection.CLOCKWISE, 100)
+    pksdriver.motorRun(pksdriver.PKSDriverMotors.M1, pksdriver.PKSDriverDirection.Clockwise, 100)
     basic.pause(500)
     pksdriver.motorStop(pksdriver.PKSDriverMotors.M1)
 }
@@ -28,7 +28,7 @@ function testMotorStopAll() {
 
 // Maze motor functions
 function testMazeMotorRun() {
-    pksdriver.mazeMotorRun(pksdriver.PKSDriverMotors.M1, pksdriver.PKSDriverDirection.CLOCKWISE, 100)
+    pksdriver.mazeMotorRun(pksdriver.PKSDriverMotors.M1, pksdriver.PKSDriverDirection.Clockwise, 100)
     basic.pause(500)
     pksdriver.mazeMotorStopAll()
 }
@@ -299,19 +299,19 @@ function testInitMPU6050() {
 }
 
 function testGyroscope() {
-    pksdriver.gyroscope(pksdriver.AxisXYZ.X, pksdriver.GyroSen.Range_250_dps)
+    pksdriver.gyroscope(pksdriver.AxisXYZ.X, pksdriver.GyroSen.Range250dps)
     basic.pause(300)
-    pksdriver.gyroscope(pksdriver.AxisXYZ.Y, pksdriver.GyroSen.Range_250_dps)
+    pksdriver.gyroscope(pksdriver.AxisXYZ.Y, pksdriver.GyroSen.Range250dps)
     basic.pause(300)
-    pksdriver.gyroscope(pksdriver.AxisXYZ.Z, pksdriver.GyroSen.Range_250_dps)
+    pksdriver.gyroscope(pksdriver.AxisXYZ.Z, pksdriver.GyroSen.Range250dps)
     basic.pause(300)
     basic.clearScreen()
 }
 
 function testAxisRotation() {
-    let rx = pksdriver.axisRotation(pksdriver.AxisXYZ.X, pksdriver.AccelSen.Range_2_g)
-    let ry = pksdriver.axisRotation(pksdriver.AxisXYZ.Y, pksdriver.AccelSen.Range_2_g)
-    let rz = pksdriver.axisRotation(pksdriver.AxisXYZ.Z, pksdriver.AccelSen.Range_2_g)
+    let rx = pksdriver.axisRotation(pksdriver.AxisXYZ.X, pksdriver.AccelSen.Range2g)
+    let ry = pksdriver.axisRotation(pksdriver.AxisXYZ.Y, pksdriver.AccelSen.Range2g)
+    let rz = pksdriver.axisRotation(pksdriver.AxisXYZ.Z, pksdriver.AccelSen.Range2g)
     basic.showNumber(rx)
     basic.pause(300)
     basic.showNumber(ry)
@@ -321,9 +321,9 @@ function testAxisRotation() {
 }
 
 function testAxisAcceleration() {
-    let ax = pksdriver.axisAcceleration(pksdriver.AxisXYZ.X, pksdriver.AccelSen.Range_2_g)
-    let ay = pksdriver.axisAcceleration(pksdriver.AxisXYZ.Y, pksdriver.AccelSen.Range_2_g)
-    let az = pksdriver.axisAcceleration(pksdriver.AxisXYZ.Z, pksdriver.AccelSen.Range_2_g)
+    let ax = pksdriver.axisAcceleration(pksdriver.AxisXYZ.X, pksdriver.AccelSen.Range2g)
+    let ay = pksdriver.axisAcceleration(pksdriver.AxisXYZ.Y, pksdriver.AccelSen.Range2g)
+    let az = pksdriver.axisAcceleration(pksdriver.AxisXYZ.Z, pksdriver.AccelSen.Range2g)
     basic.showNumber(ax)
     basic.pause(300)
     basic.showNumber(ay)
@@ -395,7 +395,7 @@ function testAht20ReadHumidity() {
 // DS1302 RTC functions - requires DS1302 to be created first
 function testDS1302() {
     // Create DS1302 instance (assumes pins P13, P14, P15)
-    let rtc = pksdriver.create(DigitalPin.P13, DigitalPin.P14, DigitalPin.P15)
+    let rtc = pksdriver.createDS1302(DigitalPin.P13, DigitalPin.P14, DigitalPin.P15)
     
     // Set date and time
     rtc.dateTime(2024, 1, 15, 1, 12, 30, 0)

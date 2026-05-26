@@ -4,7 +4,7 @@ Peanut King micro:bit Shield V2 extension for motors, servos, sensors, and I2C m
 
 ## Product URL
 
-Product URL: https://www.peanutkingsolution.com/en/product-page/peanut-king-micro-bit-shield-v2-%E6%93%B4%E5%B1%95%E6%9D%BF
+[Peanut KING micro:bit Shield V2 Extension Shield](https://www.peanutkingsolution.com/product-page/peanut-king-micro-bit-shield-v2-%E6%93%B4%E5%B1%95%E6%9D%BF)
 
 ## Summary
 
@@ -156,11 +156,6 @@ basic.forever(function () {
     basic.pause(1000)
 })
 ```
-
-## Notes
-
-- The AHT20 support is implemented directly in this extension so it does not rely on the unapproved upstream AHT20 package.
-- Other APIs still wrap functionality provided by dependencies such as `DS1302`, `SEN-MPU6050`, and `pxt-DHT11_DHT22`.
 
 ## License
 This project is licensed under the **MIT License**.

@@ -66,9 +66,9 @@ namespace pksdriver {
      */
     export enum PKSDriverDirection {
         //% blockId="pksdriver_CW" block="clockwise"
-        CLOCKWISE = 1,
+        Clockwise = 1,
         //% blockId="pksdriver_CCW" block="counterclockwise"
-        COUNTERCLOCKWISE = -1
+        Counterclockwise = -1
     }
 
     let initialized = false
@@ -582,6 +582,7 @@ namespace pksdriver {
      * Read the absolute humidity
      */
     //% block="read the absolute humidity (g/m³) || as fixed-point 8.8bit %fp88" subcategory="Smart Living"
+    //% group="Temperature and Humidity (AHT20)"
     //% weight=0
     export function readAbsHumidity(fp88?: boolean): uint16 {
         const aht20 = new AHT20Sensor();
@@ -599,9 +600,10 @@ namespace pksdriver {
     }
 
     /**
-     * Calculate crc8
+     * Calculate CRC8
      */
-    //% block="calculate crc" subcategory="Smart Living"
+    //% block="calculate CRC8 of $n" subcategory="Smart Living"
+    //% group="Temperature and Humidity (AHT20)"
     //% weight=0 
     export function crc8(n: number): uint8 {
         const byte1 = n & 0xff;
@@ -637,9 +639,9 @@ namespace pksdriver {
     }
 
     export enum TempType {
-        //% block="celsius (°C)"
+        //% block="Celsius (°C)"
         Celsius,
-        //% block="fahrenheit (°F)"
+        //% block="Fahrenheit (°F)"
         Fahrenheit,
     }
 
@@ -918,8 +920,9 @@ namespace pksdriver {
         /**
          * get Year
          */
-        //% blockId="DS1302_get_year" block="%ds|get year"
-        //% weight=80 blockGap=8
+        //% blockId="pksdriver_DS1302_get_year" block="%ds|get year" subcategory="Smart Living"
+        //% group="Real time clock"
+        //% weight=70 blockGap=8
         //% parts="DS1302"
         year(): number {
             return Math.min(HexToDec(this.readReg(DS1302_REG_YEAR + 1)), 99) + 2000
@@ -929,8 +932,9 @@ namespace pksdriver {
          * set year
          * @param dat is the Year will be set, eg: 2018
          */
-        //% blockId="DS1302_set_year" block="%ds|set year %dat"
-        //% weight=81 blockGap=8
+        //% blockId="pksdriver_DS1302_set_year" block="%ds|set year %dat" subcategory="Smart Living"
+        //% weight=80 blockGap=8
+        //% group="Real time clock"
         //% parts="DS1302"
         setYear(dat: number): void {
             this.writeReg(DS1302_REG_YEAR, DecToHex(dat % 100))
@@ -939,9 +943,10 @@ namespace pksdriver {
         /**
          * get Month
          */
-        //% blockId="DS1302_get_month" block="%ds|get month"
-        //% weight=78 blockGap=8
+        //% blockId="pksdriver_DS1302_get_month" block="%ds|get month" subcategory="Smart Living"
+        //% weight=69 blockGap=8
         //% parts="DS1302"
+        //% group="Real time clock"
         month(): number {
             return Math.max(Math.min(HexToDec(this.readReg(DS1302_REG_MONTH + 1)), 12), 1)
         }
@@ -950,8 +955,9 @@ namespace pksdriver {
          * set month
          * @param dat is Month will be set.  eg: 2
          */
-        //% blockId="DS1302_set_month" block="%ds|set month %dat"
+        //% blockId="pksdriver_DS1302_set_month" block="%ds|set month %dat" subcategory="Smart Living"
         //% weight=79 blockGap=8
+        //% group="Real time clock"
         //% parts="DS1302"
         //% dat.min=1 dat.max=12
         setMonth(dat: number): void {
@@ -961,8 +967,9 @@ namespace pksdriver {
         /**
          * get Day
          */
-        //% blockId="DS1302_get_day" block="%ds|get day"
-        //% weight=76 blockGap=8
+        //% blockId="pksdriver_DS1302_get_day" block="%ds|get day" subcategory="Smart Living"
+        //% group="Real time clock"
+        //% weight=68 blockGap=8
         //% parts="DS1302"
         day(): number {
             return Math.max(Math.min(HexToDec(this.readReg(DS1302_REG_DAY + 1)), 31), 1)
@@ -972,8 +979,9 @@ namespace pksdriver {
          * set day
          * @param dat is the Day will be set, eg: 15
          */
-        //% blockId="DS1302_set_day" block="%ds|set day %dat"
-        //% weight=77 blockGap=8
+        //% blockId="pksdriver_DS1302_set_day" block="%ds|set day %dat" subcategory="Smart Living"
+        //% group="Real time clock"
+        //% weight=78 blockGap=8
         //% parts="DS1302"
         //% dat.min=1 dat.max=31
         setDay(dat: number): void {
@@ -983,8 +991,9 @@ namespace pksdriver {
         /**
          * get Week Day
          */
-        //% blockId="DS1302_get_weekday" block="%ds|get weekday"
-        //% weight=74 blockGap=8
+        //% blockId="pksdriver_DS1302_get_weekday" block="%ds|get weekday" subcategory="Smart Living"
+        //% group="Real time clock"
+        //% weight=67 blockGap=8
         //% parts="DS1302"
         weekday(): number {
             return Math.max(Math.min(HexToDec(this.readReg(DS1302_REG_WEEKDAY + 1)), 7), 1)
@@ -994,8 +1003,9 @@ namespace pksdriver {
          * set weekday
          * @param dat is the Week Day will be set, eg: 4
          */
-        //% blockId="DS1302_set_weekday" block="%ds|set weekday %dat"
-        //% weight=75 blockGap=8
+        //% blockId="pksdriver_DS1302_set_weekday" block="%ds|set weekday %dat" subcategory="Smart Living"
+        //% group="Real time clock"
+        //% weight=77 blockGap=8
         //% parts="DS1302"
         //% dat.min=1 dat.max=7
         setWeekday(dat: number): void {
@@ -1005,8 +1015,9 @@ namespace pksdriver {
         /**
          * get Hour
          */
-        //% blockId="DS1302_get_hour" block="%ds|get hour"
-        //% weight=72 blockGap=8
+        //% blockId="pksdriver_DS1302_get_hour" block="%ds|get hour" subcategory="Smart Living"
+        //% group="Real time clock"
+        //% weight=66 blockGap=8
         //% parts="DS1302"
         hour(): number {
             return Math.min(HexToDec(this.readReg(DS1302_REG_HOUR + 1)), 23)
@@ -1016,8 +1027,9 @@ namespace pksdriver {
          * set hour
          * @param dat is the Hour will be set, eg: 0
          */
-        //% blockId="DS1302_set_hour" block="%ds|set hour %dat"
-        //% weight=73 blockGap=8
+        //% blockId="pksdriver_DS1302_set_hour" block="%ds|set hour %dat" subcategory="Smart Living"
+        //% group="Real time clock"
+        //% weight=76 blockGap=8
         //% parts="DS1302"
         //% dat.min=0 dat.max=23
         setHour(dat: number): void {
@@ -1027,8 +1039,9 @@ namespace pksdriver {
         /**
          * get Minute
          */
-        //% blockId="DS1302_get_minute" block="%ds|get minute"
-        //% weight=72 blockGap=8
+        //% blockId="pksdriver_DS1302_get_minute" block="%ds|get minute" subcategory="Smart Living"
+        //% group="Real time clock"
+        //% weight=65 blockGap=8
         //% parts="DS1302"
         minute(): number {
             return Math.min(HexToDec(this.readReg(DS1302_REG_MINUTE + 1)), 59)
@@ -1038,8 +1051,9 @@ namespace pksdriver {
          * set minute
          * @param dat is the Minute will be set, eg: 0
          */
-        //% blockId="DS1302_set_minute" block="%ds|set minute %dat"
-        //% weight=71 blockGap=8
+        //% blockId="pksdriver_DS1302_set_minute" block="%ds|set minute %dat" subcategory="Smart Living"
+        //% group="Real time clock"
+        //% weight=75 blockGap=8
         //% parts="DS1302"
         //% dat.min=0 dat.max=59
         setMinute(dat: number): void {
@@ -1049,8 +1063,9 @@ namespace pksdriver {
         /**
          * get Second
          */
-        //% blockId="DS1302_get_second" block="%ds|get second"
-        //% weight=70 blockGap=8
+        //% blockId="pksdriver_DS1302_get_second" block="%ds|get second" subcategory="Smart Living"
+        //% group="Real time clock"
+        //% weight=64 blockGap=8
         //% parts="DS1302"
         second(): number {
             return Math.min(HexToDec(this.readReg(DS1302_REG_SECOND + 1)), 59)
@@ -1060,8 +1075,9 @@ namespace pksdriver {
          * set second
          * @param dat is the Second will be set, eg: 0
          */
-        //% blockId="DS1302_set_second" block="%ds|set second %dat"
-        //% weight=69 blockGap=8
+        //% blockId="pksdriver_DS1302_set_second" block="%ds|set second %dat" subcategory="Smart Living"
+        //% group="Real time clock"
+        //% weight=74 blockGap=8
         //% parts="DS1302"
         //% dat.min=0 dat.max=59
         setSecond(dat: number): void {
@@ -1078,8 +1094,8 @@ namespace pksdriver {
          * @param minute is the Minute will be set, eg: 0
          * @param second is the Second will be set, eg: 0
          */
-        //% blockId="DS1302_set_dateTime" block="%ds|set Date and Time: Year %year|Month %month|Day %day|WeekDay %weekday|Hour %hour|Minute %minute|Second %second"
-        //% weight=50 blockGap=8
+        //% blockId="pksdriver_DS1302_set_dateTime" block="%ds|set date and time:| year %year|month %month|day %day|weekday %weekday|hour %hour|minute %minute|second %second" subcategory="Smart Living"
+        //% weight=180 blockGap=8
         //% parts="DS1302"
         //% year.min=2000 year.max=2100
         //% month.min=1 month.max=12
@@ -1088,6 +1104,7 @@ namespace pksdriver {
         //% hour.min=0 hour.max=23
         //% minute.min=0 minute.max=59
         //% second.min=0 second.max=59
+        //% group="Real time clock"
         dateTime(year: number, month: number, day: number, weekday: number, hour: number, minute: number, second: number): void {
             this.setYear(year);
             this.setMonth(month);
@@ -1101,7 +1118,8 @@ namespace pksdriver {
         /**
          * start ds1302 RTC (go on)
          */
-        //% blockId="DS1302_start" block="%ds|start RTC"
+        //% blockId="pksdriver_DS1302_start" block="%ds|start RTC" subcategory="Smart Living"
+        //% group="Real time clock"
         //% weight=41 blockGap=8
         //% parts="DS1302"
         start(): void {
@@ -1112,7 +1130,8 @@ namespace pksdriver {
         /**
          * pause ds1302 RTC
          */
-        //% blockId="DS1302_pause" block="%ds|pause RTC"
+        //% blockId="pksdriver_DS1302_pause" block="%ds|pause RTC" subcategory="Smart Living"
+        //% group="Real time clock"
         //% weight=40 blockGap=8
         //% parts="DS1302"
         pause(): void {
@@ -1123,7 +1142,8 @@ namespace pksdriver {
         /**
          * read RAM
          */
-        //% blockId="DS1302_read_ram" block="%ds|read ram %reg"
+        //% blockId="pksdriver_DS1302_read_ram" block="%ds|read RAM %reg" subcategory="Smart Living"
+        //% group="Real time clock"
         //% weight=43 blockGap=8
         //% parts="DS1302"
         //% reg.min=0 reg.max=30
@@ -1134,7 +1154,8 @@ namespace pksdriver {
         /**
          * write RAM
          */
-        //% blockId="DS1302_write_ram" block="%ds|write ram %reg|with %dat"
+        //% blockId="pksdriver_DS1302_write_ram" block="%ds|write RAM %reg|with %dat" subcategory="Smart Living"
+        //% group="Real time clock"
         //% weight=42 blockGap=8
         //% parts="DS1302"
         //% reg.min=0 reg.max=30
@@ -1150,9 +1171,11 @@ namespace pksdriver {
      * @param dio the DIO pin for DS1302, eg: DigitalPin.P14
      * @param cs the CS pin for DS1302, eg: DigitalPin.P15
      */
-    //% weight=200 blockGap=8
-    //% blockId="DS1302_create" block="CLK %clk|DIO %dio|CS %cs"
-    export function create(clk: DigitalPin, dio: DigitalPin, cs: DigitalPin): DS1302RTC {
+    //% weight=200 blockGap=8 
+    //% blockSetVariable=ds
+    //% blockId="pksdriver_DS1302_create" block="DS1302 wiring configuration: CLK %clk|DIO %dio|CS %cs" subcategory="Smart Living"
+    //% group="Real time clock"
+    export function createDS1302(clk: DigitalPin, dio: DigitalPin, cs: DigitalPin): DS1302RTC {
         let ds = new DS1302RTC();
         ds.clk = clk;
         ds.dio = dio;
@@ -1188,13 +1211,13 @@ namespace pksdriver {
      */
     export enum AccelSen {
         //% block="2g"
-        Range_2_g,
+        Range2g,
         //% block="4g"
-        Range_4_g,
+        Range4g,
         //% block="8g"
-        Range_8_g,
+        Range8g,
         //% block="16g"
-        Range_16_g
+        Range16g
     }
 
     /**
@@ -1202,13 +1225,13 @@ namespace pksdriver {
      */
     export enum GyroSen {
         //% block="250dps"
-        Range_250_dps,
+        Range250dps,
         //% block="500dps"
-        Range_500_dps,
+        Range500dps,
         //% block="1000dps"
-        Range_1000_dps,
+        Range1000dps,
         //% block="2000dps"
-        Range_2000_dps
+        Range2000dps
     }
 
     let i2cAddress = 0x68;
@@ -1258,19 +1281,19 @@ namespace pksdriver {
     function updateAcceleration(sensitivity: AccelSen) {
         // Set sensitivity of acceleration range, according to selection and datasheet value
         let accelRange = 0;
-        if(sensitivity == AccelSen.Range_2_g) {
+        if(sensitivity == AccelSen.Range2g) {
             // +- 2g
             accelRange = 16384;
         }
-        else if(sensitivity == AccelSen.Range_4_g) {
+        else if(sensitivity == AccelSen.Range4g) {
             // +- 4g
             accelRange = 8192;
         }
-        else if(sensitivity == AccelSen.Range_8_g) {
+        else if(sensitivity == AccelSen.Range8g) {
             // +- 8g
             accelRange = 4096;
         }
-        else if(sensitivity == AccelSen.Range_16_g) {
+        else if(sensitivity == AccelSen.Range16g) {
             // +- 16g
             accelRange = 2048;
         }
@@ -1283,19 +1306,19 @@ namespace pksdriver {
     function updateGyroscope(sensitivity: GyroSen) {
         // Set sensitivity of gyroscope range, according to selection and datasheet value
         let gyroRange = 0;
-        if(sensitivity == GyroSen.Range_250_dps) {
+        if(sensitivity == GyroSen.Range250dps) {
             // +- 250dps
             gyroRange = 131;
         }
-        else if(sensitivity == GyroSen.Range_500_dps) {
+        else if(sensitivity == GyroSen.Range500dps) {
             // +- 500dps
             gyroRange = 65.5;
         }
-        else if(sensitivity == GyroSen.Range_1000_dps) {
+        else if(sensitivity == GyroSen.Range1000dps) {
             // +- 1000dps
             gyroRange = 32.8;
         }
-        else if(sensitivity == GyroSen.Range_2000_dps) {
+        else if(sensitivity == GyroSen.Range2000dps) {
             // +- 2000dps
             gyroRange = 16.4;
         }
@@ -1308,6 +1331,7 @@ namespace pksdriver {
      * Initialize SEN-MPU6050
      */
     //% block="initialize SEN-MPU6050"
+    //% group="MPU6050 gyroscope and accelerometer sensor"
     //% weight=100
     export function initMPU6050() {
         let buffer = pins.createBuffer(2);
@@ -1321,8 +1345,9 @@ namespace pksdriver {
       * @param axis select X, Y or Z axis
       * @param sensitivity select sensitivity of gyroscope (250, 500, 1000 or 2000 dps)
       */
-    //% block="gyroscope value of %AxisXYZ axis with %GyroSen sensitivity (Unit: rad/s)"
-    //%weight=95
+    //% block="gyroscope value of %AxisXYZ axis with %GyroSen sensitivity (unit: rad/s)"
+    //% group="MPU6050 gyroscope and accelerometer sensor"
+    //% weight=95
     export function gyroscope(axis: AxisXYZ, sensitivity: GyroSen): number {
         updateGyroscope(sensitivity);
         if(axis == AxisXYZ.X) {
@@ -1341,7 +1366,8 @@ namespace pksdriver {
      * @param axis select X, Y or Z axis
      * @param sensitivity select sensitivity of accelerometer (2, 4, 8 or 16 g)
      */
-    //% block="angle of %AxisXYZ axis with %AccelSen sensitivity (Unit: Degrees)"
+    //% block="angle of %AxisXYZ axis with %AccelSen sensitivity (unit: degrees)"
+    //% group="MPU6050 gyroscope and accelerometer sensor"
     //% weight=90
     export function axisRotation(axis: AxisXYZ, sensitivity: AccelSen): number {
         updateAcceleration(sensitivity);
@@ -1368,7 +1394,8 @@ namespace pksdriver {
      * @param axis select X, Y or Z axis
      * @param sensitivity select sensitivity of accelerometer (2, 4, 8 or 16 g)
      */
-    //% block="acceleration of %AxisXYZ axis with %AccelSen sensitivity (Unit: g)"
+    //% block="acceleration of %AxisXYZ axis with %AccelSen sensitivity (unit: g)"
+    //% group="MPU6050 gyroscope and accelerometer sensor"
     //% weight=85
     export function axisAcceleration(axis: AxisXYZ, sensitivity: AccelSen): number {
         updateAcceleration(sensitivity);
@@ -1387,7 +1414,8 @@ namespace pksdriver {
     /**
      * Get temperature in degree Celsius from MPU6050
      */
-    //% block="temperature (Unit: Celsius)"
+    //% block="temperature (unit: Celsius)"
+    //% group="MPU6050 gyroscope and accelerometer sensor"
     //% weight=80
     export function readTemperature(): number {
         let rawTemp = MPUReadData(tempAddr);
@@ -1424,7 +1452,7 @@ namespace pksdriver {
     /**
      * Get ultrasonic distance in mm
      */
-    //% block="distance (Unit: mm)" subcategory="Maze Car"
+    //% block="distance (unit: mm)" subcategory="Maze Car"
     //% group="Ultrasound"
     //% weight=70
     export function ultrasoundDistance(): number {
@@ -1440,7 +1468,7 @@ namespace pksdriver {
     /**
     * Compass read function, to get the yaw angle
     */
-    //% block="yaw (Unit: degree)" subcategory="Soccer Robot"
+    //% block="yaw (unit: degree)" subcategory="Soccer Robot"
     //% group="Compass"
     //% weight=70
     export function compassGetYaw(): number {
