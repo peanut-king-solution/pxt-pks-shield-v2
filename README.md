@@ -4,7 +4,7 @@ Peanut King micro:bit Shield V2 extension for motors, servos, sensors, and I2C m
 
 ## Product URL
 
-[Peanut KING micro:bit Shield V2 Extension Shield](https://www.peanutkingsolution.com/product-page/peanut-king-micro-bit-shield-v2-%E6%93%B4%E5%B1%95%E6%9D%BF)
+[Peanut KING micro:bit Shield V2 Extension Shield](https://www.peanutkingsolution.com/en/product-page/peanut-king-micro-bit-shield-v2-%E6%93%B4%E5%B1%95%E6%9D%BF)
 
 ## Summary
 
