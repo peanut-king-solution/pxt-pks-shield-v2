@@ -1759,6 +1759,42 @@ namespace pksdriver {
         return ans != 0;
     }
 
+    //*****************************************************************************************************//
+    //IOT related code                                                                                     //
+    //*****************************************************************************************************//
+
+    let esp32I2CAddress = 0x22;
+    /**
+     * devices to toggle from ESP client
+     */
+    export enum ESPDevices {
+        //% block="light"
+        Light = 0x00,
+        //% block="fan"
+        Fan = 0x01,
+        //% block="door"
+        Door = 0x02
+    }
+    /**
+     * sensors to read from ESP client
+     */
+    export enum ESPSensors {
+        //% block="temperature"
+        Temperature = 0x00,
+        //% block="humidity"
+        Humidity = 0x01,
+        //% block="light"
+        Light = 0x02,
+        //% block="ultrasound"
+        Ultrasound = 0x03,
+        //% block="magnetic"
+        Magnetic = 0x04
+    }
+
+
+    //*****************************************************************************************************//
+    //IOT related code finished                                                                            //
+    //*****************************************************************************************************//
 
     /**
      * I2C multiplexer channel options
