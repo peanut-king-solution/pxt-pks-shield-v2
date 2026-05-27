@@ -157,6 +157,25 @@ basic.forever(function () {
 })
 ```
 
+## Example: ESP32 IOT 
+
+Using an ESP32 with Wi-Fi module as an intermediate to broadcast the data from sensors connected to the Peanut KING micro:bit shield.
+
+```blocks
+basic.forever(function () {
+    // Read temperature and humidity from AHT20
+    let tempC = pksdriver.aht20ReadTemperatureC()
+    let humidity = pksdriver.aht20ReadHumidity()
+
+    // Read ultrasonic distance
+    let distance = pksdriver.ultrasonic(DigitalPin.P2, DigitalPin.P1)
+
+    // Send data via serial to ESP32
+    serial.writeLine("TEMP:" + tempC + ",HUM:" + humidity + ",DIST:" + distance)
+    basic.pause(1000)
+})
+```
+
 ## License
 This project is licensed under the **MIT License**.
 
