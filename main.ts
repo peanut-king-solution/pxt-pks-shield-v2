@@ -1804,8 +1804,8 @@ namespace pksdriver {
      *   0x30 — Set ESP32 port number
      *   0x31 — Set Wi-Fi SSID
      *   0x32 — Set Wi-Fi password
-     *   0x33 — Start ESP32 Wi-Fi in Station mode (connect to existing AP) transmissions (connect and begin hosting)
-     *   0x34 — Start ESP32 Wi-Fi in Access Point mode (devices connect to ESP32) transmissions (connect and begin hosting)
+     *   0x33 — Start ESP32 Wi-Fi in station mode (connect to existing AP) transmissions (connect and begin hosting)
+     *   0x34 — Start ESP32 Wi-Fi in access point mode (devices connect to ESP32) transmissions (connect and begin hosting)
      * Sending data to ESP32 (0x40):
      *   0x40 — Send sensor reading (sensor name + value)
      * Reading from ESP32 (0x50-0x51):
