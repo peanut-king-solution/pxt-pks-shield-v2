@@ -246,51 +246,51 @@ function testCheckButton() {
 
 // I2C multiplexer functions
 function testSwitchI2CChannelEdu() {
-    pksdriver.switchI2CChannelEdu(pksdriver.PKSDriverI2cChannel.C1)
+    pksdriver.switchI2CChannelEdu(pksdriver.PKSDriverI2CChannel.C1)
     basic.pause(100)
-    pksdriver.switchI2CChannelEdu(pksdriver.PKSDriverI2cChannel.C2)
+    pksdriver.switchI2CChannelEdu(pksdriver.PKSDriverI2CChannel.C2)
     basic.pause(100)
-    pksdriver.switchI2CChannelEdu(pksdriver.PKSDriverI2cChannel.C3)
+    pksdriver.switchI2CChannelEdu(pksdriver.PKSDriverI2CChannel.C3)
     basic.pause(100)
-    pksdriver.switchI2CChannelEdu(pksdriver.PKSDriverI2cChannel.C4)
+    pksdriver.switchI2CChannelEdu(pksdriver.PKSDriverI2CChannel.C4)
     basic.pause(100)
-    pksdriver.switchI2CChannelEdu(pksdriver.PKSDriverI2cChannel.C5)
+    pksdriver.switchI2CChannelEdu(pksdriver.PKSDriverI2CChannel.C5)
     basic.pause(100)
-    pksdriver.switchI2CChannelEdu(pksdriver.PKSDriverI2cChannel.C6)
+    pksdriver.switchI2CChannelEdu(pksdriver.PKSDriverI2CChannel.C6)
     basic.pause(100)
-    pksdriver.switchI2CChannelEdu(pksdriver.PKSDriverI2cChannel.C7)
+    pksdriver.switchI2CChannelEdu(pksdriver.PKSDriverI2CChannel.C7)
     basic.pause(100)
-    pksdriver.switchI2CChannelEdu(pksdriver.PKSDriverI2cChannel.C8)
+    pksdriver.switchI2CChannelEdu(pksdriver.PKSDriverI2CChannel.C8)
 }
 
 function testSwitchI2CChannelMaze() {
-    pksdriver.switchI2CChannelMaze(pksdriver.PKSDriverI2cChannel.C1)
+    pksdriver.switchI2CChannelMaze(pksdriver.PKSDriverI2CChannel.C1)
     basic.pause(100)
-    pksdriver.switchI2CChannelMaze(pksdriver.PKSDriverI2cChannel.C2)
+    pksdriver.switchI2CChannelMaze(pksdriver.PKSDriverI2CChannel.C2)
     basic.pause(100)
-    pksdriver.switchI2CChannelMaze(pksdriver.PKSDriverI2cChannel.C3)
+    pksdriver.switchI2CChannelMaze(pksdriver.PKSDriverI2CChannel.C3)
     basic.pause(100)
-    pksdriver.switchI2CChannelMaze(pksdriver.PKSDriverI2cChannel.C4)
+    pksdriver.switchI2CChannelMaze(pksdriver.PKSDriverI2CChannel.C4)
 }
 
 function testSwitchI2CChannelSoccer() {
-    pksdriver.switchI2CChannelSoccer(pksdriver.PKSDriverI2cChannel.C1)
+    pksdriver.switchI2CChannelSoccer(pksdriver.PKSDriverI2CChannel.C1)
     basic.pause(100)
-    pksdriver.switchI2CChannelSoccer(pksdriver.PKSDriverI2cChannel.C2)
+    pksdriver.switchI2CChannelSoccer(pksdriver.PKSDriverI2CChannel.C2)
     basic.pause(100)
-    pksdriver.switchI2CChannelSoccer(pksdriver.PKSDriverI2cChannel.C3)
+    pksdriver.switchI2CChannelSoccer(pksdriver.PKSDriverI2CChannel.C3)
     basic.pause(100)
-    pksdriver.switchI2CChannelSoccer(pksdriver.PKSDriverI2cChannel.C4)
+    pksdriver.switchI2CChannelSoccer(pksdriver.PKSDriverI2CChannel.C4)
 }
 
 function testSwitchI2CChannelSmart() {
-    pksdriver.switchI2CChannelSmart(pksdriver.PKSDriverI2cChannel.C1)
+    pksdriver.switchI2CChannelSmart(pksdriver.PKSDriverI2CChannel.C1)
     basic.pause(100)
-    pksdriver.switchI2CChannelSmart(pksdriver.PKSDriverI2cChannel.C2)
+    pksdriver.switchI2CChannelSmart(pksdriver.PKSDriverI2CChannel.C2)
     basic.pause(100)
-    pksdriver.switchI2CChannelSmart(pksdriver.PKSDriverI2cChannel.C3)
+    pksdriver.switchI2CChannelSmart(pksdriver.PKSDriverI2CChannel.C3)
     basic.pause(100)
-    pksdriver.switchI2CChannelSmart(pksdriver.PKSDriverI2cChannel.C4)
+    pksdriver.switchI2CChannelSmart(pksdriver.PKSDriverI2CChannel.C4)
 }
 
 // MPU6050 functions
@@ -444,6 +444,27 @@ function testDS1302() {
     let ramVal = rtc.readRam(0)
     basic.showNumber(ramVal)
     basic.clearScreen()
+}
+
+function testIOT()  {
+    pksdriver.setESP32WiFiStationAndStart("TestMDNS", "TestSSID", "TestPassword")
+    basic.pause(500)
+    pksdriver.setESP32WiFiAccessPointAndStart("TestAP", "TestPassword")
+    basic.pause(500)
+    pksdriver.sendSensorReading(pksdriver.ESPSensors.Temperature, 25)
+    basic.pause(500)
+    pksdriver.readESP32Bits()
+    let doorState = pksdriver.decodeESP(pksdriver.ESPDevices.Door)
+    let lightState = pksdriver.decodeESP(pksdriver.ESPDevices.Light)
+    let fanState = pksdriver.decodeESP(pksdriver.ESPDevices.Fan)
+    basic.showString("D")
+    basic.showNumber(doorState)
+    basic.pause(300)
+    basic.showString("L")
+    basic.showNumber(lightState)
+    basic.pause(300)
+    basic.showString("F")
+    basic.showNumber(fanState)
 }
 
 // Run all tests

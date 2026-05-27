@@ -1763,6 +1763,56 @@ namespace pksdriver {
     //IOT related code                                                                                     //
     //*****************************************************************************************************//
 
+    /**
+         * Rounds a number to the specified number of decimal places (returns a string with the requested decimals, similar to toFixed).
+         * for example, roundToDecimalPlaces(3.14159, 2) returns "3.14", roundToDecimalPlaces(3.1, 3) returns "3.100"
+         * @param value The number to round
+         * @param decimals The number of decimal places to keep
+         */
+    //% blockId=pksdriver_round block="round %value to %decimals decimal places"
+    //% group="Math"
+    //% weight=10
+    export function roundToDecimalPlaces(value: number, decimals: number): string {
+        // safety
+        if (decimals < 0) decimals = 0;
+        if (decimals > 20) decimals = 20;
+
+        let factor = Math.pow(10, decimals);
+        let rounded = Math.round(value * factor) / factor;
+        let str = "" + rounded;
+        // Add trailing zeros if needed
+        let dotIdx = str.indexOf(".");
+        if (decimals == 0) {
+            return str.split(".")[0];
+        }
+        if (dotIdx == -1) {
+            str += ".";
+            dotIdx = str.length - 1;
+        }
+        let decimalsNow = str.length - dotIdx - 1;
+        while (decimalsNow < decimals) {
+            str += "0";
+            decimalsNow++;
+        }
+        return str;
+    }
+
+    /**
+     * ESP32 IoT Driver for micro:bit
+     * ESP32 I2C Command Codes (Relabeled for collision-free protocol):
+     * Setup (0x30-0x33):
+     *   0x30 — Set ESP32 port number
+     *   0x31 — Set Wi-Fi SSID
+     *   0x32 — Set Wi-Fi password
+     *   0x33 — Start ESP32 Wi-Fi in Station mode (connect to existing AP) transmissions (connect and begin hosting)
+     *   0x34 — Start ESP32 Wi-Fi in Access Point mode (devices connect to ESP32) transmissions (connect and begin hosting)
+     * Sending data to ESP32 (0x40):
+     *   0x40 — Send sensor reading (sensor name + value)
+     * Reading from ESP32 (0x50-0x51):
+     *   0x50 — Status register, high bit indicates command available
+     *   0x51 — Command buffer, read latest command from ESP32 (up to 32 bytes)
+     */
+
     let esp32I2CAddress = 0x22;
     /**
      * devices to toggle from ESP client
@@ -1791,6 +1841,141 @@ namespace pksdriver {
         Magnetic = 0x04
     }
 
+    /**
+     * Starts I2C communication with the ESP32 extension board.
+     * @param address The I2C address of the ESP32 (default 0x22)
+     */
+    //% blockId=pksdriver_esp32_start_i2c block="set ESP32 I2C to address %address" subcategory="IoT"
+    //% group="ESP32 IoT"
+    //% weight=100
+    //% address.defl=0x22
+    export function setI2CAddress(address: number = 0x22): void {
+        esp32I2CAddress = address;
+    }
+
+    /**
+     * Set the Wi-Fi station mode SSID and password for the ESP32 and start Wi-Fi transmissions (connect and begin hosting).
+     * The ESP32 uses mDNS to set a friendly name.
+     * @param mDNSName The mDNS name for the ESP32
+     * @param SSID The Wi-Fi network name
+     * @param password The Wi-Fi password
+     */
+    //% blockId=pksdriver_esp32_set_wifi_station_and_start block="set ESP32 in station mode with|mDNS name %mDNSName|Wi-Fi SSID %SSID|password %password|and start Wi-Fi" subcategory="IoT"
+    //% inlineInputMode=external
+    //% group="ESP32 IoT"
+    //% weight=80
+    export function setESP32WiFiStationAndStart(mDNSName: string, SSID: string, password: string): void {
+        basic.pause(1000); // wait for ESP to start
+
+        // Send mDNS name, SSID and password to ESP32 via I2C
+        let mDNSnameBuf = pins.createBuffer(mDNSName.length + 1);
+        mDNSnameBuf[0] = 0x30; // mDNS name cmd
+        for (let i = 0; i < mDNSName.length; i++) mDNSnameBuf[1 + i] = mDNSName.charCodeAt(i);
+        pins.i2cWriteBuffer(esp32I2CAddress, mDNSnameBuf);
+
+        let ssidBuf = pins.createBuffer(SSID.length + 1);
+        ssidBuf[0] = 0x31; // SSID cmd
+        for (let i = 0; i < SSID.length; i++) ssidBuf[1 + i] = SSID.charCodeAt(i);
+        pins.i2cWriteBuffer(esp32I2CAddress, ssidBuf);
+
+        let passBuf = pins.createBuffer(password.length + 1);
+        passBuf[0] = 0x32; // password cmd
+        for (let i = 0; i < password.length; i++) passBuf[1 + i] = password.charCodeAt(i);
+        pins.i2cWriteBuffer(esp32I2CAddress, passBuf);
+
+        // Now send the command to start Wi-Fi
+        let buf = pins.createBuffer(1);
+        buf[0] = 0x33; // start Wi-Fi cmd
+        pins.i2cWriteBuffer(esp32I2CAddress, buf);
+    }
+
+    /**
+     * Set the Wi-Fi access point SSID and password for the ESP32 and start Wi-Fi transmissions (connect and begin hosting).
+     * @param SSID The Wi-Fi network name
+     * @param password The Wi-Fi password
+     */
+    //% blockId=pksdriver_esp32_set_wifi_access_point_and_start block="set ESP32 in access point mode with|Wi-Fi SSID %SSID|password %password|and start Wi-Fi" subcategory="IoT"
+    //% inlineInputMode=external
+    //% group="ESP32 IoT"
+    //% weight=80
+    export function setESP32WiFiAccessPointAndStart(SSID: string, password: string): void {
+        basic.pause(1000); // wait for ESP to start
+
+        let ssidBuf = pins.createBuffer(SSID.length + 1);
+        ssidBuf[0] = 0x31; // SSID cmd
+        for (let i = 0; i < SSID.length; i++) ssidBuf[1 + i] = SSID.charCodeAt(i);
+        pins.i2cWriteBuffer(esp32I2CAddress, ssidBuf);
+
+        let passBuf = pins.createBuffer(password.length + 1);
+        passBuf[0] = 0x32; // password cmd
+        for (let i = 0; i < password.length; i++) passBuf[1 + i] = password.charCodeAt(i);
+        pins.i2cWriteBuffer(esp32I2CAddress, passBuf);
+
+        // Now send the command to start Wi-Fi
+        let buf = pins.createBuffer(1);
+        buf[0] = 0x34; // start Wi-Fi cmd
+        pins.i2cWriteBuffer(esp32I2CAddress, buf);
+    }
+
+    /**
+     * Send a sensor reading to the ESP32 for dashboard display (browser).
+     * @param sensorName The name of the sensor (e.g. "temp")
+     * @param value The value to send
+     */
+    //% blockId=pksdriver_send_sensor block="send %sensorName sensor value %value to ESP32" subcategory="IoT"
+    //% inlineInputMode=external
+    //% group="ESP32 IoT"
+    //% weight=60
+    export function sendSensorReading(sensorType: ESPSensors, value: number): void {
+        let buf = pins.createBuffer(6);
+        buf[0] = 0x40; // sensor
+        buf[1] = sensorType;
+        // Encode float as 4 bytes (IEEE 754)
+        
+        let floatBuf = pins.createBuffer(4);
+        floatBuf.setNumber(NumberFormat.Float32LE, 0, value);
+        for (let i = 0; i < 4; i++) buf[2 + i] = floatBuf[i];
+        pins.i2cWriteBuffer(esp32I2CAddress, buf);
+        // give time for ESP to process
+        basic.pause(100);
+    }
+
+    // state of outputs
+    let iDoor = 0;
+    let iLight = 0;
+    let iFan = 0;
+
+    /**
+     * Read the commands from the ESP32 module
+     * The results are stored, use the accessors to access
+     */
+    //% blockId=pksdriver_esp_read block="read commands from ESP32" subcategory="IoT"
+    //% group="ESP32 IoT"
+    //% weight=60
+    export function readESP32Bits(): void {
+        let buf = pins.i2cReadBuffer(esp32I2CAddress, 4, false);
+        // buf[0] is garbage data, see doc
+        iDoor = buf[1];
+        iFan = buf[2];
+        iLight = buf[3];
+    }
+
+    /**
+     * Public accessor of ESP devices
+     */
+    //% block="state of $ESPCommand" subcategory="IoT"
+    //% group="ESP32 IoT"
+    //% weight=60
+    export function decodeESP(ESPCommand: ESPDevices): number {
+        switch (ESPCommand) {
+            case (ESPDevices.Door):
+                return iDoor;
+            case (ESPDevices.Light):
+                return iLight;
+            case (ESPDevices.Fan):
+                return iFan;
+        }
+    }
 
     //*****************************************************************************************************//
     //IOT related code finished                                                                            //
@@ -1799,7 +1984,7 @@ namespace pksdriver {
     /**
      * I2C multiplexer channel options
      */
-    export enum PKSDriverI2cChannel {
+    export enum PKSDriverI2CChannel {
         //% block="channel 1"
         C1,
         //% block="channel 2"
@@ -1822,31 +2007,31 @@ namespace pksdriver {
     * switch I2C multiplexer channel 
     * @param channelSelected which channel to select on the I2C multiplexer 
      */
-    function switchI2CMultiplexer(channelSelected: PKSDriverI2cChannel): void {
+    function switchI2CMultiplexer(channelSelected: PKSDriverI2CChannel): void {
         let i2c_multiplexerAddress = 0x70;
         const buf = pins.createBuffer(1);
-        if (channelSelected == PKSDriverI2cChannel.C1) {
+        if (channelSelected == PKSDriverI2CChannel.C1) {
             buf[0] = 0x08
         }
-        else if (channelSelected == PKSDriverI2cChannel.C2) {
+        else if (channelSelected == PKSDriverI2CChannel.C2) {
             buf[0] = 0x04
         }
-        else if (channelSelected == PKSDriverI2cChannel.C3) {
+        else if (channelSelected == PKSDriverI2CChannel.C3) {
             buf[0] = 0x02
         }
-        else if (channelSelected == PKSDriverI2cChannel.C4) {
+        else if (channelSelected == PKSDriverI2CChannel.C4) {
             buf[0] = 0x01
         }
-        else if (channelSelected == PKSDriverI2cChannel.C5) {
+        else if (channelSelected == PKSDriverI2CChannel.C5) {
             buf[0] = 0x10
         }
-        else if (channelSelected == PKSDriverI2cChannel.C6) {
+        else if (channelSelected == PKSDriverI2CChannel.C6) {
             buf[0] = 0x20
         }
-        else if (channelSelected == PKSDriverI2cChannel.C7) {
+        else if (channelSelected == PKSDriverI2CChannel.C7) {
             buf[0] = 0x40
         }
-        else if (channelSelected == PKSDriverI2cChannel.C8) {
+        else if (channelSelected == PKSDriverI2CChannel.C8) {
             buf[0] = 0x80
         }
         pins.i2cWriteBuffer(i2c_multiplexerAddress, buf, false);
@@ -1857,10 +2042,10 @@ namespace pksdriver {
      * Switch I2C multiplexer channel (Edu Kit)
      * @param channelSelected C1~C8 
      */
-    //% blockId=pksdriver_switch_channel_edu block="switch i2c %channelSelected" subcategory="Edu Kit"
+    //% blockId=pksdriver_switch_channel_edu block="switch I2C %channelSelected" subcategory="Edu Kit"
     //% group="I2C multiplexer"
     //% weight=70
-    export function switchI2CChannelEdu(channelSelected: PKSDriverI2cChannel): void {
+    export function switchI2CChannelEdu(channelSelected: PKSDriverI2CChannel): void {
         switchI2CMultiplexer(channelSelected);
     }
 
@@ -1868,10 +2053,10 @@ namespace pksdriver {
      * Switch I2C multiplexer channel (Maze Car)
      * @param channelSelected C1~C8
      */
-    //% blockId=pksdriver_switch_channel_maze block="switch i2c %channelSelected" subcategory="Maze Car"
+    //% blockId=pksdriver_switch_channel_maze block="switch I2C %channelSelected" subcategory="Maze Car"
     //% group="I2C multiplexer"
     //% weight=70
-    export function switchI2CChannelMaze(channelSelected: PKSDriverI2cChannel): void {
+    export function switchI2CChannelMaze(channelSelected: PKSDriverI2CChannel): void {
         switchI2CMultiplexer(channelSelected);
     }
 
@@ -1879,10 +2064,10 @@ namespace pksdriver {
      * Switch I2C multiplexer channel (Soccer Robot)
      * @param channelSelected C1~C8
      */
-    //% blockId=pksdriver_switch_channel_soccer block="switch i2c %channelSelected" subcategory="Soccer Robot"
+    //% blockId=pksdriver_switch_channel_soccer block="switch I2C %channelSelected" subcategory="Soccer Robot"
     //% group="I2C multiplexer"
     //% weight=70
-    export function switchI2CChannelSoccer(channelSelected: PKSDriverI2cChannel): void {
+    export function switchI2CChannelSoccer(channelSelected: PKSDriverI2CChannel): void {
         switchI2CMultiplexer(channelSelected);
     }
 
@@ -1890,10 +2075,10 @@ namespace pksdriver {
      * Switch I2C multiplexer channel (Smart Living)
      * @param channelSelected C1~C8
      */
-    //% blockId=pksdriver_switch_channel_smart block="switch i2c %channelSelected" subcategory="Smart Living"
+    //% blockId=pksdriver_switch_channel_smart block="switch I2C %channelSelected" subcategory="Smart Living"
     //% group="I2C multiplexer"
     //% weight=70
-    export function switchI2CChannelSmart(channelSelected: PKSDriverI2cChannel): void {
+    export function switchI2CChannelSmart(channelSelected: PKSDriverI2CChannel): void {
         switchI2CMultiplexer(channelSelected);
     }
 
