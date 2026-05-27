@@ -1981,6 +1981,60 @@ namespace pksdriver {
     //IOT related code finished                                                                            //
     //*****************************************************************************************************//
 
+    //*****************************************************************************************************//
+    //IIC test related code                                                                                //
+    //*****************************************************************************************************//
+
+    /**
+     * I2C speed options for testing I2C communication beta
+     * Note: the actual speed may be affected by the hardware and may not be exactly as specified
+     */
+    //% block="I2C speed" subcategory="I2C Test"
+    //% group="I2C speed"
+    export enum I2CSpeed {
+        //% block="standard (100 kHz)"
+        Standard = 100000,
+        //% block="fast (400 kHz)"
+        Fast = 400000,
+        //% block="fast plus (1 MHz)"
+        FastPlus = 1000000
+    }
+
+    function isMicrobitV2(): boolean {
+        return control.ramSize() > 102400;
+    }
+
+    //% block="set I2C speed to %speed Hz"
+    //% speed.defl=I2CSpeed.Standard
+    //% speed.fieldEditor="gridpicker"
+    export function setI2CSpeed(speed: number): void {
+        let finalSpeed = speed;
+
+        if (isMicrobitV2()) {
+            // V2 晶片最高極限限制在 1 MHz
+            finalSpeed = Math.min(finalSpeed, 1000000);
+        } else {
+            // V1 晶片最高極限限制在 400 kHz
+            finalSpeed = Math.min(finalSpeed, 400000);
+        }
+
+        // 確保速率不為負數或過低
+        finalSpeed = Math.max(finalSpeed, 10000);
+
+        // 呼叫底層 C++ Shim
+        setI2CSpeedShim(finalSpeed);
+    }
+
+    //% shim=customI2C::setI2CSpeedShim
+    function setI2CSpeedShim(speed: number): void {
+        return; // 供網頁模擬器執行，不作任何事
+    }
+
+
+    //*****************************************************************************************************//
+    //I2C multiplexer related code                                                                         //
+    //*****************************************************************************************************//
+
     /**
      * I2C multiplexer channel options
      */
@@ -2081,5 +2135,9 @@ namespace pksdriver {
     export function switchI2CChannelSmart(channelSelected: PKSDriverI2CChannel): void {
         switchI2CMultiplexer(channelSelected);
     }
+
+    //*****************************************************************************************************//
+    //I2C multiplexer related code finished                                                                //
+    //*****************************************************************************************************//
 
 }
