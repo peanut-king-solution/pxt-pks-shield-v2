@@ -87,7 +87,7 @@ namespace pksdriver {
      * @param addr I2C device address  
      * @param reg Register address
      */
-    function i2cRead(addr: number, reg: number) {
+    export function i2cRead(addr: number, reg: number) {
         pins.i2cWriteNumber(addr, reg, NumberFormat.UInt8BE);
         let val = pins.i2cReadNumber(addr, NumberFormat.UInt8BE);
         return val;
@@ -99,7 +99,7 @@ namespace pksdriver {
      * @param reg Register address
      * @param value Value to write 
      */
-    function i2cWrite(addr: number, reg: number, value: number) {
+    export function i2cWrite(addr: number, reg: number, value: number) {
         let buf = pins.createBuffer(2)
         buf[0] = reg
         buf[1] = value
@@ -2004,24 +2004,21 @@ namespace pksdriver {
         return control.ramSize() > 102400;
     }
 
-    //% block="set I2C speed to %speed Hz"
+
+    //% block="set I2C speed to %speed Hz" subcategory="I2C Test"
     //% speed.defl=I2CSpeed.Standard
     //% speed.fieldEditor="gridpicker"
     export function setI2CSpeed(speed: number): void {
         let finalSpeed = speed;
 
         if (isMicrobitV2()) {
-            // V2 晶片最高極限限制在 1 MHz
+            //V2 max speed 1 MHz
             finalSpeed = Math.min(finalSpeed, 1000000);
         } else {
-            // V1 晶片最高極限限制在 400 kHz
+            //V1 max speed 400 kHz
             finalSpeed = Math.min(finalSpeed, 400000);
         }
-
-        // 確保速率不為負數或過低
         finalSpeed = Math.max(finalSpeed, 10000);
-
-        // 呼叫底層 C++ Shim
         setI2CSpeedShim(finalSpeed);
     }
 
