@@ -1853,7 +1853,7 @@ namespace pksdriver {
         esp32I2CAddress = address;
     }
 
-    function sendVariableCommand(cmd: number, text: string): void {
+    export function sendVariableCommand(cmd: number, text: string): void {
         let buf = pins.createBuffer(text.length + 2)
         buf[0] = cmd
         buf[1] = text.length
