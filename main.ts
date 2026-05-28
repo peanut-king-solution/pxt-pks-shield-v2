@@ -1853,6 +1853,17 @@ namespace pksdriver {
         esp32I2CAddress = address;
     }
 
+    function sendVariableCommand(cmd: number, text: string): void {
+        let buf = pins.createBuffer(text.length + 2)
+        buf[0] = cmd
+        buf[1] = text.length
+        for (let i = 0; i < text.length; i++) {
+            buf[2 + i] = text.charCodeAt(i)
+        }
+        pins.i2cWriteBuffer(esp32I2CAddress, buf)
+        basic.pause(50)
+    }
+
     /**
      * Set the Wi-Fi station mode SSID and password for the ESP32 and start Wi-Fi transmissions (connect and begin hosting).
      * The ESP32 uses mDNS to set a friendly name.
@@ -1865,28 +1876,16 @@ namespace pksdriver {
     //% group="ESP32 IoT"
     //% weight=80
     export function setESP32WiFiStationAndStart(mDNSName: string, SSID: string, password: string): void {
-        basic.pause(1000); // wait for ESP to start
+        basic.pause(1000)
 
-        // Send mDNS name, SSID and password to ESP32 via I2C
-        let mDNSnameBuf = pins.createBuffer(mDNSName.length + 1);
-        mDNSnameBuf[0] = 0x30; // mDNS name cmd
-        for (let i = 0; i < mDNSName.length; i++) mDNSnameBuf[1 + i] = mDNSName.charCodeAt(i);
-        pins.i2cWriteBuffer(esp32I2CAddress, mDNSnameBuf);
+        sendVariableCommand(0x30, mDNSName)
+        sendVariableCommand(0x31, SSID)
+        sendVariableCommand(0x32, password)
 
-        let ssidBuf = pins.createBuffer(SSID.length + 1);
-        ssidBuf[0] = 0x31; // SSID cmd
-        for (let i = 0; i < SSID.length; i++) ssidBuf[1 + i] = SSID.charCodeAt(i);
-        pins.i2cWriteBuffer(esp32I2CAddress, ssidBuf);
-
-        let passBuf = pins.createBuffer(password.length + 1);
-        passBuf[0] = 0x32; // password cmd
-        for (let i = 0; i < password.length; i++) passBuf[1 + i] = password.charCodeAt(i);
-        pins.i2cWriteBuffer(esp32I2CAddress, passBuf);
-
-        // Now send the command to start Wi-Fi
-        let buf = pins.createBuffer(1);
-        buf[0] = 0x33; // start Wi-Fi cmd
-        pins.i2cWriteBuffer(esp32I2CAddress, buf);
+        let buf = pins.createBuffer(1)
+        buf[0] = 0x33
+        pins.i2cWriteBuffer(esp32I2CAddress, buf)
+        basic.pause(50)
     }
 
     /**
@@ -1899,22 +1898,14 @@ namespace pksdriver {
     //% group="ESP32 IoT"
     //% weight=80
     export function setESP32WiFiAccessPointAndStart(SSID: string, password: string): void {
-        basic.pause(1000); // wait for ESP to start
+        basic.pause(1000)
+        sendVariableCommand(0x31, SSID)
+        sendVariableCommand(0x32, password)
 
-        let ssidBuf = pins.createBuffer(SSID.length + 1);
-        ssidBuf[0] = 0x31; // SSID cmd
-        for (let i = 0; i < SSID.length; i++) ssidBuf[1 + i] = SSID.charCodeAt(i);
-        pins.i2cWriteBuffer(esp32I2CAddress, ssidBuf);
-
-        let passBuf = pins.createBuffer(password.length + 1);
-        passBuf[0] = 0x32; // password cmd
-        for (let i = 0; i < password.length; i++) passBuf[1 + i] = password.charCodeAt(i);
-        pins.i2cWriteBuffer(esp32I2CAddress, passBuf);
-
-        // Now send the command to start Wi-Fi
-        let buf = pins.createBuffer(1);
-        buf[0] = 0x34; // start Wi-Fi cmd
-        pins.i2cWriteBuffer(esp32I2CAddress, buf);
+        let buf = pins.createBuffer(1)
+        buf[0] = 0x34
+        pins.i2cWriteBuffer(esp32I2CAddress, buf)
+        basic.pause(50)
     }
 
     /**
@@ -2024,7 +2015,7 @@ namespace pksdriver {
 
     //% shim=customI2C::setI2CSpeedShim
     function setI2CSpeedShim(speed: number): void {
-        return; // 供網頁模擬器執行，不作任何事
+        return; 
     }
 
 
