@@ -1345,7 +1345,7 @@ namespace pksdriver {
       * @param axis select X, Y or Z axis
       * @param sensitivity select sensitivity of gyroscope (250, 500, 1000 or 2000 dps)
       */
-    //% block="gyroscope value of %AxisXYZ axis with %GyroSen sensitivity (unit: rad/s)"
+    //% block="gyroscope value of %axis axis with %sensitivity sensitivity (unit: rad/s)"
     //% group="MPU6050 gyroscope and accelerometer sensor"
     //% weight=95
     export function gyroscope(axis: AxisXYZ, sensitivity: GyroSen): number {
@@ -1366,7 +1366,7 @@ namespace pksdriver {
      * @param axis select X, Y or Z axis
      * @param sensitivity select sensitivity of accelerometer (2, 4, 8 or 16 g)
      */
-    //% block="angle of %AxisXYZ axis with %AccelSen sensitivity (unit: degrees)"
+    //% block="angle of %axis axis with %sensitivity sensitivity (unit: degrees)"
     //% group="MPU6050 gyroscope and accelerometer sensor"
     //% weight=90
     export function axisRotation(axis: AxisXYZ, sensitivity: AccelSen): number {
@@ -1394,7 +1394,7 @@ namespace pksdriver {
      * @param axis select X, Y or Z axis
      * @param sensitivity select sensitivity of accelerometer (2, 4, 8 or 16 g)
      */
-    //% block="acceleration of %AxisXYZ axis with %AccelSen sensitivity (unit: g)"
+    //% block="acceleration of %axis axis with %sensitivity sensitivity (unit: g)"
     //% group="MPU6050 gyroscope and accelerometer sensor"
     //% weight=85
     export function axisAcceleration(axis: AxisXYZ, sensitivity: AccelSen): number {
