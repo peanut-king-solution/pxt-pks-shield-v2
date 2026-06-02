@@ -398,7 +398,7 @@ namespace pksdriver {
      * gets -1 if there is error
      * @param compoundEyeData The type of data to read
      */
-    //% blockId=pksdriver_compoundEye block="compound $compoundEyeData"  subcategory="Soccer Robot"
+    //% blockId=pksdriver_compoundEye block="compound %compoundEyeData"  subcategory="Soccer Robot"
     //% group="Compound Eye"
     //% weight=50
     export function compoundEyeRead(compoundEyeData: PKSDriverCompoundEyeData): number {
@@ -423,6 +423,8 @@ namespace pksdriver {
     //*************************************************************************************************//
     //AHT20 related code, adapted from https://github.com/koudayao27/AHT20                             //
     //*************************************************************************************************//
+
+    type AHT20Reading = { Humidity: number, Temperature: number }
 
     export class AHT20Sensor {
         public constructor(address: number = 0x38) {
@@ -459,7 +461,7 @@ namespace pksdriver {
             return { Busy: busy, Calibrated: calibrated };
         }
 
-        public Read(): { Humidity: number, Temperature: number } {
+        public Read(): AHT20Reading | null {
             const buf = pins.i2cReadBuffer(this._Address, 7, false);
 
             const crc8 = AHT20Sensor.CalcCRC8(buf, 0, 6);
@@ -520,7 +522,7 @@ namespace pksdriver {
      * Reads humidity and temperature from the AHT20 sensor.
      * @param sensor The AHT20 sensor instance
      */
-    function readAht20(aht20: AHT20Sensor): { Humidity: number, Temperature: number } {
+    function readAht20(aht20: AHT20Sensor): AHT20Reading | null {
         if (!aht20.State().Calibrated) {
             aht20.Initialization();
             if (!aht20.State().Calibrated) return null;
@@ -573,7 +575,7 @@ namespace pksdriver {
     export function aht20ReadHumidity(): number {
         const aht20 = new AHT20Sensor();
         const val = readAht20(aht20);
-        if (val == null) return null;
+        if (val == null) return NaN;
 
         return val.Humidity;
     }
@@ -587,7 +589,7 @@ namespace pksdriver {
     export function readAbsHumidity(fp88?: boolean): uint16 {
         const aht20 = new AHT20Sensor();
         const val = readAht20(aht20);
-        if (val == null) return null;
+        if (val == null) return 0;
         const T = val.Temperature;
         const rh = val.Humidity;
         const ret = 6.112 * Math.exp((17.67 * T) / (T + 243.5)) * rh * 2.1674 / (273.15 + T);
@@ -602,7 +604,7 @@ namespace pksdriver {
     /**
      * Calculate CRC8
      */
-    //% block="calculate CRC8 of $n" subcategory="Smart Living"
+    //% block="calculate CRC8 of %n" subcategory="Smart Living"
     //% group="Temperature and Humidity (AHT20)"
     //% weight=0 
     export function crc8(n: number): uint8 {
@@ -659,7 +661,7 @@ namespace pksdriver {
     * @param serialOutput Enable serial output
     * @param wait Wait 2 seconds after query
     */
-    //% block="query $DHT|data pin $dataPin|pin pull up $pullUp|serial output $serialOutput|wait 2 sec after query $wait"
+    //% block="query %DHT|data pin %dataPin|pin pull up %pullUp|serial output %serialOutput|wait 2 sec after query %wait"
     //% pullUp.defl=true
     //% serialOutput.defl=false
     //% wait.defl=true
@@ -775,7 +777,7 @@ namespace pksdriver {
     * @param data Data type (humidity or temperature)
     */
     //% weight=99
-    //% block="read $data" subcategory="Smart Living"
+    //% block="read %data" subcategory="Smart Living"
     //% group="Temperature and Humidity (DHT11/DHT22)" 
     export function DHTReadData(data: DataType): number {
         return data == DataType.Humidity ? _humidity : _temperature
@@ -785,7 +787,7 @@ namespace pksdriver {
     * Select temperature type (Celsius/Fahrenheit)
     * @param temp 
     */
-    //% block="temperature type: $temp" subcategory="Smart Living"
+    //% block="temperature type: %temp" subcategory="Smart Living"
     //% group="Temperature and Humidity (DHT11/DHT22)" 
     //% weight=98
     export function selectTempType(temp: TempType) {
@@ -848,16 +850,16 @@ namespace pksdriver {
      * convert a Dec data to Hex
      */
     function DecToHex(dat: number): number {
-        return Math.idiv(dat, 10) * 16 + (dat % 10)
+        return Math.floor(dat / 10) * 16 + (dat % 10)
     }
 
     /**
      * DS1302 RTC class
      */
     export class DS1302RTC {
-        clk: DigitalPin;
-        dio: DigitalPin;
-        cs: DigitalPin;
+        clk!: DigitalPin;
+        dio!: DigitalPin;
+        cs!: DigitalPin;
 
         /**
          * write a byte to DS1302
@@ -1372,7 +1374,7 @@ namespace pksdriver {
     export function axisRotation(axis: AxisXYZ, sensitivity: AccelSen): number {
         updateAcceleration(sensitivity);
 
-        let radians;
+        let radians = 0;
         if(axis == AxisXYZ.X) {
             radians = Math.atan2(yAccel, dist(xAccel,zAccel));
         }
@@ -1485,7 +1487,7 @@ namespace pksdriver {
      * Select a direction for maze car
      * @param wantedDirection FRONT, BACK, LEFT or RIGHT
      */
-    //% block="direction $wantedDirection" subcategory="Maze Car"
+    //% block="direction %wantedDirection" subcategory="Maze Car"
     //% group="Directions"
     //% weight=70
     export function chooseDirection(wantedDirection: MazeCarDirection): MazeCarDirection {
@@ -1594,7 +1596,7 @@ namespace pksdriver {
     * HSL read function
     * @param hslchoose H, S, or L
     */
-    //% blockId=pksdriver_readhsl block="read HSL $hslchoose" subcategory="Edu Kit"
+    //% blockId=pksdriver_readhsl block="read HSL %hslchoose" subcategory="Edu Kit"
     //% group="Colors"
     //% weight=80
     export function readHSL(hslchoose: PKSDriverHSL): number {
@@ -1610,7 +1612,7 @@ namespace pksdriver {
     * RGB read function
     * @param rgbchoose R, G or B
     */
-    //% blockId=pksdriver_readrgb block="read RGB $rgbchoose" subcategory="Edu Kit"
+    //% blockId=pksdriver_readrgb block="read RGB %rgbchoose" subcategory="Edu Kit"
     //% group="Colors"
     //% weight=60
     export function readRGB(rgbchoose: PKSDriverRGB): number {
@@ -1626,7 +1628,7 @@ namespace pksdriver {
     * RGBC read function
     * @param choose C, R, G, or B
     */
-    //% blockId=pksdriver_readrgbc block="read RGBC $choose" subcategory="Edu Kit"
+    //% blockId=pksdriver_readrgbc block="read RGBC %choose" subcategory="Edu Kit"
     //% group="Colors"
     //% weight=70
     export function readRGBC(choose: PKSDriverRGBC): number {
@@ -1719,7 +1721,7 @@ namespace pksdriver {
      * Check if button is pressed  
      * @param Buttoncheck B1 - B3
      */
-    //% blockId=pksdriver_getbutton block="get button $Buttoncheck" subcategory="Edu Kit"
+    //% blockId=pksdriver_getbutton block="get button %Buttoncheck" subcategory="Edu Kit"
     //% group="Button"
     //% weight=70
     export function checkButton(Buttoncheck: PKSDriverButton): boolean {
@@ -1954,7 +1956,7 @@ namespace pksdriver {
     /**
      * Public accessor of ESP devices
      */
-    //% block="state of $ESPCommand" subcategory="IoT"
+    //% block="state of %ESPCommand" subcategory="IoT"
     //% group="ESP32 IoT"
     //% weight=60
     export function decodeESP(ESPCommand: ESPDevices): number {
