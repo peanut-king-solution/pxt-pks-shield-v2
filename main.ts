@@ -857,9 +857,15 @@ namespace pksdriver {
      * DS1302 RTC class
      */
     export class DS1302RTC {
-        clk!: DigitalPin;
-        dio!: DigitalPin;
-        cs!: DigitalPin;
+        clk: DigitalPin;
+        dio: DigitalPin;
+        cs: DigitalPin;
+
+        constructor() {
+            this.clk = DigitalPin.P0
+            this.dio = DigitalPin.P0
+            this.cs = DigitalPin.P0
+        }
 
         /**
          * write a byte to DS1302
