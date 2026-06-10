@@ -51,6 +51,8 @@ namespace pksdriver {
      * The user selects the 4-way dc motor.
      */
     export enum PKSDriverMotors {
+        //% block="M0"
+        M0 = 0x0,
         //% block="M1"
         M1 = 0x1,
         //% block="M2"
@@ -59,6 +61,29 @@ namespace pksdriver {
         M3 = 0x3,
         //% block="M4"
         M4 = 0x4
+    }
+
+        export enum PKSMotorPorts {
+        //% block="M0+"
+        M0P = (0x0 - 1) * 2 + 8,
+        //% block="M0-"
+        M0N = (0x0 - 1) * 2 + 8 + 1,
+        //% block="M1+"
+        M1P = (0x1 - 1) * 2 + 8,
+        //% block="M1-"
+        M1N = (0x1 - 1) * 2 + 8 + 1,
+        //% block="M2+"
+        M2P = (0x2 - 1) * 2 + 8,
+        //% block="M2-"
+        M2N = (0x2 - 1) * 2 + 8 + 1,
+        //% block="M3+"
+        M3P = (0x3 - 1) * 2 + 8,
+        //% block="M3-"
+        M3N = (0x3 - 1) * 2 + 8 + 1,
+        //% block="M4+"
+        M4P = (0x4 - 1) * 2 + 8,
+        //% block="M4-"
+        M4N = (0x4 - 1) * 2 + 8 + 1,
     }
 
     /**
@@ -418,7 +443,6 @@ namespace pksdriver {
         }
         return temp;
     }
-
 
     //*************************************************************************************************//
     //AHT20 related code, adapted from https://github.com/koudayao27/AHT20                             //
@@ -1434,8 +1458,6 @@ namespace pksdriver {
     //MPU6050 related code finished                                                                    //
     //*************************************************************************************************//
 
-
-
     /**
      * Compass I2C register addresses
      */
@@ -1534,7 +1556,6 @@ namespace pksdriver {
     //    uint8_t b;                                //
     //} rgb_t;                                      //    
     //////////////////////////////////////////////////
-
 
     /**
      * Color Sensor
@@ -1771,12 +1792,15 @@ namespace pksdriver {
     //IOT related code                                                                                     //
     //*****************************************************************************************************//
 
+
+
+
     /**
-         * Rounds a number to the specified number of decimal places (returns a string with the requested decimals, similar to toFixed).
-         * for example, roundToDecimalPlaces(3.14159, 2) returns "3.14", roundToDecimalPlaces(3.1, 3) returns "3.100"
-         * @param value The number to round
-         * @param decimals The number of decimal places to keep
-         */
+     * Rounds a number to the specified number of decimal places (returns a string with the requested decimals, similar to toFixed).
+     * for example, roundToDecimalPlaces(3.14159, 2) returns "3.14", roundToDecimalPlaces(3.1, 3) returns "3.100"
+     * @param value The number to round
+     * @param decimals The number of decimal places to keep
+     */
     //% blockId=pksdriver_round block="round %value to %decimals decimal places"
     //% group="Math"
     //% weight=10
@@ -1822,6 +1846,7 @@ namespace pksdriver {
      */
 
     let esp32I2CAddress = 0x22;
+
     /**
      * devices to toggle from ESP client
      */
@@ -1833,6 +1858,7 @@ namespace pksdriver {
         //% block="door"
         Door = 0x02
     }
+
     /**
      * sensors to read from ESP client
      */
@@ -1981,6 +2007,12 @@ namespace pksdriver {
     //*****************************************************************************************************//
 
     //*****************************************************************************************************//
+    //Gotcha related code                                                                                  //
+    //*****************************************************************************************************//\
+
+
+
+    //*****************************************************************************************************//
     //IIC test related code                                                                                //
     //*****************************************************************************************************//
 
@@ -1991,11 +2023,11 @@ namespace pksdriver {
     //% block="I2C speed" subcategory="I2C Test"
     //% group="I2C speed"
     export enum I2CSpeed {
-        //% block="standard (100 kHz)"
+        //% block="standard mode(100 kHz)"
         Standard = 100000,
-        //% block="fast (400 kHz)"
+        //% block="fast mode(400 kHz)"
         Fast = 400000,
-        //% block="fast plus (1 MHz)"
+        //% block="fast plus mode(1 MHz)"
         FastPlus = 1000000
     }
 
@@ -2003,11 +2035,10 @@ namespace pksdriver {
         return control.ramSize() > 102400;
     }
 
-
-    //% block="set I2C speed to %speed Hz" subcategory="I2C Test"
+    //% block="set I2C %speed"
     //% speed.defl=I2CSpeed.Standard
     //% speed.fieldEditor="gridpicker"
-    export function setI2CSpeed(speed: number): void {
+    export function setI2CSpeed(speed: I2CSpeed): void {
         let finalSpeed = speed;
 
         if (isMicrobitV2()) {
@@ -2025,7 +2056,6 @@ namespace pksdriver {
     function setI2CSpeedShim(speed: number): void {
         return; 
     }
-
 
     //*****************************************************************************************************//
     //I2C multiplexer related code                                                                         //
@@ -2085,7 +2115,6 @@ namespace pksdriver {
             buf[0] = 0x80
         }
         pins.i2cWriteBuffer(i2c_multiplexerAddress, buf, false);
-
     }
 
     /**
@@ -2136,4 +2165,292 @@ namespace pksdriver {
     //I2C multiplexer related code finished                                                                //
     //*****************************************************************************************************//
 
-}
+    export class Joystick{
+        pinX: AnalogPin;
+        pinY: AnalogPin;
+        centerX: number;
+        centerY: number;
+        maxDeflection: number;
+        blindZonePercent: number;
+
+        public constructor(pinX: AnalogPin, pinY: AnalogPin, centerX: number=512, centerY: number=512, maxDeflection: number=512, blindZonePercent: number=10) {
+            this.pinX = pinX;
+            this.pinY = pinY;
+            this.centerX = centerX;
+            this.centerY = centerY;
+            this.maxDeflection = maxDeflection;
+            this.blindZonePercent = blindZonePercent;
+        }
+
+        public read() { 
+            let rawX = pins.analogReadPin(this.pinX)
+            // readAverage(this.pinX, 1);
+            let rawY = pins.analogReadPin(this.pinY)
+            // readAverage(this.pinY, 1);
+            let dx = (rawX - this.centerX) / this.maxDeflection
+            let dy = (rawY - this.centerY) / this.maxDeflection
+            // Apply blind zone
+            let strength = Math.sqrt(dx * dx + dy * dy)
+            let blindZoneThreshold = this.blindZonePercent / 100
+            if (strength <= blindZoneThreshold) {
+                // Inside dead zone: force dx,dy = 0
+                return { x: 0, y: 0 }
+            }
+            // Rescale remaining range from threshold..1 to 0..1 (optional but feels better)
+            let scale = 1 / (1 - blindZoneThreshold)
+            dx = dx * scale
+            dy = dy * scale
+            // Clamp again after scaling (should be within -1..1)
+            dx = Math.max(-1, Math.min(1, dx))
+            dy = Math.max(-1, Math.min(1, dy))
+            return { x: dx, y: dy }
+        }
+
+        public Angle() {
+            let { x: dx, y: dy } = this.read()
+            let angle = Math.atan2(dy, 0 - dx) * 180 / Math.PI
+            if (angle < 0) {
+                angle += 360
+            }
+            return angle
+        }
+
+        public strength() {
+            let { x: dx, y: dy } = this.read()
+            let strength = Math.sqrt(dx * dx + dy * dy)
+            strength = Math.min(1, strength)
+            return strength
+        }
+    }
+
+    let PKSDriverJoystickInstance: Joystick = new Joystick(AnalogPin.P1, AnalogPin.P2)
+
+    //% blockId=pksdriver_createjoystick block="create joystick with x pin %pinX and y pin %pinY|centerX %centerX centerY %centerY max deflection %maxDeflection blind zone %blindZonePercent%%" subcategory="Gotcha"
+    //% group="Joystick"
+    //% weight=90
+    export function startJoystick(pinX: AnalogPin, pinY: AnalogPin, centerX: number=512, centerY: number=512, maxDeflection: number=512, blindZonePercent: number=10) {
+        PKSDriverJoystickInstance = new Joystick(pinX, pinY, centerX, centerY, maxDeflection, blindZonePercent)
+    }
+
+    /*
+    * Get the angle (0-360 degrees) and strength (0-1) of the joystick deflection based on the x and y values.
+    * The angle is obey catesian coordinate system, 0 degree means full right, 90 degree means full up, 180 degree means full left, 270 degree means full down.
+    */
+    //% blockId=pksdriver_getorientation block="joystick angle" subcategory="Gotcha"
+    //% group="Joystick"
+    //% weight=70
+    export function JoystickAngle() {
+        return PKSDriverJoystickInstance.Angle()
+    }
+
+    /*
+    * Get the strength of the joystick deflection based on the x and y values, range from 0 to 1.
+    */
+    //% blockId=pksdriver_getstrength block="joystick strength" subcategory="Gotcha"
+    //% group="Joystick"
+    //% weight=70
+    export function JoystickStrength() {
+        return PKSDriverJoystickInstance.strength()
+    }
+
+
+    enum StepStage {
+        //% block="step 1"
+        StepStage1 = 0,
+        //% block="step 2"
+        StepStage2 = 1,
+        //% block="step 3"
+        StepStage3 = 2,
+        //% block="step 4"
+        StepStage4 = 3,
+    }
+
+    export class StepperMotorDriver {
+        private next_step_state: StepStage = StepStage.StepStage1;
+        private current_step_state: StepStage = StepStage.StepStage4;
+        private dp_Ap = PKSMotorPorts.M1P;
+        private dp_An = PKSMotorPorts.M1N;
+        private dp_Bp = PKSMotorPorts.M2N;
+        private dp_Bn = PKSMotorPorts.M2P;
+        private speed = 1 //rotation per second
+        private delay = 50;
+        private power_flag = true
+        public a_high = 4095
+        public b_high = 4095
+        private low = 0
+
+        constructor(
+            DriverPinAPlus: PKSMotorPorts,
+            DriverPinAMinus: PKSMotorPorts,
+            DriverPinBMinus: PKSMotorPorts,
+            DriverPinBPlus: PKSMotorPorts,
+        ) {
+            this.dp_Ap = DriverPinAPlus
+            this.dp_An = DriverPinAMinus
+            this.dp_Bn = DriverPinBMinus
+            this.dp_Bp = DriverPinBPlus
+        }
+        public setSpeed(speed: number) {
+
+        }
+
+        private match_stage(stage: StepStage) {
+            switch (stage) {
+                case (StepStage.StepStage1):
+                    pksdriver.setPwm(this.dp_Ap, 0, this.a_high)
+                    pksdriver.setPwm(this.dp_An, 0, this.low)
+                    pksdriver.setPwm(this.dp_Bp, 0, this.b_high)
+                    pksdriver.setPwm(this.dp_Bn, 0, this.low)
+                    control.waitMicros(this.delay)
+                    break;
+                case (StepStage.StepStage2):
+                    pksdriver.setPwm(this.dp_Ap, 0, this.low)
+                    pksdriver.setPwm(this.dp_An, 0, this.a_high)
+                    pksdriver.setPwm(this.dp_Bp, 0, this.b_high)
+                    pksdriver.setPwm(this.dp_Bn, 0, this.low)
+                    control.waitMicros(this.delay)
+                    break;
+                case (StepStage.StepStage3):
+                    pksdriver.setPwm(this.dp_Ap, 0, this.low)
+                    pksdriver.setPwm(this.dp_An, 0, this.a_high)
+                    pksdriver.setPwm(this.dp_Bp, 0, this.low)
+                    pksdriver.setPwm(this.dp_Bn, 0, this.b_high)
+                    control.waitMicros(this.delay)
+                    break;
+                case (StepStage.StepStage4):
+                    pksdriver.setPwm(this.dp_Ap, 0, this.a_high)
+                    pksdriver.setPwm(this.dp_An, 0, this.low)
+                    pksdriver.setPwm(this.dp_Bp, 0, this.low)
+                    pksdriver.setPwm(this.dp_Bn, 0, this.b_high)
+                    control.waitMicros(this.delay)
+                    break;
+            }
+        }
+
+        public state_init(order: PKSDriverDirection = PKSDriverDirection.Clockwise) {
+            if (this.power_flag == null || !this.power_flag) {
+                this.power_flag = true
+            } else if (!this.power_flag) {
+                if (this.current_step_state !== null) {
+                    this.match_stage(this.current_step_state)
+                }
+            }
+            this.match_stage(this.next_step_state)
+            this.step_count(order)
+        }
+
+        private next_state(order: PKSDriverDirection) {
+            switch (this.next_step_state) {
+                case (StepStage.StepStage1):
+                    if (order > 0) {
+                        //last : ss4
+                        pksdriver.setPwm(this.dp_Bn, 0, this.low)
+                        pksdriver.setPwm(this.dp_Bp, 0, this.b_high)
+                    } else {
+                        //last : ss2
+                        pksdriver.setPwm(this.dp_An, 0, this.low)
+                        pksdriver.setPwm(this.dp_Ap, 0, this.a_high)
+                    }
+                    break;
+                case (StepStage.StepStage2):
+                    if (order > 0) {
+                        //last : ss1
+                        pksdriver.setPwm(this.dp_Ap, 0, this.low)
+                        pksdriver.setPwm(this.dp_An, 0, this.a_high)
+                    } else {
+                        //last : ss3
+                        pksdriver.setPwm(this.dp_Bn, 0, this.low)
+                        pksdriver.setPwm(this.dp_Bp, 0, this.b_high)
+                    }
+                    break;
+                case (StepStage.StepStage3):
+                    if (order > 0) {
+                        //last : ss2
+                        pksdriver.setPwm(this.dp_Bp, 0, this.low)
+                        pksdriver.setPwm(this.dp_Bn, 0, this.b_high)
+                    } else {
+                        //last : ss4
+                        pksdriver.setPwm(this.dp_Ap, 0, this.low)
+                        pksdriver.setPwm(this.dp_An, 0, this.b_high)
+                    }
+                    break;
+                case (StepStage.StepStage4):
+                    if (order > 0) {
+                        //last : ss3
+                        pksdriver.setPwm(this.dp_An, 0, this.low)
+                        pksdriver.setPwm(this.dp_Ap, 0, this.b_high)
+                    } else {
+                        //last : ss1
+                        pksdriver.setPwm(this.dp_Bp, 0, this.low)
+                        pksdriver.setPwm(this.dp_Bn, 0, this.b_high)
+                    }
+                    break;
+            }
+            control.waitMicros(this.delay)
+            this.step_count(order)
+        }
+        private step_count(order: PKSDriverDirection) {
+            this.current_step_state = this.next_step_state
+            this.next_step_state = this.current_step_state + order
+            if (this.next_step_state > 3) {
+                this.next_step_state = 0
+            }
+            else if (this.next_step_state < 0) {
+                this.next_step_state = 3
+            }
+        }
+        public powerOff() {
+            this.power_flag = false
+            pksdriver.setPwm(this.dp_Ap, 0, 0)
+            pksdriver.setPwm(this.dp_An, 0, 0)
+            pksdriver.setPwm(this.dp_Bp, 0, 0)
+            pksdriver.setPwm(this.dp_Bn, 0, 0)
+        }
+        public steps(order: PKSDriverDirection, steps: number = 1) {
+            let i = 1
+            this.state_init(order)
+            while (i < steps) {
+                this.next_state(order)
+                i++
+            }
+        }
+    }
+    
+    let PKSDriverStepperMotorAInstance: StepperMotorDriver = new StepperMotorDriver(PKSMotorPorts.M1P, PKSMotorPorts.M1N, PKSMotorPorts.M2N, PKSMotorPorts.M2P)
+    let PKSDriverStepperMotorBInstance: StepperMotorDriver = new StepperMotorDriver(PKSMotorPorts.M1P, PKSMotorPorts.M1N, PKSMotorPorts.M2N, PKSMotorPorts.M2P)
+
+    /*
+    * Create a stepper motor driver instance with specified coil pins. The stepper motor will be controlled by energizing the coils in a specific sequence to achieve rotation. The speed of rotation can be adjusted by changing the delay between steps in the code. Note: the actual speed may be affected by the hardware and may not be exactly as specified.
+    * @param StepperCoilAPlus The pin connected to coil A+
+    * @param StepperCoilAMinus The pin connected to coil A-
+    * @param StepperCoilBPlus The pin connected to coil B+
+    * @param StepperCoilBMinus The pin connected to coil B-
+    */
+    //% blockId=pksdriver_createstepper block="create stepper motor A with |coil A+ %StepperCoilAPlus |coil A- %StepperCoilAMinus |coil B+ %StepperCoilBPlus |coil B- %StepperCoilBMinus" subcategory="Gotcha"
+    //% group="Stepper Motor"
+    //% weight=90
+    export function createStepperMotorA(StepperCoilAPlus: PKSMotorPorts, StepperCoilAMinus: PKSMotorPorts, StepperCoilBPlus: PKSMotorPorts, StepperCoilBMinus: PKSMotorPorts): void {
+        PKSDriverStepperMotorAInstance = new StepperMotorDriver(StepperCoilAPlus, StepperCoilAMinus, StepperCoilBPlus, StepperCoilBMinus)
+    }
+
+    /*
+    * Create a stepper motor driver instance with specified coil pins. The stepper motor will be controlled by energizing the coils in a specific sequence to achieve rotation. The speed of rotation can be adjusted by changing the delay between steps in the code. Note: the actual speed may be affected by the hardware and may not be exactly as specified.
+    * @param StepperCoilAPlus The pin connected to coil A+
+    * @param StepperCoilAMinus The pin connected to coil A-
+    * @param StepperCoilBPlus The pin connected to coil B+
+    * @param StepperCoilBMinus The pin connected to coil B-
+    */
+    //% blockId=pksdriver_createstepperB block="create stepper motor B with |coil A+ %StepperCoilAPlus |coil A- %StepperCoilAMinus |coil B+ %StepperCoilBPlus |coil B- %StepperCoilBMinus" subcategory="Gotcha"
+    //% group="Stepper Motor"
+    //% weight=90
+    export function createStepperMotorB(StepperCoilAPlus: PKSMotorPorts, StepperCoilAMinus: PKSMotorPorts, StepperCoilBPlus: PKSMotorPorts, StepperCoilBMinus: PKSMotorPorts): void {
+        PKSDriverStepperMotorBInstance = new StepperMotorDriver(StepperCoilAPlus, StepperCoilAMinus, StepperCoilBPlus, StepperCoilBMinus)
+    }
+
+    /*
+    *
+    */
+    //% blockId=pksdriver_stepper_motor_hbot_step block="step %stepper motor in %order direction for %steps steps" subcategory="Gotcha"
+    export function stepperMotorHBotMove(Angle: number, steps: number = 1) { 
+        
+    }
