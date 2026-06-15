@@ -2437,6 +2437,8 @@ namespace pksdriver {
     */
     //% blockId=pksdriver_createstepper block="create stepper motor A with |coil A+ %StepperCoilAPlus |coil A- %StepperCoilAMinus |coil B+ %StepperCoilBPlus |coil B- %StepperCoilBMinus" subcategory="Gotcha"
     //% group="Stepper Motor"
+    //% stepperCoilAPlus.fieldEditor="gridpicker" stepperCoilAMinus.fieldEditor="gridpicker" stepperCoilBPlus.fieldEditor="gridpicker" stepperCoilBMinus.fieldEditor="gridpicker"
+    //% stepperCoilAPlus.defl=PKSMotorPorts.M1P stepperCoilAMinus.defl=PKSMotorPorts.M1N stepperCoilBPlus.defl=PKSMotorPorts.M2P stepperCoilBMinus.defl=PKSMotorPorts.M2N
     //% weight=50
     export function createStepperMotorA(StepperCoilAPlus: PKSMotorPorts, StepperCoilAMinus: PKSMotorPorts, StepperCoilBPlus: PKSMotorPorts, StepperCoilBMinus: PKSMotorPorts): void {
         PKSDriverStepperMotorAInstance = new StepperMotorDriver(StepperCoilAPlus, StepperCoilAMinus, StepperCoilBPlus, StepperCoilBMinus)
@@ -2451,6 +2453,8 @@ namespace pksdriver {
     */
     //% blockId=pksdriver_createstepperB block="create stepper motor B with |coil A+ %StepperCoilAPlus |coil A- %StepperCoilAMinus |coil B+ %StepperCoilBPlus |coil B- %StepperCoilBMinus" subcategory="Gotcha"
     //% group="Stepper Motor"
+    //% stepperCoilAPlus.fieldEditor="gridpicker" stepperCoilAMinus.fieldEditor="gridpicker" stepperCoilBPlus.fieldEditor="gridpicker" stepperCoilBMinus.fieldEditor="gridpicker"
+    //% stepperCoilAPlus.defl=PKSMotorPorts.M1P stepperCoilAMinus.defl=PKSMotorPorts.M1N stepperCoilBPlus.defl=PKSMotorPorts.M2P stepperCoilBMinus.defl=PKSMotorPorts.M2N
     //% weight=50
     export function createStepperMotorB(StepperCoilAPlus: PKSMotorPorts, StepperCoilAMinus: PKSMotorPorts, StepperCoilBPlus: PKSMotorPorts, StepperCoilBMinus: PKSMotorPorts): void {
         PKSDriverStepperMotorBInstance = new StepperMotorDriver(StepperCoilAPlus, StepperCoilAMinus, StepperCoilBPlus, StepperCoilBMinus)
