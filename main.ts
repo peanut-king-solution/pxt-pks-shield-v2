@@ -2220,7 +2220,7 @@ namespace pksdriver {
 
     let PKSDriverJoystickInstance: Joystick = new Joystick(AnalogPin.P1, AnalogPin.P2)
 
-    //% blockId=pksdriver_createjoystick block="create joystick with |x axis %pinX,|y axis %pinY|centerX %centerX centerY %centerY max deflection %maxDeflection blind zone %blindZonePercent%%" subcategory="Gotcha"
+    //% blockId=pksdriver_createjoystick block="create joystick with |x axis %pinX|y axis %pinY|centerX %centerX centerY %centerY max deflection %maxDeflection blind zone %blindZonePercent" subcategory="Gotcha"
     //% group="Joystick"
     //% centerX.defl=512 centerY.defl=512 maxDeflection.defl=512 blindZonePercent.defl=10
     //% weight=90
@@ -2263,7 +2263,7 @@ namespace pksdriver {
 
     export class StepperMotorDriver {
         private next_step_state: StepStage = StepStage.StepStage1;
-        private current_step_state: StepStage = StepStage.StepStage4;
+        private current_step_state: StepStage = null;
         private dp_Ap = PKSMotorPorts.M1P;
         private dp_An = PKSMotorPorts.M1N;
         private dp_Bp = PKSMotorPorts.M2N;
@@ -2422,7 +2422,7 @@ namespace pksdriver {
         B
     }
 
-    /*
+    /**
     * Create a stepper motor driver instance with specified coil pins. The stepper motor will be controlled by energizing the coils in a specific sequence to achieve rotation. The speed of rotation can be adjusted by changing the delay between steps in the code. Note: the actual speed may be affected by the hardware and may not be exactly as specified.
     * @param StepperCoilAPlus The pin connected to coil A+
     * @param StepperCoilAMinus The pin connected to coil A-
@@ -2431,13 +2431,16 @@ namespace pksdriver {
     */
     //% blockId=pksdriver_createstepper block="create stepper motor A with |coil A+ %StepperCoilAPlus |coil A- %StepperCoilAMinus |coil B+ %StepperCoilBPlus |coil B- %StepperCoilBMinus" subcategory="Gotcha"
     //% group="Stepper Motor"
-    //% stepperCoilAPlus.defl=PKSMotorPorts.M1P stepperCoilAMinus.defl=PKSMotorPorts.M1N stepperCoilBPlus.defl=PKSMotorPorts.M2P stepperCoilBMinus.defl=PKSMotorPorts.M2N
+    //% stepperCoilAPlus.defl=PKSMotorPorts.M1P
+    //% stepperCoilAMinus.defl=PKSMotorPorts.M1N
+    //% stepperCoilBPlus.defl=PKSMotorPorts.M2P
+    //% stepperCoilBMinus.defl=PKSMotorPorts.M2N
     //% weight=50
     export function createStepperMotorA(StepperCoilAPlus: PKSMotorPorts=PKSMotorPorts.M1P, StepperCoilAMinus: PKSMotorPorts=PKSMotorPorts.M1N, StepperCoilBPlus: PKSMotorPorts=PKSMotorPorts.M2P, StepperCoilBMinus: PKSMotorPorts=PKSMotorPorts.M2N): void {
         PKSDriverStepperMotorAInstance = new StepperMotorDriver(StepperCoilAPlus, StepperCoilAMinus, StepperCoilBPlus, StepperCoilBMinus)
     }
 
-    /*
+    /**
     * Create a stepper motor driver instance with specified coil pins. The stepper motor will be controlled by energizing the coils in a specific sequence to achieve rotation. The speed of rotation can be adjusted by changing the delay between steps in the code. Note: the actual speed may be affected by the hardware and may not be exactly as specified.
     * @param StepperCoilAPlus The pin connected to coil A+
     * @param StepperCoilAMinus The pin connected to coil A-
@@ -2446,7 +2449,10 @@ namespace pksdriver {
     */
     //% blockId=pksdriver_createstepperB block="create stepper motor B with |coil A+ %StepperCoilAPlus |coil A- %StepperCoilAMinus |coil B+ %StepperCoilBPlus |coil B- %StepperCoilBMinus" subcategory="Gotcha"
     //% group="Stepper Motor"
-    //% stepperCoilAPlus.defl=PKSMotorPorts.M3P stepperCoilAMinus.defl=PKSMotorPorts.M3N stepperCoilBPlus.defl=PKSMotorPorts.M4P stepperCoilBMinus.defl=PKSMotorPorts.M4N
+    //% stepperCoilAPlus.defl=PKSMotorPorts.M3P 
+    //% stepperCoilAMinus.defl=PKSMotorPorts.M3N
+    //% stepperCoilBPlus.defl=PKSMotorPorts.M4P
+    //% stepperCoilBMinus.defl=PKSMotorPorts.M4N
     //% weight=50
     export function createStepperMotorB(StepperCoilAPlus: PKSMotorPorts=PKSMotorPorts.M3P, StepperCoilAMinus: PKSMotorPorts=PKSMotorPorts.M3N, StepperCoilBPlus: PKSMotorPorts=PKSMotorPorts.M4P, StepperCoilBMinus: PKSMotorPorts=PKSMotorPorts.M4N): void {
         PKSDriverStepperMotorBInstance = new StepperMotorDriver(StepperCoilAPlus, StepperCoilAMinus, StepperCoilBPlus, StepperCoilBMinus)
