@@ -1792,12 +1792,9 @@ namespace pksdriver {
     //IOT related code                                                                                     //
     //*****************************************************************************************************//
 
-
-
-
     /**
      * Rounds a number to the specified number of decimal places (returns a string with the requested decimals, similar to toFixed).
-     * for example, roundToDecimalPlaces(3.14159, 2) returns "3.14", roundToDecimalPlaces(3.1, 3) returns "3.100"
+     * for example, roundToDecimalPlaces(3.14159, 2) returns "3.14", roundToDecimalPlaces (3.1, 3) returns "3.100"
      * @param value The number to round
      * @param decimals The number of decimal places to keep
      */
@@ -2416,7 +2413,7 @@ namespace pksdriver {
     }
     
     let PKSDriverStepperMotorAInstance: StepperMotorDriver = new StepperMotorDriver(PKSMotorPorts.M1P, PKSMotorPorts.M1N, PKSMotorPorts.M2N, PKSMotorPorts.M2P)
-    let PKSDriverStepperMotorBInstance: StepperMotorDriver = new StepperMotorDriver(PKSMotorPorts.M1P, PKSMotorPorts.M1N, PKSMotorPorts.M2N, PKSMotorPorts.M2P)
+    let PKSDriverStepperMotorBInstance: StepperMotorDriver = new StepperMotorDriver(PKSMotorPorts.M3N, PKSMotorPorts.M3P, PKSMotorPorts.M4N, PKSMotorPorts.M4P)
 
     export enum StepperMotor{
         //% block="A"
@@ -2436,7 +2433,7 @@ namespace pksdriver {
     //% group="Stepper Motor"
     //% stepperCoilAPlus.defl=PKSMotorPorts.M1P stepperCoilAMinus.defl=PKSMotorPorts.M1N stepperCoilBPlus.defl=PKSMotorPorts.M2P stepperCoilBMinus.defl=PKSMotorPorts.M2N
     //% weight=50
-    export function createStepperMotorA(StepperCoilAPlus: PKSMotorPorts, StepperCoilAMinus: PKSMotorPorts, StepperCoilBPlus: PKSMotorPorts, StepperCoilBMinus: PKSMotorPorts): void {
+    export function createStepperMotorA(StepperCoilAPlus: PKSMotorPorts=PKSMotorPorts.M1P, StepperCoilAMinus: PKSMotorPorts=PKSMotorPorts.M1N, StepperCoilBPlus: PKSMotorPorts=PKSMotorPorts.M2P, StepperCoilBMinus: PKSMotorPorts=PKSMotorPorts.M2N): void {
         PKSDriverStepperMotorAInstance = new StepperMotorDriver(StepperCoilAPlus, StepperCoilAMinus, StepperCoilBPlus, StepperCoilBMinus)
     }
 
@@ -2449,9 +2446,9 @@ namespace pksdriver {
     */
     //% blockId=pksdriver_createstepperB block="create stepper motor B with |coil A+ %StepperCoilAPlus |coil A- %StepperCoilAMinus |coil B+ %StepperCoilBPlus |coil B- %StepperCoilBMinus" subcategory="Gotcha"
     //% group="Stepper Motor"
-    //% stepperCoilAPlus.defl=PKSMotorPorts.M1P stepperCoilAMinus.defl=PKSMotorPorts.M1N stepperCoilBPlus.defl=PKSMotorPorts.M2P stepperCoilBMinus.defl=PKSMotorPorts.M2N
+    //% stepperCoilAPlus.defl=PKSMotorPorts.M3P stepperCoilAMinus.defl=PKSMotorPorts.M3N stepperCoilBPlus.defl=PKSMotorPorts.M4P stepperCoilBMinus.defl=PKSMotorPorts.M4N
     //% weight=50
-    export function createStepperMotorB(StepperCoilAPlus: PKSMotorPorts, StepperCoilAMinus: PKSMotorPorts, StepperCoilBPlus: PKSMotorPorts, StepperCoilBMinus: PKSMotorPorts): void {
+    export function createStepperMotorB(StepperCoilAPlus: PKSMotorPorts=PKSMotorPorts.M3P, StepperCoilAMinus: PKSMotorPorts=PKSMotorPorts.M3N, StepperCoilBPlus: PKSMotorPorts=PKSMotorPorts.M4P, StepperCoilBMinus: PKSMotorPorts=PKSMotorPorts.M4N): void {
         PKSDriverStepperMotorBInstance = new StepperMotorDriver(StepperCoilAPlus, StepperCoilAMinus, StepperCoilBPlus, StepperCoilBMinus)
     }
 
