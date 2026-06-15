@@ -2225,7 +2225,7 @@ namespace pksdriver {
 
     let PKSDriverJoystickInstance: Joystick = new Joystick(AnalogPin.P1, AnalogPin.P2)
 
-    //% blockId=pksdriver_createjoystick block="create joystick with x pin %pinX and y pin %pinY|centerX %centerX centerY %centerY max deflection %maxDeflection blind zone %blindZonePercent%%" subcategory="Gotcha"
+    //% blockId=pksdriver_createjoystick block="create joystick with |x axis %pinX,|y axis %pinY|centerX %centerX centerY %centerY max deflection %maxDeflection blind zone %blindZonePercent%%" subcategory="Gotcha"
     //% group="Joystick"
     //% weight=90
     export function startJoystick(pinX: AnalogPin, pinY: AnalogPin, centerX: number = 512, centerY: number = 512, maxDeflection: number = 512, blindZonePercent: number = 10) {
@@ -2428,7 +2428,7 @@ namespace pksdriver {
     */
     //% blockId=pksdriver_createstepper block="create stepper motor A with |coil A+ %StepperCoilAPlus |coil A- %StepperCoilAMinus |coil B+ %StepperCoilBPlus |coil B- %StepperCoilBMinus" subcategory="Gotcha"
     //% group="Stepper Motor"
-    //% weight=10
+    //% weight=50
     export function createStepperMotorA(StepperCoilAPlus: PKSMotorPorts, StepperCoilAMinus: PKSMotorPorts, StepperCoilBPlus: PKSMotorPorts, StepperCoilBMinus: PKSMotorPorts): void {
         PKSDriverStepperMotorAInstance = new StepperMotorDriver(StepperCoilAPlus, StepperCoilAMinus, StepperCoilBPlus, StepperCoilBMinus)
     }
@@ -2442,7 +2442,7 @@ namespace pksdriver {
     */
     //% blockId=pksdriver_createstepperB block="create stepper motor B with |coil A+ %StepperCoilAPlus |coil A- %StepperCoilAMinus |coil B+ %StepperCoilBPlus |coil B- %StepperCoilBMinus" subcategory="Gotcha"
     //% group="Stepper Motor"
-    //% weight=10
+    //% weight=50
     export function createStepperMotorB(StepperCoilAPlus: PKSMotorPorts, StepperCoilAMinus: PKSMotorPorts, StepperCoilBPlus: PKSMotorPorts, StepperCoilBMinus: PKSMotorPorts): void {
         PKSDriverStepperMotorBInstance = new StepperMotorDriver(StepperCoilAPlus, StepperCoilAMinus, StepperCoilBPlus, StepperCoilBMinus)
     }
@@ -2471,10 +2471,10 @@ namespace pksdriver {
     * @param direction The cardinal direction to move the robot (e.g. North, Northeast, etc.)
     * @param steps The number of steps to move in the specified direction (default is 1)
     */
-    //% blockId=pksdriver_stepper_motor_hbot_step block="step %stepper motor in %order direction for %steps steps" subcategory="Gotcha"
+    //% blockId=pksdriver_stepper_motor_hbot_step block="Hbot drive in %direction for %steps steps" subcategory="Gotcha"
     //% group="Stepper Motor"
     //% steps.defl=1
-    //% weight=10
+    //% weight=40
     export function stepperMotorHBotMove(direction: PKSHBotCardinalDirections, steps: number = 1) {
         let step_count = 0
         if (direction == PKSHBotCardinalDirections.North) {
