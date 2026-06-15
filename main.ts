@@ -2271,6 +2271,7 @@ namespace pksdriver {
         private speed = 1 //rotation per second
         private delay = 50;
         private power_flag = true
+        private last_step: StepStage = null;
         public a_high = 4095
         public b_high = 4095
         private low = 0
@@ -2412,6 +2413,8 @@ namespace pksdriver {
         }
     }
     
+    pksdriver.i2cWrite(0x40, 0x00, 0x00)
+    pksdriver.setFreq(1522)
     let PKSDriverStepperMotorAInstance: StepperMotorDriver = new StepperMotorDriver(PKSMotorPorts.M1P, PKSMotorPorts.M1N, PKSMotorPorts.M2N, PKSMotorPorts.M2P)
     let PKSDriverStepperMotorBInstance: StepperMotorDriver = new StepperMotorDriver(PKSMotorPorts.M3N, PKSMotorPorts.M3P, PKSMotorPorts.M4N, PKSMotorPorts.M4P)
 
