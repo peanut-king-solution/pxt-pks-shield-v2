@@ -2035,7 +2035,8 @@ namespace pksdriver {
         return control.ramSize() > 102400;
     }
 
-    //% block="set I2C %speed"
+    //% block="set I2C %speed" 
+    //% group="I2C speed"
     //% speed.defl=I2CSpeed.Standard
     //% speed.fieldEditor="gridpicker"
     export function setI2CSpeed(speed: I2CSpeed): void {
@@ -2043,7 +2044,7 @@ namespace pksdriver {
 
         if (isMicrobitV2()) {
             //V2 max speed 1 MHz
-            finalSpeed = Math.min(finalSpeed, 1000000);
+            finalSpeed = Math.min(finalSpeed, 1000000); 
         } else {
             //V1 max speed 400 kHz
             finalSpeed = Math.min(finalSpeed, 400000);
@@ -2227,6 +2228,7 @@ namespace pksdriver {
 
     //% blockId=pksdriver_createjoystick block="create joystick with |x axis %pinX,|y axis %pinY|centerX %centerX centerY %centerY max deflection %maxDeflection blind zone %blindZonePercent%%" subcategory="Gotcha"
     //% group="Joystick"
+    //% centerX.defl=512 centerY.defl=512 maxDeflection.defl=512 blindZonePercent.defl=10
     //% weight=90
     export function startJoystick(pinX: AnalogPin, pinY: AnalogPin, centerX: number = 512, centerY: number = 512, maxDeflection: number = 512, blindZonePercent: number = 10) {
         PKSDriverJoystickInstance = new Joystick(pinX, pinY, centerX, centerY, maxDeflection, blindZonePercent)
@@ -2418,6 +2420,13 @@ namespace pksdriver {
     
     let PKSDriverStepperMotorAInstance: StepperMotorDriver = new StepperMotorDriver(PKSMotorPorts.M1P, PKSMotorPorts.M1N, PKSMotorPorts.M2N, PKSMotorPorts.M2P)
     let PKSDriverStepperMotorBInstance: StepperMotorDriver = new StepperMotorDriver(PKSMotorPorts.M1P, PKSMotorPorts.M1N, PKSMotorPorts.M2N, PKSMotorPorts.M2P)
+
+    export enum StepperMotor{
+        //% block="A"
+        A,
+        //% block="B"
+        B
+    }
 
     /*
     * Create a stepper motor driver instance with specified coil pins. The stepper motor will be controlled by energizing the coils in a specific sequence to achieve rotation. The speed of rotation can be adjusted by changing the delay between steps in the code. Note: the actual speed may be affected by the hardware and may not be exactly as specified.
