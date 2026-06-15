@@ -63,7 +63,7 @@ namespace pksdriver {
         M4 = 0x4
     }
 
-        export enum PKSMotorPorts {
+    export enum PKSMotorPorts {
         //% block="M0+"
         M0P = (0x0 - 1) * 2 + 8,
         //% block="M0-"
@@ -195,7 +195,7 @@ namespace pksdriver {
      * Steering gear control function 
      * @param index S1~S8.
      * @param degree 0°~180°.
-     */ 
+     */
     //% blockId=pksdriver_smart_servo block="smart servo|%index|degree|%degree" subcategory="Smart Living"
     //% group="Servo"
     //% weight=99
@@ -863,9 +863,9 @@ namespace pksdriver {
      * DS1302 RTC class
      */
 
-     /**
-     * convert a Hex data to Dec
-     */
+    /**
+    * convert a Hex data to Dec
+    */
     function HexToDec(dat: number): number {
         return (dat >> 4) * 10 + (dat % 16);
     }
@@ -1294,7 +1294,7 @@ namespace pksdriver {
 
     function MPUReadData(reg: number) {
         let h = MPUI2cRead(reg);
-        let l = MPUI2cRead(reg+1);
+        let l = MPUI2cRead(reg + 1);
         let value = (h << 8) + l;
 
         if (value >= 0x8000) {
@@ -1306,26 +1306,26 @@ namespace pksdriver {
     }
 
     function dist(a: number, b: number): number {
-        return Math.sqrt((a*a)+(b*b));
+        return Math.sqrt((a * a) + (b * b));
     }
 
     // Update acceleration data via I2C
     function updateAcceleration(sensitivity: AccelSen) {
         // Set sensitivity of acceleration range, according to selection and datasheet value
         let accelRange = 0;
-        if(sensitivity == AccelSen.Range2g) {
+        if (sensitivity == AccelSen.Range2g) {
             // +- 2g
             accelRange = 16384;
         }
-        else if(sensitivity == AccelSen.Range4g) {
+        else if (sensitivity == AccelSen.Range4g) {
             // +- 4g
             accelRange = 8192;
         }
-        else if(sensitivity == AccelSen.Range8g) {
+        else if (sensitivity == AccelSen.Range8g) {
             // +- 8g
             accelRange = 4096;
         }
-        else if(sensitivity == AccelSen.Range16g) {
+        else if (sensitivity == AccelSen.Range16g) {
             // +- 16g
             accelRange = 2048;
         }
@@ -1338,19 +1338,19 @@ namespace pksdriver {
     function updateGyroscope(sensitivity: GyroSen) {
         // Set sensitivity of gyroscope range, according to selection and datasheet value
         let gyroRange = 0;
-        if(sensitivity == GyroSen.Range250dps) {
+        if (sensitivity == GyroSen.Range250dps) {
             // +- 250dps
             gyroRange = 131;
         }
-        else if(sensitivity == GyroSen.Range500dps) {
+        else if (sensitivity == GyroSen.Range500dps) {
             // +- 500dps
             gyroRange = 65.5;
         }
-        else if(sensitivity == GyroSen.Range1000dps) {
+        else if (sensitivity == GyroSen.Range1000dps) {
             // +- 1000dps
             gyroRange = 32.8;
         }
-        else if(sensitivity == GyroSen.Range2000dps) {
+        else if (sensitivity == GyroSen.Range2000dps) {
             // +- 2000dps
             gyroRange = 16.4;
         }
@@ -1382,10 +1382,10 @@ namespace pksdriver {
     //% weight=95
     export function gyroscope(axis: AxisXYZ, sensitivity: GyroSen): number {
         updateGyroscope(sensitivity);
-        if(axis == AxisXYZ.X) {
+        if (axis == AxisXYZ.X) {
             return xGyro;
         }
-        else if(axis == AxisXYZ.Y) {
+        else if (axis == AxisXYZ.Y) {
             return yGyro;
         }
         else {
@@ -1405,19 +1405,19 @@ namespace pksdriver {
         updateAcceleration(sensitivity);
 
         let radians = 0;
-        if(axis == AxisXYZ.X) {
-            radians = Math.atan2(yAccel, dist(xAccel,zAccel));
+        if (axis == AxisXYZ.X) {
+            radians = Math.atan2(yAccel, dist(xAccel, zAccel));
         }
-        else if(axis == AxisXYZ.Y) {
-            radians = -Math.atan2(xAccel, dist(yAccel,zAccel));
+        else if (axis == AxisXYZ.Y) {
+            radians = -Math.atan2(xAccel, dist(yAccel, zAccel));
         }
-        else if(axis == AxisXYZ.Z) {
+        else if (axis == AxisXYZ.Z) {
             radians = Math.atan2(zAccel, dist(xAccel, yAccel));
         }
 
         // Convert radian to degrees and return
         let pi = Math.PI;
-        let degrees = radians * (180/pi);
+        let degrees = radians * (180 / pi);
         return degrees;
     }
 
@@ -1432,10 +1432,10 @@ namespace pksdriver {
     export function axisAcceleration(axis: AxisXYZ, sensitivity: AccelSen): number {
         updateAcceleration(sensitivity);
         // Return acceleration of specific axis
-        if(axis == AxisXYZ.X) {
+        if (axis == AxisXYZ.X) {
             return xAccel;
         }
-        else if(axis == AxisXYZ.Y) {
+        else if (axis == AxisXYZ.Y) {
             return yAccel;
         }
         else {
@@ -2054,7 +2054,7 @@ namespace pksdriver {
 
     //% shim=customI2C::setI2CSpeedShim
     function setI2CSpeedShim(speed: number): void {
-        return; 
+        return;
     }
 
     //*****************************************************************************************************//
@@ -2165,7 +2165,7 @@ namespace pksdriver {
     //I2C multiplexer related code finished                                                                //
     //*****************************************************************************************************//
 
-    export class Joystick{
+    export class Joystick {
         pinX: AnalogPin;
         pinY: AnalogPin;
         centerX: number;
@@ -2173,7 +2173,7 @@ namespace pksdriver {
         maxDeflection: number;
         blindZonePercent: number;
 
-        public constructor(pinX: AnalogPin, pinY: AnalogPin, centerX: number=512, centerY: number=512, maxDeflection: number=512, blindZonePercent: number=10) {
+        public constructor(pinX: AnalogPin, pinY: AnalogPin, centerX: number = 512, centerY: number = 512, maxDeflection: number = 512, blindZonePercent: number = 10) {
             this.pinX = pinX;
             this.pinY = pinY;
             this.centerX = centerX;
@@ -2182,7 +2182,7 @@ namespace pksdriver {
             this.blindZonePercent = blindZonePercent;
         }
 
-        public read() { 
+        public read() {
             let rawX = pins.analogReadPin(this.pinX)
             // readAverage(this.pinX, 1);
             let rawY = pins.analogReadPin(this.pinY)
@@ -2228,7 +2228,7 @@ namespace pksdriver {
     //% blockId=pksdriver_createjoystick block="create joystick with x pin %pinX and y pin %pinY|centerX %centerX centerY %centerY max deflection %maxDeflection blind zone %blindZonePercent%%" subcategory="Gotcha"
     //% group="Joystick"
     //% weight=90
-    export function startJoystick(pinX: AnalogPin, pinY: AnalogPin, centerX: number=512, centerY: number=512, maxDeflection: number=512, blindZonePercent: number=10) {
+    export function startJoystick(pinX: AnalogPin, pinY: AnalogPin, centerX: number = 512, centerY: number = 512, maxDeflection: number = 512, blindZonePercent: number = 10) {
         PKSDriverJoystickInstance = new Joystick(pinX, pinY, centerX, centerY, maxDeflection, blindZonePercent)
     }
 
@@ -2428,7 +2428,7 @@ namespace pksdriver {
     */
     //% blockId=pksdriver_createstepper block="create stepper motor A with |coil A+ %StepperCoilAPlus |coil A- %StepperCoilAMinus |coil B+ %StepperCoilBPlus |coil B- %StepperCoilBMinus" subcategory="Gotcha"
     //% group="Stepper Motor"
-    //% weight=90
+    //% weight=10
     export function createStepperMotorA(StepperCoilAPlus: PKSMotorPorts, StepperCoilAMinus: PKSMotorPorts, StepperCoilBPlus: PKSMotorPorts, StepperCoilBMinus: PKSMotorPorts): void {
         PKSDriverStepperMotorAInstance = new StepperMotorDriver(StepperCoilAPlus, StepperCoilAMinus, StepperCoilBPlus, StepperCoilBMinus)
     }
@@ -2442,15 +2442,85 @@ namespace pksdriver {
     */
     //% blockId=pksdriver_createstepperB block="create stepper motor B with |coil A+ %StepperCoilAPlus |coil A- %StepperCoilAMinus |coil B+ %StepperCoilBPlus |coil B- %StepperCoilBMinus" subcategory="Gotcha"
     //% group="Stepper Motor"
-    //% weight=90
+    //% weight=10
     export function createStepperMotorB(StepperCoilAPlus: PKSMotorPorts, StepperCoilAMinus: PKSMotorPorts, StepperCoilBPlus: PKSMotorPorts, StepperCoilBMinus: PKSMotorPorts): void {
         PKSDriverStepperMotorBInstance = new StepperMotorDriver(StepperCoilAPlus, StepperCoilAMinus, StepperCoilBPlus, StepperCoilBMinus)
     }
 
+    export enum PKSHBotCardinalDirections {
+        //% block="north (0°)"
+        North,
+        //% block="northeast (45°)"
+        Northeast,
+        //% block="east (90°)"
+        East,
+        //% block="southeast (135°)"
+        Southeast,
+        //% block="south (180°)"
+        South,
+        //% block="southwest (225°)"
+        Southwest,
+        //% block="west (270°)"
+        West,
+        //% block="northwest (315°)"
+        Northwest
+    }
+
     /*
-    *
+    * This function controls two stepper motors in a coordinated way to move a robot in the specified cardinal direction for a certain number of steps. The direction parameter determines the sequence of steps for each motor to achieve the desired movement direction. 
+    * @param direction The cardinal direction to move the robot (e.g. North, Northeast, etc.)
+    * @param steps The number of steps to move in the specified direction (default is 1)
     */
     //% blockId=pksdriver_stepper_motor_hbot_step block="step %stepper motor in %order direction for %steps steps" subcategory="Gotcha"
-    export function stepperMotorHBotMove(Angle: number, steps: number = 1) { 
-        
+    //% group="Stepper Motor"
+    //% steps.defl=1
+    //% weight=10
+    export function stepperMotorHBotMove(direction: PKSHBotCardinalDirections, steps: number = 1) {
+        let step_count = 0
+        if (direction == PKSHBotCardinalDirections.North) {
+            while (step_count < steps) {
+                PKSDriverStepperMotorAInstance.steps(pksdriver.PKSDriverDirection.Counterclockwise)
+                PKSDriverStepperMotorBInstance.steps(pksdriver.PKSDriverDirection.Clockwise)
+                step_count += 1
+            }
+        } else if (direction == PKSHBotCardinalDirections.Northeast) {
+            while (step_count < steps) {
+                PKSDriverStepperMotorAInstance.steps(pksdriver.PKSDriverDirection.Counterclockwise)
+                step_count += 1
+            }
+        } else if (direction == PKSHBotCardinalDirections.East) {
+            while (step_count < steps) {
+                PKSDriverStepperMotorAInstance.steps(pksdriver.PKSDriverDirection.Counterclockwise)
+                PKSDriverStepperMotorBInstance.steps(pksdriver.PKSDriverDirection.Counterclockwise)
+                step_count += 1
+            }
+        } else if (direction == PKSHBotCardinalDirections.Southeast) {
+            while (step_count < steps) {
+                PKSDriverStepperMotorBInstance.steps(pksdriver.PKSDriverDirection.Counterclockwise)
+                step_count += 1
+            }
+        } else if (direction == PKSHBotCardinalDirections.South) {
+            while (step_count < steps) {
+                PKSDriverStepperMotorAInstance.steps(pksdriver.PKSDriverDirection.Clockwise)
+                PKSDriverStepperMotorBInstance.steps(pksdriver.PKSDriverDirection.Clockwise)
+                step_count += 1
+            }
+        } else if (direction == PKSHBotCardinalDirections.Southwest) {
+            while (step_count < steps) {
+                PKSDriverStepperMotorAInstance.steps(pksdriver.PKSDriverDirection.Clockwise)
+                step_count += 1
+            }
+        } else if (direction == PKSHBotCardinalDirections.West) {
+            while (step_count < steps) {
+                PKSDriverStepperMotorAInstance.steps(pksdriver.PKSDriverDirection.Clockwise)
+                PKSDriverStepperMotorBInstance.steps(pksdriver.PKSDriverDirection.Counterclockwise)
+                step_count += 1
+            }
+        } else if (direction == PKSHBotCardinalDirections.Northwest) {
+            while (step_count < steps) {
+                PKSDriverStepperMotorBInstance.steps(pksdriver.PKSDriverDirection.Counterclockwise)
+                step_count += 1
+            }
+        }
     }
+}
