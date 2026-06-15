@@ -2020,14 +2020,12 @@ namespace pksdriver {
      * I2C speed options for testing I2C communication beta
      * Note: the actual speed may be affected by the hardware and may not be exactly as specified
      */
-    //% block="I2C speed" subcategory="I2C Test"
-    //% group="I2C speed"
     export enum I2CSpeed {
-        //% block="standard mode(100 kHz)"
+        //% block="standard mode (100 kHz)"
         Standard = 100000,
-        //% block="fast mode(400 kHz)"
+        //% block="fast mode (400 kHz)"
         Fast = 400000,
-        //% block="fast plus mode(1 MHz)"
+        //% block="fast plus mode (1 MHz)"
         FastPlus = 1000000
     }
 
@@ -2038,7 +2036,6 @@ namespace pksdriver {
     //% block="set I2C %speed" 
     //% group="I2C speed"
     //% speed.defl=I2CSpeed.Standard
-    //% speed.fieldEditor="gridpicker"
     export function setI2CSpeed(speed: I2CSpeed): void {
         let finalSpeed = speed;
 
@@ -2437,7 +2434,6 @@ namespace pksdriver {
     */
     //% blockId=pksdriver_createstepper block="create stepper motor A with |coil A+ %StepperCoilAPlus |coil A- %StepperCoilAMinus |coil B+ %StepperCoilBPlus |coil B- %StepperCoilBMinus" subcategory="Gotcha"
     //% group="Stepper Motor"
-    //% stepperCoilAPlus.fieldEditor="gridpicker" stepperCoilAMinus.fieldEditor="gridpicker" stepperCoilBPlus.fieldEditor="gridpicker" stepperCoilBMinus.fieldEditor="gridpicker"
     //% stepperCoilAPlus.defl=PKSMotorPorts.M1P stepperCoilAMinus.defl=PKSMotorPorts.M1N stepperCoilBPlus.defl=PKSMotorPorts.M2P stepperCoilBMinus.defl=PKSMotorPorts.M2N
     //% weight=50
     export function createStepperMotorA(StepperCoilAPlus: PKSMotorPorts, StepperCoilAMinus: PKSMotorPorts, StepperCoilBPlus: PKSMotorPorts, StepperCoilBMinus: PKSMotorPorts): void {
@@ -2453,7 +2449,6 @@ namespace pksdriver {
     */
     //% blockId=pksdriver_createstepperB block="create stepper motor B with |coil A+ %StepperCoilAPlus |coil A- %StepperCoilAMinus |coil B+ %StepperCoilBPlus |coil B- %StepperCoilBMinus" subcategory="Gotcha"
     //% group="Stepper Motor"
-    //% stepperCoilAPlus.fieldEditor="gridpicker" stepperCoilAMinus.fieldEditor="gridpicker" stepperCoilBPlus.fieldEditor="gridpicker" stepperCoilBMinus.fieldEditor="gridpicker"
     //% stepperCoilAPlus.defl=PKSMotorPorts.M1P stepperCoilAMinus.defl=PKSMotorPorts.M1N stepperCoilBPlus.defl=PKSMotorPorts.M2P stepperCoilBMinus.defl=PKSMotorPorts.M2N
     //% weight=50
     export function createStepperMotorB(StepperCoilAPlus: PKSMotorPorts, StepperCoilAMinus: PKSMotorPorts, StepperCoilBPlus: PKSMotorPorts, StepperCoilBMinus: PKSMotorPorts): void {
