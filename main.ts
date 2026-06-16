@@ -2220,6 +2220,15 @@ namespace pksdriver {
 
     let PKSDriverJoystickInstance: Joystick = new Joystick(AnalogPin.P1, AnalogPin.P2)
 
+    /**
+     * Joystick initialization, specify the x and y axis pins, the center value for x and y (default 512 for most joysticks), the max deflection value (default 512 for most joysticks), and the blind zone percentage (default 10%, adjust based on your joystick's sensitivity and noise)
+     * @param pinX 
+     * @param pinY 
+     * @param centerX 
+     * @param centerY 
+     * @param maxDeflection 
+     * @param blindZonePercent 
+     */
     //% blockId=pksdriver_createjoystick block="create joystick with |x axis %pinX|y axis %pinY|centerX %centerX centerY %centerY max deflection %maxDeflection blind zone %blindZonePercent" subcategory="Gotcha"
     //% group="Joystick"
     //% centerX.defl=512 centerY.defl=512 maxDeflection.defl=512 blindZonePercent.defl=10
@@ -2228,7 +2237,7 @@ namespace pksdriver {
         PKSDriverJoystickInstance = new Joystick(pinX, pinY, centerX, centerY, maxDeflection, blindZonePercent)
     }
 
-    /*
+    /**
     * Get the angle (0-360 degrees) and strength (0-1) of the joystick deflection based on the x and y values.
     * The angle is obey catesian coordinate system, 0 degree means full right, 90 degree means full up, 180 degree means full left, 270 degree means full down.
     */
@@ -2239,7 +2248,7 @@ namespace pksdriver {
         return PKSDriverJoystickInstance.Angle()
     }
 
-    /*
+    /**
     * Get the strength of the joystick deflection based on the x and y values, range from 0 to 1.
     */
     //% blockId=pksdriver_getstrength block="joystick strength" subcategory="Gotcha"
@@ -2480,7 +2489,7 @@ namespace pksdriver {
         Northwest
     }
 
-    /*
+    /**
     * This function controls two stepper motors in a coordinated way to move a robot in the specified cardinal direction for a certain number of steps. The direction parameter determines the sequence of steps for each motor to achieve the desired movement direction. 
     * @param direction The cardinal direction to move the robot (e.g. North, Northeast, etc.)
     * @param steps The number of steps to move in the specified direction (default is 1)
@@ -2493,13 +2502,13 @@ namespace pksdriver {
         let step_count = 0
         if (direction == PKSHBotCardinalDirections.North) {
             while (step_count < steps) {
-                PKSDriverStepperMotorAInstance.steps(pksdriver.PKSDriverDirection.Counterclockwise)
-                PKSDriverStepperMotorBInstance.steps(pksdriver.PKSDriverDirection.Clockwise)
+                PKSDriverStepperMotorAInstance.steps(pksdriver.PKSDriverDirection.Clockwise)
+                PKSDriverStepperMotorBInstance.steps(pksdriver.PKSDriverDirection.Counterclockwise)
                 step_count += 1
             }
         } else if (direction == PKSHBotCardinalDirections.Northeast) {
             while (step_count < steps) {
-                PKSDriverStepperMotorAInstance.steps(pksdriver.PKSDriverDirection.Counterclockwise)
+                PKSDriverStepperMotorBInstance.steps(pksdriver.PKSDriverDirection.Counterclockwise)
                 step_count += 1
             }
         } else if (direction == PKSHBotCardinalDirections.East) {
@@ -2510,7 +2519,7 @@ namespace pksdriver {
             }
         } else if (direction == PKSHBotCardinalDirections.Southeast) {
             while (step_count < steps) {
-                PKSDriverStepperMotorBInstance.steps(pksdriver.PKSDriverDirection.Counterclockwise)
+                PKSDriverStepperMotorAInstance.steps(pksdriver.PKSDriverDirection.Counterclockwise)
                 step_count += 1
             }
         } else if (direction == PKSHBotCardinalDirections.South) {
@@ -2527,12 +2536,12 @@ namespace pksdriver {
         } else if (direction == PKSHBotCardinalDirections.West) {
             while (step_count < steps) {
                 PKSDriverStepperMotorAInstance.steps(pksdriver.PKSDriverDirection.Clockwise)
-                PKSDriverStepperMotorBInstance.steps(pksdriver.PKSDriverDirection.Counterclockwise)
+                PKSDriverStepperMotorBInstance.steps(pksdriver.PKSDriverDirection.Clockwise)
                 step_count += 1
             }
         } else if (direction == PKSHBotCardinalDirections.Northwest) {
             while (step_count < steps) {
-                PKSDriverStepperMotorBInstance.steps(pksdriver.PKSDriverDirection.Counterclockwise)
+                PKSDriverStepperMotorAInstance.steps(pksdriver.PKSDriverDirection.Clockwise)
                 step_count += 1
             }
         }
