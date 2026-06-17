@@ -1,56 +1,189 @@
 # pxt-pks-shield-v2
- Peanut King microbit shield V2
 
----in development---
+Peanut King micro:bit Shield V2 extension for motors, servos, sensors, and I2C modules.
 
-## Table of Contents
+## Product URL
 
-* [URL](#url)
-* [Summary](#summary)
-* [Blocks](#blocks)
-* [License](#license)
-
-## URL
-project URL:  ```https://github.com/peanut-king-solution/pks-pxt-shield```
+[Peanut KING micro:bit Shield V2 Extension Shield](https://www.peanutkingsolution.com/en/product-page/peanut-king-micro-bit-shield-v2-%E6%93%B4%E5%B1%95%E6%9D%BF)
 
 ## Summary
-The Micro:bit motor drive expansion board not only enhances motor drive capabilities but also incorporates four motor driven, 2 road, on the basis of stepper motor driver, 
-also raises the additional 8 road steering gear interface, IO port, 2 road 9 I2C interface.
-In addition, it provides an extra eight steering gear interfaces, IO ports, and two 9 I2C interfaces.
-The motor uses a high-current interface, while the steering machine, I2C, and IO ports all use the Gravity standard interface, supporting a vast number of modules and sensors. 
-The expansion board is powered by a voltage range of 3.5v to 5.5v and offers two power interface modes: a 3.5mm plug and wiring. 
-It's known for its wide voltage compatibility, numerous ports, compact size, and plug-and-play convenience.
 
-## Blocks
-### 1. Robot
-![image](image/robot.png)
+This extension exposes the main features of the Peanut King Shield V2 to MakeCode for micro:bit.
+It includes APIs for:
 
-### 2. Gyroscope
-![image](image/gyro.png)
+- DC motor control
+- Servo control
+- Light and fan outputs
+- MPU6050 gyroscope and acceleration readings
+- Ultrasonic, compound eye, and color sensors
+- AHT20 and DHT temperature and humidity sensors
+- DS1302 real-time clock support
+- I2C channel switching for the different shield configurations
 
-### 3. Hydroponic
-![image](image/hydroponic.png)
+```package
+pksdriver=github:peanut-king-solution/pxt-pks-shield-v2
+```
 
-## Code Example
-```JavaScript
+## Example: Drive Two Motors
+
+Use `motorRun` to drive each motor independently, then stop everything with `motorStopAll`.
+
+
+```blocks
 basic.forever(function () {
-    pksdriver.MotorRun(pksdriver.Motors.M1, pksdriver.Dir.CCW, 80) // set the speed of moter M1
-    pksdriver.MotorRun(pksdriver.Motors.M2, pksdriver.Dir.CW, 80)
+    // Drive M1 and M2 forward at moderate speed.
+    pksdriver.motorRun(pksdriver.PKSDriverMotors.M1, pksdriver.PKSDriverDirection.CLOCKWISE, 80)
+    pksdriver.motorRun(pksdriver.PKSDriverMotors.M2, pksdriver.PKSDriverDirection.CLOCKWISE, 80)
     basic.pause(1500)
-    pksdriver.motorStopAll() // stop all the motors
+
+    // Reverse both motors to back away.
+    pksdriver.motorRun(pksdriver.PKSDriverMotors.M1, pksdriver.PKSDriverDirection.COUNTERCLOCKWISE, 80)
+    pksdriver.motorRun(pksdriver.PKSDriverMotors.M2, pksdriver.PKSDriverDirection.COUNTERCLOCKWISE, 80)
+    basic.pause(1500)
+
+    // Stop all motor outputs before the next cycle.
+    pksdriver.motorStopAll()
+    basic.pause(500)
+})
+```
+
+## Example: Position a Servo
+
+Use `servo` to move a connected servo to a target angle.
+
+```blocks
+input.onButtonPressed(Button.A, function () {
+    // Move servo S1 to 0 degrees.
+    pksdriver.servo(pksdriver.PKSDriverServos.S1, 0)
 })
 
+input.onButtonPressed(Button.B, function () {
+    // Move servo S1 to 180 degrees.
+    pksdriver.servo(pksdriver.PKSDriverServos.S1, 180)
+})
 
+input.onButtonPressed(Button.AB, function () {
+    // Turn the servo output off when it is no longer needed.
+    pksdriver.servoOff(pksdriver.PKSDriverServos.S1)
+})
+```
+
+## Example: Read the MPU6050
+
+Initialize the MPU6050 once, then read gyroscope and acceleration values inside a loop.
+
+```blocks
+pksdriver.initMPU6050()
+
+basic.forever(function () {
+    // Read yaw rate on the Z axis in radians per second.
+    let gyroZ = pksdriver.gyroscope(pksdriver.AxisXYZ.Z, pksdriver.GyroSen.Range_250_dps)
+
+    // Read acceleration on the X axis in g.
+    let accelX = pksdriver.axisAcceleration(pksdriver.AxisXYZ.X, pksdriver.AccelSen.Range_2_g)
+
+    serial.writeLine("gyroZ=" + gyroZ + ", accelX=" + accelX)
+    basic.pause(200)
+})
+```
+
+## Example: Read Temperature and Humidity
+
+The shield supports both AHT20 and DHT sensors. Use the API that matches the sensor you connected.
+
+```blocks
+basic.forever(function () {
+    // Read the AHT20 sensor over I2C.
+    let tempC = pksdriver.aht20ReadTemperatureC()
+    let humidity = pksdriver.aht20ReadHumidity()
+
+    serial.writeLine("AHT20 temp=" + tempC + "C, humidity=" + humidity + "%")
+    basic.pause(1000)
+})
+```
+
+
+```blocks
+input.onButtonPressed(Button.A, function () {
+    // Query a DHT11 or DHT22 sensor connected to pin P1.
+    pksdriver.queryData(pksdriver.DHTType.DHT11, DigitalPin.P1, true, false, true)
+
+    // Only read values after a successful query.
+    if (pksdriver.DHTReadDataSuccessful()) {
+        let temperature = pksdriver.DHTReadData(pksdriver.DataType.Temperature)
+        let humidity = pksdriver.DHTReadData(pksdriver.DataType.Humidity)
+        serial.writeLine("DHT temp=" + temperature + ", humidity=" + humidity)
+    }
+})
+```
+
+## Example: Use the Color Sensor
+
+Use the color sensor helpers to inspect raw channels or compare the detected color directly.
+
+```blocks
+basic.forever(function () {
+    // Read the detected color enum from the sensor.
+    let detected = pksdriver.readColor()
+
+    // React when red is detected.
+    if (detected == pksdriver.PKSDriverColorType.Red) {
+        basic.showString("R")
+    } else {
+        basic.clearScreen()
+    }
+
+    basic.pause(100)
+})
+```
+
+## Example: Create and Read the RTC
+
+Create the DS1302 instance once, then use the helper blocks exposed by this package.
+
+```blocks
+let rtc = pksdriver.create(DigitalPin.P13, DigitalPin.P14, DigitalPin.P15)
+
+// Set the RTC to 2026-05-11 Tuesday 08:30:00.
+rtc.dateTime(2026, 5, 11, 2, 8, 30, 0)
+
+basic.forever(function () {
+    let hour = rtc.hour()
+    let minute = rtc.minute()
+    let second = rtc.second()
+
+    serial.writeLine("time=" + hour + ":" + minute + ":" + second)
+    basic.pause(1000)
+})
+```
+
+## Example: ESP32 IOT 
+
+Using an ESP32 with Wi-Fi module as an intermediate to broadcast the data from sensors connected to the Peanut KING micro:bit shield.
+
+```blocks
+basic.forever(function () {
+    // Read temperature and humidity from AHT20
+    let tempC = pksdriver.aht20ReadTemperatureC()
+    let humidity = pksdriver.aht20ReadHumidity()
+
+    // Read ultrasonic distance
+    let distance = pksdriver.ultrasonic(DigitalPin.P2, DigitalPin.P1)
+
+    // Send data via serial to ESP32
+    serial.writeLine("TEMP:" + tempC + ",HUM:" + humidity + ",DIST:" + distance)
+    basic.pause(1000)
+})
 ```
 
 ## License
+This project is licensed under the **MIT License**.
 
-MIT
+This software incorporates portions of several third-party libraries. In accordance with the MIT License, the original copyright notices and permissions for these dependencies are acknowledged:
+- **AHT20**: [koudayao27/AHT20](https://github.com/koudayao27/AHT20)
+- **pxt-DHT11_DHT22**: [alankrantas/pxt-dht11_dht22](https://github.com/alankrantas/pxt-dht11_dht22)
+- **SEN-MPU6050**: [joy-it/sen-mpu6050](https://github.com/joy-it/sen-mpu6050)
+- **DS1302**: [makecode-extensions/ds1302](https://github.com/makecode-extensions/ds1302)
 
 ## Supported targets
-
-* for PXT/microbit
-(The metadata above is needed for package search.)
-```package
-gamePad=github:peanut-king-solution/pks-pxt-shield
-```
+- for PXT/microbit

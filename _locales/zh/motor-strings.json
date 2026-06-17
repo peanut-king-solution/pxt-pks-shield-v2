@@ -1,8 +1,10 @@
 {
-    "motor.Dir.CW|block": "正轉",
-    "motor.Dir.CCW|block": "反轉",
-    "motor.servo|block": "伺服摩打|%index|角度|%degree",
-    "motor.MotorRun|block": "摩打|%index|方向|%Dir|速度|%speed",
-    "motor.motorStop|block": "摩打 停止|%index",
-    "motor.motorStopAll|block": "停止所有摩打"
+    "pksdriver|block": "PKS Driver",
+    "PKSDriverDirection.Clockwise|block": "正轉",
+    "PKSDriverDirection.Counterclockwise|block": "反轉",
+    "pksdriver.servo|block": "伺服摩打|%index|角度|%degree",
+    "pksdriver.motorRun|block": "摩打|%index|方向|%direction|速度|%speed",
+    "pksdriver.motorStop|block": "摩打 停止|%index",
+    "pksdriver.motorStopAll|block": "停止所有摩打",
+    "{id:category}pksdriver": "PKS Driver"
 }
