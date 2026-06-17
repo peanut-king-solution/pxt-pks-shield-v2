@@ -2429,12 +2429,12 @@ namespace pksdriver {
     pksdriver.i2cWrite(0x40, 0x00, 0x00)
     pksdriver.setFreq(1522)
     //Hbot follows cartesian coordinate system, x axis positive to the right, y axis positive to the top, angle is obeying cartesian coordinate system as well, 0 degree means full right, 90 degree means full up, 180 degree means full left, 270 degree means full down.
-    let x_counter = 0
-    let y_counter = 0
-    let x_max = 2000
-    let x_min = 0
-    let y_max = 2000
-    let y_min = 0
+    let PKS_HBOT_x_counter = 0
+    let PKS_HBOT_y_counter = 0
+    let PKS_HBOT_x_max = 2000
+    let PKS_HBOT_x_min = 0
+    let PKS_HBOT_y_max = 2000
+    let PKS_HBOT_y_min = 0
     let PKSDriverStepperMotorAInstance: StepperMotorDriver = new StepperMotorDriver(PKSMotorPorts.M1P, PKSMotorPorts.M1N, PKSMotorPorts.M2N, PKSMotorPorts.M2P)
     let PKSDriverStepperMotorBInstance: StepperMotorDriver = new StepperMotorDriver(PKSMotorPorts.M3N, PKSMotorPorts.M3P, PKSMotorPorts.M4N, PKSMotorPorts.M4P)
 
@@ -2459,7 +2459,7 @@ namespace pksdriver {
     //% stepperCoilBPlus.defl=PKSMotorPorts.M2P
     //% stepperCoilBMinus.defl=PKSMotorPorts.M2N
     //% weight=50
-    export function createStepperMotorA(stepperCoilAPlus: PKSMotorPorts=PKSMotorPorts.M1P, stepperCoilAMinus: PKSMotorPorts=PKSMotorPorts.M1N, stepperCoilBPlus: PKSMotorPorts=PKSMotorPorts.M2P, stepperCoilBMinus: PKSMotorPorts=PKSMotorPorts.M2N): void {
+    export function createStepperMotorA(stepperCoilAPlus: PKSMotorPorts, stepperCoilAMinus: PKSMotorPorts, stepperCoilBPlus: PKSMotorPorts, stepperCoilBMinus: PKSMotorPorts): void {
         PKSDriverStepperMotorAInstance = new StepperMotorDriver(stepperCoilAPlus, stepperCoilAMinus, stepperCoilBPlus, stepperCoilBMinus)
     }
 
@@ -2477,7 +2477,7 @@ namespace pksdriver {
     //% stepperCoilBPlus.defl=PKSMotorPorts.M4P
     //% stepperCoilBMinus.defl=PKSMotorPorts.M4N
     //% weight=50
-    export function createStepperMotorB(stepperCoilAPlus: PKSMotorPorts=PKSMotorPorts.M3P, stepperCoilAMinus: PKSMotorPorts=PKSMotorPorts.M3N, stepperCoilBPlus: PKSMotorPorts=PKSMotorPorts.M4P, stepperCoilBMinus: PKSMotorPorts=PKSMotorPorts.M4N): void {
+    export function createStepperMotorB(stepperCoilAPlus: PKSMotorPorts, stepperCoilAMinus: PKSMotorPorts, stepperCoilBPlus: PKSMotorPorts, stepperCoilBMinus: PKSMotorPorts): void {
         PKSDriverStepperMotorBInstance = new StepperMotorDriver(stepperCoilAPlus, stepperCoilAMinus, stepperCoilBPlus, stepperCoilBMinus)
     }
 
@@ -2504,34 +2504,38 @@ namespace pksdriver {
     //% weight=40
     export function stepperMotorHBotMove(direction: PKSHBotCardinalDirections, steps: number = 1) {
         let step_count = 0
-        if (direction == PKSHBotCardinalDirections.North && y_counter < y_max) {
+        if (direction == PKSHBotCardinalDirections.North && PKS_HBOT_y_counter < PKS_HBOT_y_max) {
             while (step_count < steps) {
                 PKSDriverStepperMotorAInstance.steps(pksdriver.PKSDriverDirection.Clockwise)
                 PKSDriverStepperMotorBInstance.steps(pksdriver.PKSDriverDirection.Counterclockwise)
                 step_count += 1
-                y_counter += 1
+                PKS_HBOT_y_counter += 1
             }
-        } else if (direction == PKSHBotCardinalDirections.East && x_counter < x_max) {
+        } else if (direction == PKSHBotCardinalDirections.East && PKS_HBOT_x_counter < PKS_HBOT_x_max) {
             while (step_count < steps) {
                 PKSDriverStepperMotorAInstance.steps(pksdriver.PKSDriverDirection.Counterclockwise)
                 PKSDriverStepperMotorBInstance.steps(pksdriver.PKSDriverDirection.Counterclockwise)
                 step_count += 1
-                x_counter += 1
+                PKS_HBOT_x_counter += 1
             }
-        } else if (direction == PKSHBotCardinalDirections.South && y_counter > y_min) {
+        } else if (direction == PKSHBotCardinalDirections.South && PKS_HBOT_y_counter > PKS_HBOT_y_min) {
             while (step_count < steps) {
                 PKSDriverStepperMotorAInstance.steps(pksdriver.PKSDriverDirection.Counterclockwise)
                 PKSDriverStepperMotorBInstance.steps(pksdriver.PKSDriverDirection.Clockwise)
                 step_count += 1
-                y_counter -= 1
+                PKS_HBOT_y_counter -= 1
             }
-        } else if (direction == PKSHBotCardinalDirections.West && x_counter > x_min) {
+        } else if (direction == PKSHBotCardinalDirections.West && PKS_HBOT_x_counter > PKS_HBOT_x_min) {
             while (step_count < steps) {
                 PKSDriverStepperMotorAInstance.steps(pksdriver.PKSDriverDirection.Clockwise)
                 PKSDriverStepperMotorBInstance.steps(pksdriver.PKSDriverDirection.Clockwise)
                 step_count += 1
-                x_counter -= 1
+                PKS_HBOT_x_counter -= 1
             }
+        }
+        else {
+            PKSDriverStepperMotorAInstance.powerOff()
+            PKSDriverStepperMotorBInstance.powerOff()
         }
     }
 
@@ -2557,6 +2561,24 @@ namespace pksdriver {
             PKSDriverStepperMotorAInstance.powerOff()
             PKSDriverStepperMotorBInstance.powerOff()
         }
+    }
+
+    /**
+     * Get the current X direction movement step count
+     */
+    //% blockId=pksdriver_hbot_x_counter block="Hbot X Counter" subcategory="Gotcha"
+    //% weight=10
+    export function HBotXCounter() {
+        return PKS_HBOT_x_counter
+    }
+
+    /**
+     * Get the current Y direction movement step count
+     */
+    //% blockId=pksdriver_hbot_y_counter block="Hbot Y Counter" subcategory="Gotcha"
+    //% weight=10
+    export function HBotYCounter() {
+        return PKS_HBOT_y_counter
     }
 
 }
