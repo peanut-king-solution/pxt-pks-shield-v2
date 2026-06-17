@@ -2425,6 +2425,13 @@ namespace pksdriver {
     
     pksdriver.i2cWrite(0x40, 0x00, 0x00)
     pksdriver.setFreq(1522)
+    //Hbot follows cartesian coordinate system, x axis positive to the right, y axis positive to the top, angle is obeying cartesian coordinate system as well, 0 degree means full right, 90 degree means full up, 180 degree means full left, 270 degree means full down.
+    let x_counter = 0
+    let y_counter = 0
+    let x_max = 200
+    let x_min = 0
+    let y_max = 200
+    let y_min = 0
     let PKSDriverStepperMotorAInstance: StepperMotorDriver = new StepperMotorDriver(PKSMotorPorts.M1P, PKSMotorPorts.M1N, PKSMotorPorts.M2N, PKSMotorPorts.M2P)
     let PKSDriverStepperMotorBInstance: StepperMotorDriver = new StepperMotorDriver(PKSMotorPorts.M3N, PKSMotorPorts.M3P, PKSMotorPorts.M4N, PKSMotorPorts.M4P)
 
@@ -2501,49 +2508,61 @@ namespace pksdriver {
     //% weight=40
     export function stepperMotorHBotMove(direction: PKSHBotCardinalDirections, steps: number = 1) {
         let step_count = 0
-        if (direction == PKSHBotCardinalDirections.North) {
+        if (direction == PKSHBotCardinalDirections.North && y_counter < y_max) {
             while (step_count < steps) {
                 PKSDriverStepperMotorAInstance.steps(pksdriver.PKSDriverDirection.Clockwise)
                 PKSDriverStepperMotorBInstance.steps(pksdriver.PKSDriverDirection.Counterclockwise)
                 step_count += 1
+                y_counter += 1
             }
-        } else if (direction == PKSHBotCardinalDirections.Northeast) {
+        } else if (direction == PKSHBotCardinalDirections.Northeast && x_counter < x_max && y_counter < y_max) {
             while (step_count < steps) {
                 PKSDriverStepperMotorBInstance.steps(pksdriver.PKSDriverDirection.Counterclockwise)
                 step_count += 1
+                x_counter += 1
+                y_counter += 1
             }
-        } else if (direction == PKSHBotCardinalDirections.East) {
+        } else if (direction == PKSHBotCardinalDirections.East && x_counter < x_max) {
             while (step_count < steps) {
                 PKSDriverStepperMotorAInstance.steps(pksdriver.PKSDriverDirection.Counterclockwise)
                 PKSDriverStepperMotorBInstance.steps(pksdriver.PKSDriverDirection.Counterclockwise)
                 step_count += 1
+                x_counter += 1
             }
-        } else if (direction == PKSHBotCardinalDirections.Southeast) {
+        } else if (direction == PKSHBotCardinalDirections.Southeast && x_counter < x_max && y_counter > y_min) {
             while (step_count < steps) {
                 PKSDriverStepperMotorAInstance.steps(pksdriver.PKSDriverDirection.Counterclockwise)
                 step_count += 1
+                x_counter += 1
+                y_counter -= 1
             }
-        } else if (direction == PKSHBotCardinalDirections.South) {
+        } else if (direction == PKSHBotCardinalDirections.South && y_counter > y_min) {
             while (step_count < steps) {
                 PKSDriverStepperMotorAInstance.steps(pksdriver.PKSDriverDirection.Counterclockwise)
                 PKSDriverStepperMotorBInstance.steps(pksdriver.PKSDriverDirection.Clockwise)
                 step_count += 1
+                y_counter -= 1
             }
-        } else if (direction == PKSHBotCardinalDirections.Southwest) {
+        } else if (direction == PKSHBotCardinalDirections.Southwest && x_counter > x_min && y_counter > y_min) {
             while (step_count < steps) {
                 PKSDriverStepperMotorBInstance.steps(pksdriver.PKSDriverDirection.Clockwise)
                 step_count += 1
+                x_counter -= 1
+                y_counter -= 1
             }
-        } else if (direction == PKSHBotCardinalDirections.West) {
+        } else if (direction == PKSHBotCardinalDirections.West && x_counter > x_min) {
             while (step_count < steps) {
                 PKSDriverStepperMotorAInstance.steps(pksdriver.PKSDriverDirection.Clockwise)
                 PKSDriverStepperMotorBInstance.steps(pksdriver.PKSDriverDirection.Clockwise)
                 step_count += 1
+                x_counter -= 1
             }
-        } else if (direction == PKSHBotCardinalDirections.Northwest) {
+        } else if (direction == PKSHBotCardinalDirections.Northwest && x_counter > x_min && y_counter < y_max) {
             while (step_count < steps) {
                 PKSDriverStepperMotorAInstance.steps(pksdriver.PKSDriverDirection.Clockwise)
                 step_count += 1
+                x_counter -= 1
+                y_counter += 1
             }
         }
     }
@@ -2557,7 +2576,7 @@ namespace pksdriver {
     //% weight=30
     export function HBotMoveByJoystick(joystickAngle: number, joystickStrength: number) {
         if (joystickStrength > 0) {
-            if (joystickAngle >= 337.5 || joystickAngle < 22.5) {
+            if (joystickAngle >= 337.5 || joystickAngle < 22.5 ) {
                 stepperMotorHBotMove(PKSHBotCardinalDirections.East)
             } else if (joystickAngle >= 22.5 && joystickAngle < 67.5) {
                 stepperMotorHBotMove(PKSHBotCardinalDirections.Northeast)
