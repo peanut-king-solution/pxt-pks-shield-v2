@@ -2574,6 +2574,9 @@ namespace pksdriver {
             } else if (joystickAngle >= 292.5 && joystickAngle < 337.5) {
                 stepperMotorHBotMove(PKSHBotCardinalDirections.Southeast)
             }
+        } else {
+            PKSDriverStepperMotorAInstance.powerOff()
+            PKSDriverStepperMotorBInstance.powerOff()
         }
     }
 
