@@ -1847,6 +1847,7 @@ namespace pksdriver {
     /**
      * devices to toggle from ESP client
      */
+    //% block
     export enum ESPDevices {
         //% block="light"
         Light = 0x00,
@@ -1859,6 +1860,7 @@ namespace pksdriver {
     /**
      * sensors to read from ESP client
      */
+    //% block
     export enum ESPSensors {
         //% block="temperature"
         Temperature = 0x00,
@@ -2017,6 +2019,7 @@ namespace pksdriver {
      * I2C speed options for testing I2C communication beta
      * Note: the actual speed may be affected by the hardware and may not be exactly as specified
      */
+    //% block
     export enum I2CSpeed {
         //% block="standard mode (100 kHz)"
         Standard = 100000,
@@ -2428,9 +2431,9 @@ namespace pksdriver {
     //Hbot follows cartesian coordinate system, x axis positive to the right, y axis positive to the top, angle is obeying cartesian coordinate system as well, 0 degree means full right, 90 degree means full up, 180 degree means full left, 270 degree means full down.
     let x_counter = 0
     let y_counter = 0
-    let x_max = 200
+    let x_max = 2000
     let x_min = 0
-    let y_max = 200
+    let y_max = 2000
     let y_min = 0
     let PKSDriverStepperMotorAInstance: StepperMotorDriver = new StepperMotorDriver(PKSMotorPorts.M1P, PKSMotorPorts.M1N, PKSMotorPorts.M2N, PKSMotorPorts.M2P)
     let PKSDriverStepperMotorBInstance: StepperMotorDriver = new StepperMotorDriver(PKSMotorPorts.M3N, PKSMotorPorts.M3P, PKSMotorPorts.M4N, PKSMotorPorts.M4P)
@@ -2478,28 +2481,21 @@ namespace pksdriver {
         PKSDriverStepperMotorBInstance = new StepperMotorDriver(stepperCoilAPlus, stepperCoilAMinus, stepperCoilBPlus, stepperCoilBMinus)
     }
 
+    //% block
     export enum PKSHBotCardinalDirections {
         //% block="north (0°)"
         North,
-        //% block="northeast (45°)"
-        Northeast,
         //% block="east (90°)"
         East,
-        //% block="southeast (135°)"
-        Southeast,
         //% block="south (180°)"
         South,
-        //% block="southwest (225°)"
-        Southwest,
         //% block="west (270°)"
         West,
-        //% block="northwest (315°)"
-        Northwest
     }
 
     /**
     * This function controls two stepper motors in a coordinated way to move a robot in the specified cardinal direction for a certain number of steps. The direction parameter determines the sequence of steps for each motor to achieve the desired movement direction. 
-    * @param direction The cardinal direction to move the robot (e.g. North, Northeast, etc.)
+    * @param direction The cardinal direction to move the robot (e.g. North, East, South, West)
     * @param steps The number of steps to move in the specified direction (default is 1)
     */
     //% blockId=pksdriver_stepper_motor_hbot_step block="Hbot drive in %direction for %steps steps" subcategory="Gotcha"
@@ -2515,26 +2511,12 @@ namespace pksdriver {
                 step_count += 1
                 y_counter += 1
             }
-        } else if (direction == PKSHBotCardinalDirections.Northeast && x_counter < x_max && y_counter < y_max) {
-            while (step_count < steps) {
-                PKSDriverStepperMotorBInstance.steps(pksdriver.PKSDriverDirection.Counterclockwise)
-                step_count += 1
-                x_counter += 1
-                y_counter += 1
-            }
         } else if (direction == PKSHBotCardinalDirections.East && x_counter < x_max) {
             while (step_count < steps) {
                 PKSDriverStepperMotorAInstance.steps(pksdriver.PKSDriverDirection.Counterclockwise)
                 PKSDriverStepperMotorBInstance.steps(pksdriver.PKSDriverDirection.Counterclockwise)
                 step_count += 1
                 x_counter += 1
-            }
-        } else if (direction == PKSHBotCardinalDirections.Southeast && x_counter < x_max && y_counter > y_min) {
-            while (step_count < steps) {
-                PKSDriverStepperMotorAInstance.steps(pksdriver.PKSDriverDirection.Counterclockwise)
-                step_count += 1
-                x_counter += 1
-                y_counter -= 1
             }
         } else if (direction == PKSHBotCardinalDirections.South && y_counter > y_min) {
             while (step_count < steps) {
@@ -2543,26 +2525,12 @@ namespace pksdriver {
                 step_count += 1
                 y_counter -= 1
             }
-        } else if (direction == PKSHBotCardinalDirections.Southwest && x_counter > x_min && y_counter > y_min) {
-            while (step_count < steps) {
-                PKSDriverStepperMotorBInstance.steps(pksdriver.PKSDriverDirection.Clockwise)
-                step_count += 1
-                x_counter -= 1
-                y_counter -= 1
-            }
         } else if (direction == PKSHBotCardinalDirections.West && x_counter > x_min) {
             while (step_count < steps) {
                 PKSDriverStepperMotorAInstance.steps(pksdriver.PKSDriverDirection.Clockwise)
                 PKSDriverStepperMotorBInstance.steps(pksdriver.PKSDriverDirection.Clockwise)
                 step_count += 1
                 x_counter -= 1
-            }
-        } else if (direction == PKSHBotCardinalDirections.Northwest && x_counter > x_min && y_counter < y_max) {
-            while (step_count < steps) {
-                PKSDriverStepperMotorAInstance.steps(pksdriver.PKSDriverDirection.Clockwise)
-                step_count += 1
-                x_counter -= 1
-                y_counter += 1
             }
         }
     }
@@ -2576,22 +2544,14 @@ namespace pksdriver {
     //% weight=30
     export function HBotMoveByJoystick(joystickAngle: number, joystickStrength: number) {
         if (joystickStrength > 0) {
-            if (joystickAngle >= 337.5 || joystickAngle < 22.5 ) {
+            if (joystickAngle >= 315 || joystickAngle < 45 ) {
                 stepperMotorHBotMove(PKSHBotCardinalDirections.East)
-            } else if (joystickAngle >= 22.5 && joystickAngle < 67.5) {
-                stepperMotorHBotMove(PKSHBotCardinalDirections.Northeast)
-            } else if (joystickAngle >= 67.5 && joystickAngle < 112.5) {
+            } else if (joystickAngle >= 45 && joystickAngle < 135) {
                 stepperMotorHBotMove(PKSHBotCardinalDirections.North)
-            } else if (joystickAngle >= 112.5 && joystickAngle < 157.5) {
-                stepperMotorHBotMove(PKSHBotCardinalDirections.Northwest)
-            } else if (joystickAngle >= 157.5 && joystickAngle < 202.5) {
+            } else if (joystickAngle >= 135 && joystickAngle < 225) {
                 stepperMotorHBotMove(PKSHBotCardinalDirections.West)
-            } else if (joystickAngle >= 202.5 && joystickAngle < 247.5) {
-                stepperMotorHBotMove(PKSHBotCardinalDirections.Southwest)
-            } else if (joystickAngle >= 247.5 && joystickAngle < 292.5) {
+            } else if (joystickAngle >= 225 && joystickAngle < 315) {
                 stepperMotorHBotMove(PKSHBotCardinalDirections.South)
-            } else if (joystickAngle >= 292.5 && joystickAngle < 337.5) {
-                stepperMotorHBotMove(PKSHBotCardinalDirections.Southeast)
             }
         } else {
             PKSDriverStepperMotorAInstance.powerOff()
