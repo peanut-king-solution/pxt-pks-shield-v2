@@ -2419,6 +2419,7 @@ namespace pksdriver {
                 this.next_state(order)
                 i++
             }
+            this.powerOff()
         }
     }
     
