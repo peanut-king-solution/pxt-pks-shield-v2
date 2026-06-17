@@ -2551,26 +2551,29 @@ namespace pksdriver {
     /**
     * This function takes the angle of the joystick deflection and maps it to one of the 8 cardinal directions (N, NE, E, SE, S, SW, W, NW) to control the movement of a robot. The joystick angle is typically measured in degrees, where 0 degrees corresponds to the right (east) direction and increases counterclockwise. The function determines which cardinal direction the joystick is pointing to based on the angle and then calls the stepper motor control function to move the robot in that direction.
     * @param joystickAngle The angle of the joystick deflection in degrees (0-360)
+    * @param joystickStrength The strength of the joystick deflection (0-100)
     */
-    //% blockId=pksdriver_stepper_motor_hbot_joystick block="Hbot drive by %joystickAngle" subcategory="Gotcha"
+    //% blockId=pksdriver_stepper_motor_hbot_joystick block="Hbot drive by %joystickAngle and %joystickStrength" subcategory="Gotcha"
     //% weight=30
-    export function HBotMoveByJoystick(joystickAngle: number) {
-        if (joystickAngle >= 337.5 || joystickAngle < 22.5) {
-            stepperMotorHBotMove(PKSHBotCardinalDirections.East)
-        } else if (joystickAngle >= 22.5 && joystickAngle < 67.5) {
-            stepperMotorHBotMove(PKSHBotCardinalDirections.Northeast)
-        } else if (joystickAngle >= 67.5 && joystickAngle < 112.5) {
-            stepperMotorHBotMove(PKSHBotCardinalDirections.North)
-        } else if (joystickAngle >= 112.5 && joystickAngle < 157.5) {
-            stepperMotorHBotMove(PKSHBotCardinalDirections.Northwest)
-        } else if (joystickAngle >= 157.5 && joystickAngle < 202.5) {
-            stepperMotorHBotMove(PKSHBotCardinalDirections.West)
-        } else if (joystickAngle >= 202.5 && joystickAngle < 247.5) {
-            stepperMotorHBotMove(PKSHBotCardinalDirections.Southwest)
-        } else if (joystickAngle >= 247.5 && joystickAngle < 292.5) {
-            stepperMotorHBotMove(PKSHBotCardinalDirections.South)
-        } else if (joystickAngle >= 292.5 && joystickAngle < 337.5) {
-            stepperMotorHBotMove(PKSHBotCardinalDirections.Southeast)
+    export function HBotMoveByJoystick(joystickAngle: number, joystickStrength: number) {
+        if (joystickStrength > 0) {
+            if (joystickAngle >= 337.5 || joystickAngle < 22.5) {
+                stepperMotorHBotMove(PKSHBotCardinalDirections.East)
+            } else if (joystickAngle >= 22.5 && joystickAngle < 67.5) {
+                stepperMotorHBotMove(PKSHBotCardinalDirections.Northeast)
+            } else if (joystickAngle >= 67.5 && joystickAngle < 112.5) {
+                stepperMotorHBotMove(PKSHBotCardinalDirections.North)
+            } else if (joystickAngle >= 112.5 && joystickAngle < 157.5) {
+                stepperMotorHBotMove(PKSHBotCardinalDirections.Northwest)
+            } else if (joystickAngle >= 157.5 && joystickAngle < 202.5) {
+                stepperMotorHBotMove(PKSHBotCardinalDirections.West)
+            } else if (joystickAngle >= 202.5 && joystickAngle < 247.5) {
+                stepperMotorHBotMove(PKSHBotCardinalDirections.Southwest)
+            } else if (joystickAngle >= 247.5 && joystickAngle < 292.5) {
+                stepperMotorHBotMove(PKSHBotCardinalDirections.South)
+            } else if (joystickAngle >= 292.5 && joystickAngle < 337.5) {
+                stepperMotorHBotMove(PKSHBotCardinalDirections.Southeast)
+            }
         }
     }
 
