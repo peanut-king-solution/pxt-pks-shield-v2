@@ -2525,7 +2525,7 @@ namespace pksdriver {
             }
         } else if (direction == PKSHBotCardinalDirections.South) {
             while (step_count < steps) {
-                PKSDriverStepperMotorAInstance.steps(pksdriver.PKSDriverDirection.Clockwise)
+                PKSDriverStepperMotorAInstance.steps(pksdriver.PKSDriverDirection.Counterclockwise)
                 PKSDriverStepperMotorBInstance.steps(pksdriver.PKSDriverDirection.Clockwise)
                 step_count += 1
             }
@@ -2542,7 +2542,7 @@ namespace pksdriver {
             }
         } else if (direction == PKSHBotCardinalDirections.Northwest) {
             while (step_count < steps) {
-                PKSDriverStepperMotorBInstance.steps(pksdriver.PKSDriverDirection.Clockwise)
+                PKSDriverStepperMotorAInstance.steps(pksdriver.PKSDriverDirection.Clockwise)
                 step_count += 1
             }
         }
