@@ -51,6 +51,8 @@ namespace pksdriver {
      * The user selects the 4-way dc motor.
      */
     export enum PKSDriverMotors {
+        //% block="M0"
+        M0 = 0x0,
         //% block="M1"
         M1 = 0x1,
         //% block="M2"
@@ -59,6 +61,29 @@ namespace pksdriver {
         M3 = 0x3,
         //% block="M4"
         M4 = 0x4
+    }
+
+    export enum PKSMotorPorts {
+        //% block="M0+"
+        M0P = (0x0 - 1) * 2 + 8,
+        //% block="M0-"
+        M0N = (0x0 - 1) * 2 + 8 + 1,
+        //% block="M1+"
+        M1P = (0x1 - 1) * 2 + 8,
+        //% block="M1-"
+        M1N = (0x1 - 1) * 2 + 8 + 1,
+        //% block="M2+"
+        M2P = (0x2 - 1) * 2 + 8,
+        //% block="M2-"
+        M2N = (0x2 - 1) * 2 + 8 + 1,
+        //% block="M3+"
+        M3P = (0x3 - 1) * 2 + 8,
+        //% block="M3-"
+        M3N = (0x3 - 1) * 2 + 8 + 1,
+        //% block="M4+"
+        M4P = (0x4 - 1) * 2 + 8,
+        //% block="M4-"
+        M4N = (0x4 - 1) * 2 + 8 + 1,
     }
 
     /**
@@ -170,7 +195,7 @@ namespace pksdriver {
      * Steering gear control function 
      * @param index S1~S8.
      * @param degree 0°~180°.
-     */ 
+     */
     //% blockId=pksdriver_smart_servo block="smart servo|%index|degree|%degree" subcategory="Smart Living"
     //% group="Servo"
     //% weight=99
@@ -418,7 +443,6 @@ namespace pksdriver {
         }
         return temp;
     }
-
 
     //*************************************************************************************************//
     //AHT20 related code, adapted from https://github.com/koudayao27/AHT20                             //
@@ -839,9 +863,9 @@ namespace pksdriver {
      * DS1302 RTC class
      */
 
-     /**
-     * convert a Hex data to Dec
-     */
+    /**
+    * convert a Hex data to Dec
+    */
     function HexToDec(dat: number): number {
         return (dat >> 4) * 10 + (dat % 16);
     }
@@ -1270,7 +1294,7 @@ namespace pksdriver {
 
     function MPUReadData(reg: number) {
         let h = MPUI2cRead(reg);
-        let l = MPUI2cRead(reg+1);
+        let l = MPUI2cRead(reg + 1);
         let value = (h << 8) + l;
 
         if (value >= 0x8000) {
@@ -1282,26 +1306,26 @@ namespace pksdriver {
     }
 
     function dist(a: number, b: number): number {
-        return Math.sqrt((a*a)+(b*b));
+        return Math.sqrt((a * a) + (b * b));
     }
 
     // Update acceleration data via I2C
     function updateAcceleration(sensitivity: AccelSen) {
         // Set sensitivity of acceleration range, according to selection and datasheet value
         let accelRange = 0;
-        if(sensitivity == AccelSen.Range2g) {
+        if (sensitivity == AccelSen.Range2g) {
             // +- 2g
             accelRange = 16384;
         }
-        else if(sensitivity == AccelSen.Range4g) {
+        else if (sensitivity == AccelSen.Range4g) {
             // +- 4g
             accelRange = 8192;
         }
-        else if(sensitivity == AccelSen.Range8g) {
+        else if (sensitivity == AccelSen.Range8g) {
             // +- 8g
             accelRange = 4096;
         }
-        else if(sensitivity == AccelSen.Range16g) {
+        else if (sensitivity == AccelSen.Range16g) {
             // +- 16g
             accelRange = 2048;
         }
@@ -1314,19 +1338,19 @@ namespace pksdriver {
     function updateGyroscope(sensitivity: GyroSen) {
         // Set sensitivity of gyroscope range, according to selection and datasheet value
         let gyroRange = 0;
-        if(sensitivity == GyroSen.Range250dps) {
+        if (sensitivity == GyroSen.Range250dps) {
             // +- 250dps
             gyroRange = 131;
         }
-        else if(sensitivity == GyroSen.Range500dps) {
+        else if (sensitivity == GyroSen.Range500dps) {
             // +- 500dps
             gyroRange = 65.5;
         }
-        else if(sensitivity == GyroSen.Range1000dps) {
+        else if (sensitivity == GyroSen.Range1000dps) {
             // +- 1000dps
             gyroRange = 32.8;
         }
-        else if(sensitivity == GyroSen.Range2000dps) {
+        else if (sensitivity == GyroSen.Range2000dps) {
             // +- 2000dps
             gyroRange = 16.4;
         }
@@ -1358,10 +1382,10 @@ namespace pksdriver {
     //% weight=95
     export function gyroscope(axis: AxisXYZ, sensitivity: GyroSen): number {
         updateGyroscope(sensitivity);
-        if(axis == AxisXYZ.X) {
+        if (axis == AxisXYZ.X) {
             return xGyro;
         }
-        else if(axis == AxisXYZ.Y) {
+        else if (axis == AxisXYZ.Y) {
             return yGyro;
         }
         else {
@@ -1381,19 +1405,19 @@ namespace pksdriver {
         updateAcceleration(sensitivity);
 
         let radians = 0;
-        if(axis == AxisXYZ.X) {
-            radians = Math.atan2(yAccel, dist(xAccel,zAccel));
+        if (axis == AxisXYZ.X) {
+            radians = Math.atan2(yAccel, dist(xAccel, zAccel));
         }
-        else if(axis == AxisXYZ.Y) {
-            radians = -Math.atan2(xAccel, dist(yAccel,zAccel));
+        else if (axis == AxisXYZ.Y) {
+            radians = -Math.atan2(xAccel, dist(yAccel, zAccel));
         }
-        else if(axis == AxisXYZ.Z) {
+        else if (axis == AxisXYZ.Z) {
             radians = Math.atan2(zAccel, dist(xAccel, yAccel));
         }
 
         // Convert radian to degrees and return
         let pi = Math.PI;
-        let degrees = radians * (180/pi);
+        let degrees = radians * (180 / pi);
         return degrees;
     }
 
@@ -1408,10 +1432,10 @@ namespace pksdriver {
     export function axisAcceleration(axis: AxisXYZ, sensitivity: AccelSen): number {
         updateAcceleration(sensitivity);
         // Return acceleration of specific axis
-        if(axis == AxisXYZ.X) {
+        if (axis == AxisXYZ.X) {
             return xAccel;
         }
-        else if(axis == AxisXYZ.Y) {
+        else if (axis == AxisXYZ.Y) {
             return yAccel;
         }
         else {
@@ -1433,8 +1457,6 @@ namespace pksdriver {
     //*************************************************************************************************//
     //MPU6050 related code finished                                                                    //
     //*************************************************************************************************//
-
-
 
     /**
      * Compass I2C register addresses
@@ -1534,7 +1556,6 @@ namespace pksdriver {
     //    uint8_t b;                                //
     //} rgb_t;                                      //    
     //////////////////////////////////////////////////
-
 
     /**
      * Color Sensor
@@ -1772,11 +1793,11 @@ namespace pksdriver {
     //*****************************************************************************************************//
 
     /**
-         * Rounds a number to the specified number of decimal places (returns a string with the requested decimals, similar to toFixed).
-         * for example, roundToDecimalPlaces(3.14159, 2) returns "3.14", roundToDecimalPlaces(3.1, 3) returns "3.100"
-         * @param value The number to round
-         * @param decimals The number of decimal places to keep
-         */
+     * Rounds a number to the specified number of decimal places (returns a string with the requested decimals, similar to toFixed).
+     * for example, roundToDecimalPlaces(3.14159, 2) returns "3.14", roundToDecimalPlaces (3.1, 3) returns "3.100"
+     * @param value The number to round
+     * @param decimals The number of decimal places to keep
+     */
     //% blockId=pksdriver_round block="round %value to %decimals decimal places"
     //% group="Math"
     //% weight=10
@@ -1822,6 +1843,7 @@ namespace pksdriver {
      */
 
     let esp32I2CAddress = 0x22;
+
     /**
      * devices to toggle from ESP client
      */
@@ -1833,6 +1855,7 @@ namespace pksdriver {
         //% block="door"
         Door = 0x02
     }
+
     /**
      * sensors to read from ESP client
      */
@@ -1981,6 +2004,12 @@ namespace pksdriver {
     //*****************************************************************************************************//
 
     //*****************************************************************************************************//
+    //Gotcha related code                                                                                  //
+    //*****************************************************************************************************//\
+
+
+
+    //*****************************************************************************************************//
     //IIC test related code                                                                                //
     //*****************************************************************************************************//
 
@@ -1988,14 +2017,12 @@ namespace pksdriver {
      * I2C speed options for testing I2C communication beta
      * Note: the actual speed may be affected by the hardware and may not be exactly as specified
      */
-    //% block="I2C speed" subcategory="I2C Test"
-    //% group="I2C speed"
     export enum I2CSpeed {
-        //% block="standard (100 kHz)"
+        //% block="standard mode (100 kHz)"
         Standard = 100000,
-        //% block="fast (400 kHz)"
+        //% block="fast mode (400 kHz)"
         Fast = 400000,
-        //% block="fast plus (1 MHz)"
+        //% block="fast plus mode (1 MHz)"
         FastPlus = 1000000
     }
 
@@ -2003,16 +2030,15 @@ namespace pksdriver {
         return control.ramSize() > 102400;
     }
 
-
-    //% block="set I2C speed to %speed Hz" subcategory="I2C Test"
+    //% block="set I2C %speed" 
+    //% group="I2C speed"
     //% speed.defl=I2CSpeed.Standard
-    //% speed.fieldEditor="gridpicker"
-    export function setI2CSpeed(speed: number): void {
+    export function setI2CSpeed(speed: I2CSpeed): void {
         let finalSpeed = speed;
 
         if (isMicrobitV2()) {
             //V2 max speed 1 MHz
-            finalSpeed = Math.min(finalSpeed, 1000000);
+            finalSpeed = Math.min(finalSpeed, 1000000); 
         } else {
             //V1 max speed 400 kHz
             finalSpeed = Math.min(finalSpeed, 400000);
@@ -2023,9 +2049,8 @@ namespace pksdriver {
 
     //% shim=customI2C::setI2CSpeedShim
     function setI2CSpeedShim(speed: number): void {
-        return; 
+        return;
     }
-
 
     //*****************************************************************************************************//
     //I2C multiplexer related code                                                                         //
@@ -2085,7 +2110,6 @@ namespace pksdriver {
             buf[0] = 0x80
         }
         pins.i2cWriteBuffer(i2c_multiplexerAddress, buf, false);
-
     }
 
     /**
@@ -2135,5 +2159,422 @@ namespace pksdriver {
     //*****************************************************************************************************//
     //I2C multiplexer related code finished                                                                //
     //*****************************************************************************************************//
+
+    export class Joystick {
+        pinX: AnalogPin;
+        pinY: AnalogPin;
+        centerX: number;
+        centerY: number;
+        maxDeflection: number;
+        blindZonePercent: number;
+
+        public constructor(pinX: AnalogPin, pinY: AnalogPin, centerX: number = 512, centerY: number = 512, maxDeflection: number = 512, blindZonePercent: number = 10) {
+            this.pinX = pinX;
+            this.pinY = pinY;
+            this.centerX = centerX;
+            this.centerY = centerY;
+            this.maxDeflection = maxDeflection;
+            this.blindZonePercent = blindZonePercent;
+        }
+
+        public read() {
+            let rawX = pins.analogReadPin(this.pinX)
+            // readAverage(this.pinX, 1);
+            let rawY = pins.analogReadPin(this.pinY)
+            // readAverage(this.pinY, 1);
+            let dx = (rawX - this.centerX) / this.maxDeflection
+            let dy = (rawY - this.centerY) / this.maxDeflection
+            // Apply blind zone
+            let strength = Math.sqrt(dx * dx + dy * dy)
+            let blindZoneThreshold = this.blindZonePercent / 100
+            if (strength <= blindZoneThreshold) {
+                // Inside dead zone: force dx,dy = 0
+                return { x: 0, y: 0 }
+            }
+            // Rescale remaining range from threshold..1 to 0..1 (optional but feels better)
+            let scale = 1 / (1 - blindZoneThreshold)
+            dx = dx * scale
+            dy = dy * scale
+            // Clamp again after scaling (should be within -1..1)
+            dx = Math.max(-1, Math.min(1, dx))
+            dy = Math.max(-1, Math.min(1, dy))
+            return { x: dx, y: dy }
+        }
+
+        public Angle() {
+            let { x: dx, y: dy } = this.read()
+            let angle = Math.atan2(dy, 0 - dx) * 180 / Math.PI
+            if (angle < 0) {
+                angle += 360
+            }
+            return angle
+        }
+
+        public strength() {
+            let { x: dx, y: dy } = this.read()
+            let strength = Math.sqrt(dx * dx + dy * dy)
+            strength = Math.min(1, strength)
+            return strength
+        }
+    }
+
+    let PKSDriverJoystickInstance: Joystick = new Joystick(AnalogPin.P1, AnalogPin.P2)
+
+    /**
+     * Joystick initialization, specify the x and y axis pins, the center value for x and y (default 512 for most joysticks), the max deflection value (default 512 for most joysticks), and the blind zone percentage (default 10%, adjust based on your joystick's sensitivity and noise)
+     * @param pinX 
+     * @param pinY 
+     * @param centerX 
+     * @param centerY 
+     * @param maxDeflection 
+     * @param blindZonePercent 
+     */
+    //% blockId=pksdriver_createjoystick block="create joystick with |x axis %pinX|y axis %pinY|centerX %centerX centerY %centerY max deflection %maxDeflection blind zone %blindZonePercent" subcategory="Gotcha"
+    //% group="Joystick"
+    //% centerX.defl=512 centerY.defl=512 maxDeflection.defl=512 blindZonePercent.defl=10
+    //% weight=90
+    export function startJoystick(pinX: AnalogPin, pinY: AnalogPin, centerX: number = 512, centerY: number = 512, maxDeflection: number = 512, blindZonePercent: number = 10) {
+        PKSDriverJoystickInstance = new Joystick(pinX, pinY, centerX, centerY, maxDeflection, blindZonePercent)
+    }
+
+    /**
+    * Get the angle (0-360 degrees) and strength (0-1) of the joystick deflection based on the x and y values.
+    * The angle is obey catesian coordinate system, 0 degree means full right, 90 degree means full up, 180 degree means full left, 270 degree means full down.
+    */
+    //% blockId=pksdriver_getorientation block="joystick angle" subcategory="Gotcha"
+    //% group="Joystick"
+    //% weight=70
+    export function JoystickAngle() {
+        return PKSDriverJoystickInstance.Angle()
+    }
+
+    /**
+    * Get the strength of the joystick deflection based on the x and y values, range from 0 to 1.
+    */
+    //% blockId=pksdriver_getstrength block="joystick strength" subcategory="Gotcha"
+    //% group="Joystick"
+    //% weight=70
+    export function JoystickStrength() {
+        return PKSDriverJoystickInstance.strength()
+    }
+
+
+    enum StepStage {
+        //% block="step 1"
+        StepStage1 = 0,
+        //% block="step 2"
+        StepStage2 = 1,
+        //% block="step 3"
+        StepStage3 = 2,
+        //% block="step 4"
+        StepStage4 = 3,
+    }
+
+    export class StepperMotorDriver {
+        private next_step_state: StepStage = StepStage.StepStage1;
+        private current_step_state: StepStage = null;
+        private dp_Ap = PKSMotorPorts.M1P;
+        private dp_An = PKSMotorPorts.M1N;
+        private dp_Bp = PKSMotorPorts.M2N;
+        private dp_Bn = PKSMotorPorts.M2P;
+        private speed = 1 //rotation per second
+        private delay = 50;
+        private power_flag = true
+        private last_step: StepStage = null;
+        public a_high = 4095
+        public b_high = 4095
+        private low = 0
+
+        constructor(
+            DriverPinAPlus: PKSMotorPorts,
+            DriverPinAMinus: PKSMotorPorts,
+            DriverPinBMinus: PKSMotorPorts,
+            DriverPinBPlus: PKSMotorPorts,
+        ) {
+            this.dp_Ap = DriverPinAPlus
+            this.dp_An = DriverPinAMinus
+            this.dp_Bn = DriverPinBMinus
+            this.dp_Bp = DriverPinBPlus
+        }
+        public setSpeed(speed: number) {
+
+        }
+
+        private match_stage(stage: StepStage) {
+            switch (stage) {
+                case (StepStage.StepStage1):
+                    pksdriver.setPwm(this.dp_Ap, 0, this.a_high)
+                    pksdriver.setPwm(this.dp_An, 0, this.low)
+                    pksdriver.setPwm(this.dp_Bp, 0, this.b_high)
+                    pksdriver.setPwm(this.dp_Bn, 0, this.low)
+                    control.waitMicros(this.delay)
+                    break;
+                case (StepStage.StepStage2):
+                    pksdriver.setPwm(this.dp_Ap, 0, this.low)
+                    pksdriver.setPwm(this.dp_An, 0, this.a_high)
+                    pksdriver.setPwm(this.dp_Bp, 0, this.b_high)
+                    pksdriver.setPwm(this.dp_Bn, 0, this.low)
+                    control.waitMicros(this.delay)
+                    break;
+                case (StepStage.StepStage3):
+                    pksdriver.setPwm(this.dp_Ap, 0, this.low)
+                    pksdriver.setPwm(this.dp_An, 0, this.a_high)
+                    pksdriver.setPwm(this.dp_Bp, 0, this.low)
+                    pksdriver.setPwm(this.dp_Bn, 0, this.b_high)
+                    control.waitMicros(this.delay)
+                    break;
+                case (StepStage.StepStage4):
+                    pksdriver.setPwm(this.dp_Ap, 0, this.a_high)
+                    pksdriver.setPwm(this.dp_An, 0, this.low)
+                    pksdriver.setPwm(this.dp_Bp, 0, this.low)
+                    pksdriver.setPwm(this.dp_Bn, 0, this.b_high)
+                    control.waitMicros(this.delay)
+                    break;
+            }
+        }
+
+        public state_init(order: PKSDriverDirection = PKSDriverDirection.Clockwise) {
+            if (this.power_flag == null || !this.power_flag) {
+                this.power_flag = true
+            } else if (!this.power_flag) {
+                if (this.current_step_state !== null) {
+                    this.match_stage(this.current_step_state)
+                }
+            }
+            this.match_stage(this.next_step_state)
+            this.step_count(order)
+        }
+
+        private next_state(order: PKSDriverDirection) {
+            switch (this.next_step_state) {
+                case (StepStage.StepStage1):
+                    if (order > 0) {
+                        //last : ss4
+                        pksdriver.setPwm(this.dp_Bn, 0, this.low)
+                        pksdriver.setPwm(this.dp_Bp, 0, this.b_high)
+                    } else {
+                        //last : ss2
+                        pksdriver.setPwm(this.dp_An, 0, this.low)
+                        pksdriver.setPwm(this.dp_Ap, 0, this.a_high)
+                    }
+                    break;
+                case (StepStage.StepStage2):
+                    if (order > 0) {
+                        //last : ss1
+                        pksdriver.setPwm(this.dp_Ap, 0, this.low)
+                        pksdriver.setPwm(this.dp_An, 0, this.a_high)
+                    } else {
+                        //last : ss3
+                        pksdriver.setPwm(this.dp_Bn, 0, this.low)
+                        pksdriver.setPwm(this.dp_Bp, 0, this.b_high)
+                    }
+                    break;
+                case (StepStage.StepStage3):
+                    if (order > 0) {
+                        //last : ss2
+                        pksdriver.setPwm(this.dp_Bp, 0, this.low)
+                        pksdriver.setPwm(this.dp_Bn, 0, this.b_high)
+                    } else {
+                        //last : ss4
+                        pksdriver.setPwm(this.dp_Ap, 0, this.low)
+                        pksdriver.setPwm(this.dp_An, 0, this.b_high)
+                    }
+                    break;
+                case (StepStage.StepStage4):
+                    if (order > 0) {
+                        //last : ss3
+                        pksdriver.setPwm(this.dp_An, 0, this.low)
+                        pksdriver.setPwm(this.dp_Ap, 0, this.b_high)
+                    } else {
+                        //last : ss1
+                        pksdriver.setPwm(this.dp_Bp, 0, this.low)
+                        pksdriver.setPwm(this.dp_Bn, 0, this.b_high)
+                    }
+                    break;
+            }
+            control.waitMicros(this.delay)
+            this.step_count(order)
+        }
+        private step_count(order: PKSDriverDirection) {
+            this.current_step_state = this.next_step_state
+            this.next_step_state = this.current_step_state + order
+            if (this.next_step_state > 3) {
+                this.next_step_state = 0
+            }
+            else if (this.next_step_state < 0) {
+                this.next_step_state = 3
+            }
+        }
+        public powerOff() {
+            this.power_flag = false
+            pksdriver.setPwm(this.dp_Ap, 0, 0)
+            pksdriver.setPwm(this.dp_An, 0, 0)
+            pksdriver.setPwm(this.dp_Bp, 0, 0)
+            pksdriver.setPwm(this.dp_Bn, 0, 0)
+        }
+        public steps(order: PKSDriverDirection, steps: number = 1) {
+            let i = 1
+            this.state_init(order)
+            while (i < steps) {
+                this.next_state(order)
+                i++
+            }
+            this.powerOff()
+        }
+    }
+    
+    pksdriver.i2cWrite(0x40, 0x00, 0x00)
+    pksdriver.setFreq(1522)
+    let PKSDriverStepperMotorAInstance: StepperMotorDriver = new StepperMotorDriver(PKSMotorPorts.M1P, PKSMotorPorts.M1N, PKSMotorPorts.M2N, PKSMotorPorts.M2P)
+    let PKSDriverStepperMotorBInstance: StepperMotorDriver = new StepperMotorDriver(PKSMotorPorts.M3N, PKSMotorPorts.M3P, PKSMotorPorts.M4N, PKSMotorPorts.M4P)
+
+    export enum StepperMotor{
+        //% block="A"
+        A,
+        //% block="B"
+        B
+    }
+
+    /**
+    * Create a stepper motor driver instance with specified coil pins. The stepper motor will be controlled by energizing the coils in a specific sequence to achieve rotation. The speed of rotation can be adjusted by changing the delay between steps in the code. Note: the actual speed may be affected by the hardware and may not be exactly as specified.
+    * @param stepperCoilAPlus The pin connected to coil A+
+    * @param stepperCoilAMinus The pin connected to coil A-
+    * @param stepperCoilBPlus The pin connected to coil B+
+    * @param stepperCoilBMinus The pin connected to coil B-
+    */
+    //% blockId=pksdriver_createstepper block="create stepper motor A with |coil A+ %stepperCoilAPlus |coil A- %stepperCoilAMinus |coil B+ %stepperCoilBPlus |coil B- %stepperCoilBMinus" subcategory="Gotcha"
+    //% group="Stepper Motor"
+    //% stepperCoilAPlus.defl=PKSMotorPorts.M1P
+    //% stepperCoilAMinus.defl=PKSMotorPorts.M1N
+    //% stepperCoilBPlus.defl=PKSMotorPorts.M2P
+    //% stepperCoilBMinus.defl=PKSMotorPorts.M2N
+    //% weight=50
+    export function createStepperMotorA(stepperCoilAPlus: PKSMotorPorts=PKSMotorPorts.M1P, stepperCoilAMinus: PKSMotorPorts=PKSMotorPorts.M1N, stepperCoilBPlus: PKSMotorPorts=PKSMotorPorts.M2P, stepperCoilBMinus: PKSMotorPorts=PKSMotorPorts.M2N): void {
+        PKSDriverStepperMotorAInstance = new StepperMotorDriver(stepperCoilAPlus, stepperCoilAMinus, stepperCoilBPlus, stepperCoilBMinus)
+    }
+
+    /**
+    * Create a stepper motor driver instance with specified coil pins. The stepper motor will be controlled by energizing the coils in a specific sequence to achieve rotation. The speed of rotation can be adjusted by changing the delay between steps in the code. Note: the actual speed may be affected by the hardware and may not be exactly as specified.
+    * @param stepperCoilAPlus The pin connected to coil A+
+    * @param stepperCoilAMinus The pin connected to coil A-
+    * @param stepperCoilBPlus The pin connected to coil B+
+    * @param stepperCoilBMinus The pin connected to coil B-
+    */
+    //% blockId=pksdriver_createstepperB block="create stepper motor B with |coil A+ %stepperCoilAPlus |coil A- %stepperCoilAMinus |coil B+ %stepperCoilBPlus |coil B- %stepperCoilBMinus" subcategory="Gotcha"
+    //% group="Stepper Motor"
+    //% stepperCoilAPlus.defl=PKSMotorPorts.M3P 
+    //% stepperCoilAMinus.defl=PKSMotorPorts.M3N
+    //% stepperCoilBPlus.defl=PKSMotorPorts.M4P
+    //% stepperCoilBMinus.defl=PKSMotorPorts.M4N
+    //% weight=50
+    export function createStepperMotorB(stepperCoilAPlus: PKSMotorPorts=PKSMotorPorts.M3P, stepperCoilAMinus: PKSMotorPorts=PKSMotorPorts.M3N, stepperCoilBPlus: PKSMotorPorts=PKSMotorPorts.M4P, stepperCoilBMinus: PKSMotorPorts=PKSMotorPorts.M4N): void {
+        PKSDriverStepperMotorBInstance = new StepperMotorDriver(stepperCoilAPlus, stepperCoilAMinus, stepperCoilBPlus, stepperCoilBMinus)
+    }
+
+    export enum PKSHBotCardinalDirections {
+        //% block="north (0°)"
+        North,
+        //% block="northeast (45°)"
+        Northeast,
+        //% block="east (90°)"
+        East,
+        //% block="southeast (135°)"
+        Southeast,
+        //% block="south (180°)"
+        South,
+        //% block="southwest (225°)"
+        Southwest,
+        //% block="west (270°)"
+        West,
+        //% block="northwest (315°)"
+        Northwest
+    }
+
+    /**
+    * This function controls two stepper motors in a coordinated way to move a robot in the specified cardinal direction for a certain number of steps. The direction parameter determines the sequence of steps for each motor to achieve the desired movement direction. 
+    * @param direction The cardinal direction to move the robot (e.g. North, Northeast, etc.)
+    * @param steps The number of steps to move in the specified direction (default is 1)
+    */
+    //% blockId=pksdriver_stepper_motor_hbot_step block="Hbot drive in %direction for %steps steps" subcategory="Gotcha"
+    //% group="Stepper Motor"
+    //% steps.defl=1
+    //% weight=40
+    export function stepperMotorHBotMove(direction: PKSHBotCardinalDirections, steps: number = 1) {
+        let step_count = 0
+        if (direction == PKSHBotCardinalDirections.North) {
+            while (step_count < steps) {
+                PKSDriverStepperMotorAInstance.steps(pksdriver.PKSDriverDirection.Clockwise)
+                PKSDriverStepperMotorBInstance.steps(pksdriver.PKSDriverDirection.Counterclockwise)
+                step_count += 1
+            }
+        } else if (direction == PKSHBotCardinalDirections.Northeast) {
+            while (step_count < steps) {
+                PKSDriverStepperMotorBInstance.steps(pksdriver.PKSDriverDirection.Counterclockwise)
+                step_count += 1
+            }
+        } else if (direction == PKSHBotCardinalDirections.East) {
+            while (step_count < steps) {
+                PKSDriverStepperMotorAInstance.steps(pksdriver.PKSDriverDirection.Counterclockwise)
+                PKSDriverStepperMotorBInstance.steps(pksdriver.PKSDriverDirection.Counterclockwise)
+                step_count += 1
+            }
+        } else if (direction == PKSHBotCardinalDirections.Southeast) {
+            while (step_count < steps) {
+                PKSDriverStepperMotorAInstance.steps(pksdriver.PKSDriverDirection.Counterclockwise)
+                step_count += 1
+            }
+        } else if (direction == PKSHBotCardinalDirections.South) {
+            while (step_count < steps) {
+                PKSDriverStepperMotorAInstance.steps(pksdriver.PKSDriverDirection.Clockwise)
+                PKSDriverStepperMotorBInstance.steps(pksdriver.PKSDriverDirection.Clockwise)
+                step_count += 1
+            }
+        } else if (direction == PKSHBotCardinalDirections.Southwest) {
+            while (step_count < steps) {
+                PKSDriverStepperMotorAInstance.steps(pksdriver.PKSDriverDirection.Clockwise)
+                step_count += 1
+            }
+        } else if (direction == PKSHBotCardinalDirections.West) {
+            while (step_count < steps) {
+                PKSDriverStepperMotorAInstance.steps(pksdriver.PKSDriverDirection.Clockwise)
+                PKSDriverStepperMotorBInstance.steps(pksdriver.PKSDriverDirection.Clockwise)
+                step_count += 1
+            }
+        } else if (direction == PKSHBotCardinalDirections.Northwest) {
+            while (step_count < steps) {
+                PKSDriverStepperMotorAInstance.steps(pksdriver.PKSDriverDirection.Clockwise)
+                step_count += 1
+            }
+        }
+    }
+
+    /**
+    * This function takes the angle of the joystick deflection and maps it to one of the 8 cardinal directions (N, NE, E, SE, S, SW, W, NW) to control the movement of a robot. The joystick angle is typically measured in degrees, where 0 degrees corresponds to the right (east) direction and increases counterclockwise. The function determines which cardinal direction the joystick is pointing to based on the angle and then calls the stepper motor control function to move the robot in that direction.
+    * @param joystickAngle The angle of the joystick deflection in degrees (0-360)
+    * @param joystickStrength The strength of the joystick deflection (0-100)
+    */
+    //% blockId=pksdriver_stepper_motor_hbot_joystick block="Hbot drive by %joystickAngle and %joystickStrength" subcategory="Gotcha"
+    //% weight=30
+    export function HBotMoveByJoystick(joystickAngle: number, joystickStrength: number) {
+        if (joystickStrength > 0) {
+            if (joystickAngle >= 337.5 || joystickAngle < 22.5) {
+                stepperMotorHBotMove(PKSHBotCardinalDirections.East)
+            } else if (joystickAngle >= 22.5 && joystickAngle < 67.5) {
+                stepperMotorHBotMove(PKSHBotCardinalDirections.Northeast)
+            } else if (joystickAngle >= 67.5 && joystickAngle < 112.5) {
+                stepperMotorHBotMove(PKSHBotCardinalDirections.North)
+            } else if (joystickAngle >= 112.5 && joystickAngle < 157.5) {
+                stepperMotorHBotMove(PKSHBotCardinalDirections.Northwest)
+            } else if (joystickAngle >= 157.5 && joystickAngle < 202.5) {
+                stepperMotorHBotMove(PKSHBotCardinalDirections.West)
+            } else if (joystickAngle >= 202.5 && joystickAngle < 247.5) {
+                stepperMotorHBotMove(PKSHBotCardinalDirections.Southwest)
+            } else if (joystickAngle >= 247.5 && joystickAngle < 292.5) {
+                stepperMotorHBotMove(PKSHBotCardinalDirections.South)
+            } else if (joystickAngle >= 292.5 && joystickAngle < 337.5) {
+                stepperMotorHBotMove(PKSHBotCardinalDirections.Southeast)
+            }
+        }
+    }
 
 }
