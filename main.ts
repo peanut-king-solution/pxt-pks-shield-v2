@@ -2436,38 +2436,38 @@ namespace pksdriver {
 
     /**
     * Create a stepper motor driver instance with specified coil pins. The stepper motor will be controlled by energizing the coils in a specific sequence to achieve rotation. The speed of rotation can be adjusted by changing the delay between steps in the code. Note: the actual speed may be affected by the hardware and may not be exactly as specified.
-    * @param StepperCoilAPlus The pin connected to coil A+
-    * @param StepperCoilAMinus The pin connected to coil A-
-    * @param StepperCoilBPlus The pin connected to coil B+
-    * @param StepperCoilBMinus The pin connected to coil B-
+    * @param stepperCoilAPlus The pin connected to coil A+
+    * @param stepperCoilAMinus The pin connected to coil A-
+    * @param stepperCoilBPlus The pin connected to coil B+
+    * @param stepperCoilBMinus The pin connected to coil B-
     */
-    //% blockId=pksdriver_createstepper block="create stepper motor A with |coil A+ %StepperCoilAPlus |coil A- %StepperCoilAMinus |coil B+ %StepperCoilBPlus |coil B- %StepperCoilBMinus" subcategory="Gotcha"
+    //% blockId=pksdriver_createstepper block="create stepper motor A with |coil A+ %stepperCoilAPlus |coil A- %stepperCoilAMinus |coil B+ %stepperCoilBPlus |coil B- %stepperCoilBMinus" subcategory="Gotcha"
     //% group="Stepper Motor"
     //% stepperCoilAPlus.defl=PKSMotorPorts.M1P
     //% stepperCoilAMinus.defl=PKSMotorPorts.M1N
     //% stepperCoilBPlus.defl=PKSMotorPorts.M2P
     //% stepperCoilBMinus.defl=PKSMotorPorts.M2N
     //% weight=50
-    export function createStepperMotorA(StepperCoilAPlus: PKSMotorPorts=PKSMotorPorts.M1P, StepperCoilAMinus: PKSMotorPorts=PKSMotorPorts.M1N, StepperCoilBPlus: PKSMotorPorts=PKSMotorPorts.M2P, StepperCoilBMinus: PKSMotorPorts=PKSMotorPorts.M2N): void {
-        PKSDriverStepperMotorAInstance = new StepperMotorDriver(StepperCoilAPlus, StepperCoilAMinus, StepperCoilBPlus, StepperCoilBMinus)
+    export function createStepperMotorA(stepperCoilAPlus: PKSMotorPorts=PKSMotorPorts.M1P, stepperCoilAMinus: PKSMotorPorts=PKSMotorPorts.M1N, stepperCoilBPlus: PKSMotorPorts=PKSMotorPorts.M2P, stepperCoilBMinus: PKSMotorPorts=PKSMotorPorts.M2N): void {
+        PKSDriverStepperMotorAInstance = new StepperMotorDriver(stepperCoilAPlus, stepperCoilAMinus, stepperCoilBPlus, stepperCoilBMinus)
     }
 
     /**
     * Create a stepper motor driver instance with specified coil pins. The stepper motor will be controlled by energizing the coils in a specific sequence to achieve rotation. The speed of rotation can be adjusted by changing the delay between steps in the code. Note: the actual speed may be affected by the hardware and may not be exactly as specified.
-    * @param StepperCoilAPlus The pin connected to coil A+
-    * @param StepperCoilAMinus The pin connected to coil A-
-    * @param StepperCoilBPlus The pin connected to coil B+
-    * @param StepperCoilBMinus The pin connected to coil B-
+    * @param stepperCoilAPlus The pin connected to coil A+
+    * @param stepperCoilAMinus The pin connected to coil A-
+    * @param stepperCoilBPlus The pin connected to coil B+
+    * @param stepperCoilBMinus The pin connected to coil B-
     */
-    //% blockId=pksdriver_createstepperB block="create stepper motor B with |coil A+ %StepperCoilAPlus |coil A- %StepperCoilAMinus |coil B+ %StepperCoilBPlus |coil B- %StepperCoilBMinus" subcategory="Gotcha"
+    //% blockId=pksdriver_createstepperB block="create stepper motor B with |coil A+ %stepperCoilAPlus |coil A- %stepperCoilAMinus |coil B+ %stepperCoilBPlus |coil B- %stepperCoilBMinus" subcategory="Gotcha"
     //% group="Stepper Motor"
     //% stepperCoilAPlus.defl=PKSMotorPorts.M3P 
     //% stepperCoilAMinus.defl=PKSMotorPorts.M3N
     //% stepperCoilBPlus.defl=PKSMotorPorts.M4P
     //% stepperCoilBMinus.defl=PKSMotorPorts.M4N
     //% weight=50
-    export function createStepperMotorB(StepperCoilAPlus: PKSMotorPorts=PKSMotorPorts.M3P, StepperCoilAMinus: PKSMotorPorts=PKSMotorPorts.M3N, StepperCoilBPlus: PKSMotorPorts=PKSMotorPorts.M4P, StepperCoilBMinus: PKSMotorPorts=PKSMotorPorts.M4N): void {
-        PKSDriverStepperMotorBInstance = new StepperMotorDriver(StepperCoilAPlus, StepperCoilAMinus, StepperCoilBPlus, StepperCoilBMinus)
+    export function createStepperMotorB(stepperCoilAPlus: PKSMotorPorts=PKSMotorPorts.M3P, stepperCoilAMinus: PKSMotorPorts=PKSMotorPorts.M3N, stepperCoilBPlus: PKSMotorPorts=PKSMotorPorts.M4P, stepperCoilBMinus: PKSMotorPorts=PKSMotorPorts.M4N): void {
+        PKSDriverStepperMotorBInstance = new StepperMotorDriver(stepperCoilAPlus, stepperCoilAMinus, stepperCoilBPlus, stepperCoilBMinus)
     }
 
     export enum PKSHBotCardinalDirections {
@@ -2546,4 +2546,31 @@ namespace pksdriver {
             }
         }
     }
+
+    /**
+    * This function takes the angle of the joystick deflection and maps it to one of the 8 cardinal directions (N, NE, E, SE, S, SW, W, NW) to control the movement of a robot. The joystick angle is typically measured in degrees, where 0 degrees corresponds to the right (east) direction and increases counterclockwise. The function determines which cardinal direction the joystick is pointing to based on the angle and then calls the stepper motor control function to move the robot in that direction.
+    * @param joystickAngle The angle of the joystick deflection in degrees (0-360)
+    */
+    //% blockId=pksdriver_stepper_motor_hbot_joystick block="Hbot drive by %joystickAngle" subcategory="Gotcha"
+    //% weight=30
+    export function HBotMoveByJoystick(joystickAngle: number) {
+        if (joystickAngle >= 337.5 || joystickAngle < 22.5) {
+            stepperMotorHBotMove(PKSHBotCardinalDirections.East)
+        } else if (joystickAngle >= 22.5 && joystickAngle < 67.5) {
+            stepperMotorHBotMove(PKSHBotCardinalDirections.Northeast)
+        } else if (joystickAngle >= 67.5 && joystickAngle < 112.5) {
+            stepperMotorHBotMove(PKSHBotCardinalDirections.North)
+        } else if (joystickAngle >= 112.5 && joystickAngle < 157.5) {
+            stepperMotorHBotMove(PKSHBotCardinalDirections.Northwest)
+        } else if (joystickAngle >= 157.5 && joystickAngle < 202.5) {
+            stepperMotorHBotMove(PKSHBotCardinalDirections.West)
+        } else if (joystickAngle >= 202.5 && joystickAngle < 247.5) {
+            stepperMotorHBotMove(PKSHBotCardinalDirections.Southwest)
+        } else if (joystickAngle >= 247.5 && joystickAngle < 292.5) {
+            stepperMotorHBotMove(PKSHBotCardinalDirections.South)
+        } else if (joystickAngle >= 292.5 && joystickAngle < 337.5) {
+            stepperMotorHBotMove(PKSHBotCardinalDirections.Southeast)
+        }
+    }
+
 }
