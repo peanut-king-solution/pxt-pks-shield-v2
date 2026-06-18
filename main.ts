@@ -258,7 +258,7 @@ namespace pksdriver {
         if (speed <= -4096) {
             speed = -4095
         }
-        if (index > 4 || index <= 0)
+        if (index > 4 || index < 0)
             return
         let pn = (index - 1) * 2 + 8
         let pp = (index - 1) * 2 + 8 + 1
