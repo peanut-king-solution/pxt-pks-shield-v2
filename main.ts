@@ -106,12 +106,16 @@ namespace pksdriver {
         initialized = true
     }
 
-    function ensurePCA9685Freq(freq: number): void {
-        let needsInit = !initialized
+    function ensurePCA9685Initialized(): void {
         if (!initialized) {
             i2cWrite(PCA9685_ADDRESS, MODE, 0x00)
             initialized = true
         }
+    }
+
+    function ensurePCA9685Freq(freq: number): void {
+        let needsInit = !initialized
+        ensurePCA9685Initialized()
         if (needsInit || currentFreq != freq) {
             setFreq(freq)
         }
@@ -253,9 +257,7 @@ namespace pksdriver {
     //% direction.fieldEditor="gridpicker" direction.fieldOptions.columns=2
     //% group="Motors"
     export function motorRun(index: PKSDriverMotors, direction: PKSDriverDirection, speed: number): void {
-        if (!initialized) {
-            initPCA9685()
-        }
+        ensurePCA9685Freq(SERVO_FREQ)
         speed = speed * 16 * direction; // map 255 to 4096
         if (speed >= 4096) {
             speed = 4095
@@ -302,9 +304,7 @@ namespace pksdriver {
     //% group="Motors"
     //% index.fieldEditor="gridpicker" index.fieldOptions.columns=2
     export function motorStop(index: PKSDriverMotors) {
-        if (!initialized) {
-            initPCA9685()
-        }
+        ensurePCA9685Freq(SERVO_FREQ)
         if (index > 4 || index < 0)
             return
         let pn = (index - 1) * 2 + 8
@@ -2429,8 +2429,6 @@ namespace pksdriver {
         }
     }
     
-    i2cWrite(PCA9685_ADDRESS, MODE, 0x00)
-    setFreq(STEPPER_FREQ)
     //Hbot follows cartesian coordinate system, x axis positive to the right, y axis positive to the top, angle is obeying cartesian coordinate system as well, 0 degree means full right, 90 degree means full up, 180 degree means full left, 270 degree means full down.
     let PKS_HBOT_x_counter = 0
     let PKS_HBOT_y_counter = 0
