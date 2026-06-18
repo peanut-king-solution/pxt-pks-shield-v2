@@ -93,6 +93,7 @@ namespace pksdriver {
     }
 
     let initialized = false
+    let currentFreq = 50
 
     /**
      * initalize PCA9685
@@ -101,14 +102,6 @@ namespace pksdriver {
         i2cWrite(PCA9685_ADDRESS, MODE, 0x00)
         setFreq(50)
         initialized = true
-    }
-
-    /**
-     * finish state of servo
-     */
-    function servoFinish(): void {
-        i2cWrite(PCA9685_ADDRESS, MODE, 0x00)
-        setFreq(1522)
     }
 
     /**
@@ -185,14 +178,13 @@ namespace pksdriver {
     //% degree.min=0 degree.max=180
     //% index.fieldEditor="gridpicker" index.fieldOptions.columns=4
     export function servo(index: PKSDriverServos, degree: number): void {
-        // if (!initialized) {
-        initPCA9685()
-        // }
+        if (!initialized && currentFreq != 50) {
+            initPCA9685()
+        }
         // 50hz
         let v_us = (degree * 1800 / 180 + 600) // 0.6ms ~ 2.4ms
         let value = v_us * 4096 / 20000
         setPwm(8 - index, 0, value)
-        servoFinish()
     }
 
 
@@ -219,9 +211,10 @@ namespace pksdriver {
     //% weight=99
     //% index.fieldEditor="gridpicker" index.fieldOptions.columns=4
     export function servoOff(index: PKSDriverServos): void {
-        initPCA9685()
+        if (!initialized && currentFreq != 50) {
+            initPCA9685()
+        }
         setPwm(8 - (index), 0, 0)
-        servoFinish()
     }
 
     /**
@@ -233,9 +226,10 @@ namespace pksdriver {
     //% weight=98
     //% index.fieldEditor="gridpicker" index.fieldOptions.columns=4
     export function servoOn(index: PKSDriverServos): void {
-        initPCA9685()
+        if (!initialized && currentFreq != 50) {
+            initPCA9685()
+        }
         setPwm(8 - (index), 0, 150)
-        servoFinish()
     }
 
     /**
@@ -2505,6 +2499,10 @@ namespace pksdriver {
     //% steps.defl=1
     //% weight=40
     export function stepperMotorHBotMove(direction: PKSHBotCardinalDirections, steps: number = 1) {
+        if (currentFreq != 1522) {
+            setFreq(1522)
+            currentFreq = 1522
+        }
         let step_count = 0
         if (direction == PKSHBotCardinalDirections.North && PKS_HBOT_y_counter < PKS_HBOT_y_max) {
             while (step_count < steps) {
