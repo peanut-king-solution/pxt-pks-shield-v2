@@ -301,7 +301,7 @@ namespace pksdriver {
         if (!initialized) {
             initPCA9685()
         }
-        if (index > 4 || index <= 0)
+        if (index > 4 || index < 0)
             return
         let pn = (index - 1) * 2 + 8
         let pp = (index - 1) * 2 + 8 + 1
@@ -316,7 +316,7 @@ namespace pksdriver {
     //% blockId=pksdriver_motor_motorStopAll block="stop all motors" subcategory="Edu Kit"
     //% group="Motors"
     export function motorStopAll(): void {
-        for (let idx = 1; idx <= 4; idx++) {
+        for (let idx = 0; idx <= 4; idx++) {
             motorStop(idx);
         }
     }
