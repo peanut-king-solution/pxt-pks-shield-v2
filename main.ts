@@ -245,7 +245,7 @@ namespace pksdriver {
     //% direction.fieldEditor="gridpicker" direction.fieldOptions.columns=2
     //% group="Motors"
     export function motorRun(index: PKSDriverMotors, direction: PKSDriverDirection, speed: number): void {
-        if (!initialized || currentFreq != 50) {
+        if (!initialized) {
             initPCA9685()
         }
         speed = speed * 16 * direction; // map 255 to 4096
@@ -294,7 +294,7 @@ namespace pksdriver {
     //% group="Motors"
     //% index.fieldEditor="gridpicker" index.fieldOptions.columns=2
     export function motorStop(index: PKSDriverMotors) {
-        if (!initialized || currentFreq != 50) {
+        if (!initialized) {
             initPCA9685()
         }
         if (index > 4 || index < 0)
@@ -2418,7 +2418,6 @@ namespace pksdriver {
                 this.next_state(order)
                 i++
             }
-            //this.powerOff()
         }
     }
     
