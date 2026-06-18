@@ -2500,6 +2500,7 @@ namespace pksdriver {
     //% weight=40
     export function stepperMotorHBotMove(direction: PKSHBotCardinalDirections, steps: number = 1) {
         if (currentFreq != 1522) {
+            pksdriver.i2cWrite(0x40, 0x00, 0x00)
             setFreq(1522)
             currentFreq = 1522
         }
