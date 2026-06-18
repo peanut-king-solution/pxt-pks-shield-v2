@@ -9,6 +9,8 @@ namespace pksdriver {
     const MODE = 0x00
     const PRESCALE = 0xFE
     const LED0_ON_L = 0x06
+    const SERVO_FREQ = 50
+    const STEPPER_FREQ = 1522
     
     /**
      * For maze car's use only
@@ -93,15 +95,26 @@ namespace pksdriver {
     }
 
     let initialized = false
-    let currentFreq = 50
+    let currentFreq = 0
 
     /**
      * initalize PCA9685
      */
     function initPCA9685(): void {
         i2cWrite(PCA9685_ADDRESS, MODE, 0x00)
-        setFreq(50)
+        setFreq(SERVO_FREQ)
         initialized = true
+    }
+
+    function ensurePCA9685Freq(freq: number): void {
+        let needsInit = !initialized
+        if (!initialized) {
+            i2cWrite(PCA9685_ADDRESS, MODE, 0x00)
+            initialized = true
+        }
+        if (needsInit || currentFreq != freq) {
+            setFreq(freq)
+        }
     }
 
     /**
@@ -146,6 +159,7 @@ namespace pksdriver {
         i2cWrite(PCA9685_ADDRESS, MODE, oldmode);
         control.waitMicros(5000);
         i2cWrite(PCA9685_ADDRESS, MODE, oldmode | 0xa1);
+        currentFreq = freq
     }
 
     /**
@@ -178,9 +192,7 @@ namespace pksdriver {
     //% degree.min=0 degree.max=180
     //% index.fieldEditor="gridpicker" index.fieldOptions.columns=4
     export function servo(index: PKSDriverServos, degree: number): void {
-        if (!initialized || currentFreq != 50) {
-            initPCA9685()
-        }
+        ensurePCA9685Freq(SERVO_FREQ)
         // 50hz
         let v_us = (degree * 1800 / 180 + 600) // 0.6ms ~ 2.4ms
         let value = v_us * 4096 / 20000
@@ -211,9 +223,7 @@ namespace pksdriver {
     //% weight=99
     //% index.fieldEditor="gridpicker" index.fieldOptions.columns=4
     export function servoOff(index: PKSDriverServos): void {
-        if (!initialized || currentFreq != 50) {
-            initPCA9685()
-        }
+        ensurePCA9685Freq(SERVO_FREQ)
         setPwm(8 - (index), 0, 0)
     }
 
@@ -226,9 +236,7 @@ namespace pksdriver {
     //% weight=98
     //% index.fieldEditor="gridpicker" index.fieldOptions.columns=4
     export function servoOn(index: PKSDriverServos): void {
-        if (!initialized || currentFreq != 50) {
-            initPCA9685()
-        }
+        ensurePCA9685Freq(SERVO_FREQ)
         setPwm(8 - (index), 0, 150)
     }
 
@@ -2271,7 +2279,7 @@ namespace pksdriver {
 
     export class StepperMotorDriver {
         private next_step_state: StepStage = StepStage.StepStage1;
-        private current_step_state: StepStage = null;
+        private current_step_state: StepStage | null = null;
         private dp_Ap = PKSMotorPorts.M1P;
         private dp_An = PKSMotorPorts.M1N;
         private dp_Bp = PKSMotorPorts.M2N;
@@ -2279,7 +2287,7 @@ namespace pksdriver {
         private speed = 1 //rotation per second
         private delay = 50;
         private power_flag = true
-        private last_step: StepStage = null;
+        private last_step: StepStage | null = null;
         public a_high = 4095
         public b_high = 4095
         private low = 0
@@ -2421,8 +2429,8 @@ namespace pksdriver {
         }
     }
     
-    pksdriver.i2cWrite(0x40, 0x00, 0x00)
-    pksdriver.setFreq(1522)
+    i2cWrite(PCA9685_ADDRESS, MODE, 0x00)
+    setFreq(STEPPER_FREQ)
     //Hbot follows cartesian coordinate system, x axis positive to the right, y axis positive to the top, angle is obeying cartesian coordinate system as well, 0 degree means full right, 90 degree means full up, 180 degree means full left, 270 degree means full down.
     let PKS_HBOT_x_counter = 0
     let PKS_HBOT_y_counter = 0
@@ -2498,11 +2506,7 @@ namespace pksdriver {
     //% steps.defl=1
     //% weight=40
     export function stepperMotorHBotMove(direction: PKSHBotCardinalDirections, steps: number = 1) {
-        if (currentFreq != 1522) {
-            i2cWrite(PCA9685_ADDRESS, MODE, 0x00)
-            setFreq(1522)
-            currentFreq = 1522
-        }
+        ensurePCA9685Freq(STEPPER_FREQ)
         let step_count = 0
         if (direction == PKSHBotCardinalDirections.North && PKS_HBOT_y_counter < PKS_HBOT_y_max) {
             while (step_count < steps) {
