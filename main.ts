@@ -178,7 +178,7 @@ namespace pksdriver {
     //% degree.min=0 degree.max=180
     //% index.fieldEditor="gridpicker" index.fieldOptions.columns=4
     export function servo(index: PKSDriverServos, degree: number): void {
-        if (!initialized && currentFreq != 50) {
+        if (!initialized || currentFreq != 50) {
             initPCA9685()
         }
         // 50hz
@@ -211,7 +211,7 @@ namespace pksdriver {
     //% weight=99
     //% index.fieldEditor="gridpicker" index.fieldOptions.columns=4
     export function servoOff(index: PKSDriverServos): void {
-        if (!initialized && currentFreq != 50) {
+        if (!initialized || currentFreq != 50) {
             initPCA9685()
         }
         setPwm(8 - (index), 0, 0)
@@ -226,7 +226,7 @@ namespace pksdriver {
     //% weight=98
     //% index.fieldEditor="gridpicker" index.fieldOptions.columns=4
     export function servoOn(index: PKSDriverServos): void {
-        if (!initialized && currentFreq != 50) {
+        if (!initialized || currentFreq != 50) {
             initPCA9685()
         }
         setPwm(8 - (index), 0, 150)
@@ -245,7 +245,7 @@ namespace pksdriver {
     //% direction.fieldEditor="gridpicker" direction.fieldOptions.columns=2
     //% group="Motors"
     export function motorRun(index: PKSDriverMotors, direction: PKSDriverDirection, speed: number): void {
-        if (!initialized) {
+        if (!initialized || currentFreq != 50) {
             initPCA9685()
         }
         speed = speed * 16 * direction; // map 255 to 4096
@@ -294,7 +294,7 @@ namespace pksdriver {
     //% group="Motors"
     //% index.fieldEditor="gridpicker" index.fieldOptions.columns=2
     export function motorStop(index: PKSDriverMotors) {
-        if (!initialized) {
+        if (!initialized || currentFreq != 50) {
             initPCA9685()
         }
         if (index > 4 || index < 0)
@@ -2500,7 +2500,7 @@ namespace pksdriver {
     //% weight=40
     export function stepperMotorHBotMove(direction: PKSHBotCardinalDirections, steps: number = 1) {
         if (currentFreq != 1522) {
-            pksdriver.i2cWrite(0x40, 0x00, 0x00)
+            i2cWrite(PCA9685_ADDRESS, MODE, 0x00)
             setFreq(1522)
             currentFreq = 1522
         }
