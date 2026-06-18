@@ -2585,4 +2585,22 @@ namespace pksdriver {
         return PKS_HBOT_y_counter
     }
 
+    /**
+     * Reset the HBot movement counters to zero by moving the robot back to the origin (0,0) position.
+     */
+    //% blockId=pksdriver_hbot_reset_counter block="reset Hbot counter" subcategory="Gotcha"
+    //% weight=20
+    export function resetHBotCounter() { 
+        while (PKS_HBOT_x_counter > 0) {
+            stepperMotorHBotMove(PKSHBotCardinalDirections.West)
+        }
+        while (PKS_HBOT_y_counter > 0) {
+            stepperMotorHBotMove(PKSHBotCardinalDirections.South)
+        }
+        //extra step to ensure fully reset, in case of any mechanical issues
+        stepperMotorHBotMove(PKSHBotCardinalDirections.West,30)
+        stepperMotorHBotMove(PKSHBotCardinalDirections.South,30)
+
+    }
+
 }
