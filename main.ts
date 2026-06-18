@@ -40,11 +40,7 @@ namespace pksdriver {
         //% block="S5"
         S5 = 0x04,
         //% block="S6"
-        S6 = 0x03,
-        //% block="S7"
-        S7 = 0x02,
-        //% block="S8"
-        S8 = 0x01
+        S6 = 0x03
     }
 
     /**
@@ -103,8 +99,16 @@ namespace pksdriver {
      */
     function initPCA9685(): void {
         i2cWrite(PCA9685_ADDRESS, MODE, 0x00)
-        setFreq(50);
+        setFreq(50)
         initialized = true
+    }
+
+    /**
+     * finish state of servo
+     */
+    function servoFinish(): void {
+        i2cWrite(PCA9685_ADDRESS, MODE, 0x00)
+        setFreq(1522)
     }
 
     /**
@@ -172,7 +176,7 @@ namespace pksdriver {
 
     /**
      * Steering gear control function 
-     * @param index S1~S8.
+     * @param index S1~S6.
      * @param degree 0°~180°.
     */
     //% blockId=pksdriver_motor_servo block="servo|%index|degree|%degree" subcategory="Edu Kit"
@@ -181,19 +185,20 @@ namespace pksdriver {
     //% degree.min=0 degree.max=180
     //% index.fieldEditor="gridpicker" index.fieldOptions.columns=4
     export function servo(index: PKSDriverServos, degree: number): void {
-        if (!initialized) {
-            initPCA9685()
-        }
+        // if (!initialized) {
+        initPCA9685()
+        // }
         // 50hz
         let v_us = (degree * 1800 / 180 + 600) // 0.6ms ~ 2.4ms
         let value = v_us * 4096 / 20000
         setPwm(8 - index, 0, value)
+        setFreq(12)
     }
 
 
     /**
      * Steering gear control function 
-     * @param index S1~S8.
+     * @param index S1~S6.
      * @param degree 0°~180°.
      */
     //% blockId=pksdriver_smart_servo block="smart servo|%index|degree|%degree" subcategory="Smart Living"
@@ -207,37 +212,35 @@ namespace pksdriver {
 
     /**
      * set servo off
-     * @param index S1~S8.
+     * @param index S1~S6.
     */
     //% blockId=pksdriver_motor_servoOff block="servo off|%index" subcategory="Edu Kit"
     //% group="Servos"
     //% weight=99
     //% index.fieldEditor="gridpicker" index.fieldOptions.columns=4
     export function servoOff(index: PKSDriverServos): void {
-        if (!initialized) {
-            initPCA9685()
-        }
+        initPCA9685()
         setPwm(8 - (index), 0, 0)
+        servoFinish()
     }
 
     /**
      * set servo on
-     * @param index S1~S8.
+     * @param index S1~S6.
     */
     //% blockId=pksdriver_motor_servoOn block="servo on|%index" subcategory="Edu Kit"
     //% group="Servos"
     //% weight=98
     //% index.fieldEditor="gridpicker" index.fieldOptions.columns=4
     export function servoOn(index: PKSDriverServos): void {
-        if (!initialized) {
-            initPCA9685()
-        }
+        initPCA9685()
         setPwm(8 - (index), 0, 150)
+        servoFinish()
     }
 
     /**
      * Execute a motor
-     * @param index M1~M4.
+     * @param index M0~M4.
      * @param direction clockwise/counterclockwise
      * @param speed speed(0~255).
     */
@@ -271,10 +274,9 @@ namespace pksdriver {
         }
     }
 
-
     /**
      * Execute a motor 
-     * @param index M1~M4.
+     * @param index M0~M4.
      * @param direction clockwise/counterclockwise
      * @param speed speed(0~255).
      */
@@ -291,7 +293,7 @@ namespace pksdriver {
 
     /**
      * Stop the dc motor.
-     * @param index M1~M4
+     * @param index M0~M4
     */
     //% weight=129
     //% blockId=pksdriver_motor_motorStop block="motor stop|%index" subcategory="Edu Kit"
@@ -333,7 +335,7 @@ namespace pksdriver {
 
     /**
      * Switch light on 
-     * @param index M1~M4.
+     * @param index M0~M4.
      */
     //% weight=90
     //% blockId=pksdriver_light_lighton block="light on|%index" subcategory="Smart Living"
@@ -344,18 +346,18 @@ namespace pksdriver {
 
     /**
      * Switch fan on
-     * @param index M1~M4. 
+     * @param index M0~M4. 
      */
     //% weight=90
     //% blockId=pksdriver_fan_fanon block="fan on|%index" subcategory="Smart Living"
     //% group="Fan"
     export function fanOn(index: PKSDriverMotors): void {
-        lightOn(index);
+        motorRun(index, -1, 255);
     }
 
     /**
      * Switch light off
-     * @param index M1~M4.
+     * @param index M0~M4.
      */
     //% weight=90
     //% blockId=pksdriver_light_lightoff block="light off|%index" subcategory="Smart Living"
@@ -367,13 +369,13 @@ namespace pksdriver {
 
     /**
      * Switch fan off
-     * @param index M1~M4.
+     * @param index M0~M4.
      */
     //% weight=90
     //% blockId=pksdriver_fan_fanoff block="fan off|%index" subcategory="Smart Living"
     //% group="Fan"
     export function fanOff(index: PKSDriverMotors) {
-        lightOff(index);
+        motorStop(index);
     }
 
 
