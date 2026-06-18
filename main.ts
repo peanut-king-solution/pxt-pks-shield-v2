@@ -107,7 +107,7 @@ namespace pksdriver {
      * finish state of servo
      */
     function servoFinish(): void {
-        i2cWrite(PCA9685_ADDRESS, MODE, 0x00)
+        i2cWrite(0x40, MODE, 0x00)
         setFreq(1522)
     }
 
@@ -192,7 +192,7 @@ namespace pksdriver {
         let v_us = (degree * 1800 / 180 + 600) // 0.6ms ~ 2.4ms
         let value = v_us * 4096 / 20000
         setPwm(8 - index, 0, value)
-        setFreq(12)
+        servoFinish()
     }
 
 
