@@ -107,7 +107,7 @@ namespace pksdriver {
      * finish state of servo
      */
     function servoFinish(): void {
-        i2cWrite(0x40, MODE, 0x00)
+        i2cWrite(PCA9685_ADDRESS, MODE, 0x00)
         setFreq(1522)
     }
 
