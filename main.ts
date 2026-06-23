@@ -2551,13 +2551,13 @@ namespace pksdriver {
     export function HBotMoveByJoystick(joystickAngle: number, joystickStrength: number) {
         if (joystickStrength > 0) {
             if (joystickAngle >= 315 || joystickAngle < 45 ) {
-                stepperMotorHBotMove(PKSHBotCardinalDirections.East)
+                stepperMotorHBotMove(PKSHBotCardinalDirections.East,4)
             } else if (joystickAngle >= 45 && joystickAngle < 135) {
-                stepperMotorHBotMove(PKSHBotCardinalDirections.North)
+                stepperMotorHBotMove(PKSHBotCardinalDirections.North,4)
             } else if (joystickAngle >= 135 && joystickAngle < 225) {
-                stepperMotorHBotMove(PKSHBotCardinalDirections.West)
+                stepperMotorHBotMove(PKSHBotCardinalDirections.West,4)
             } else if (joystickAngle >= 225 && joystickAngle < 315) {
-                stepperMotorHBotMove(PKSHBotCardinalDirections.South)
+                stepperMotorHBotMove(PKSHBotCardinalDirections.South,4)
             }
         } else {
             PKSDriverStepperMotorAInstance.powerOff()
