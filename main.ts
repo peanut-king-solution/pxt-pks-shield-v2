@@ -2535,10 +2535,8 @@ namespace pksdriver {
                 PKS_HBOT_x_counter -= 1
             }
         }
-        else {
             PKSDriverStepperMotorAInstance.powerOff()
             PKSDriverStepperMotorBInstance.powerOff()
-        }
     }
 
     /**
@@ -2551,13 +2549,13 @@ namespace pksdriver {
     export function HBotMoveByJoystick(joystickAngle: number, joystickStrength: number) {
         if (joystickStrength > 0) {
             if (joystickAngle >= 315 || joystickAngle < 45 ) {
-                stepperMotorHBotMove(PKSHBotCardinalDirections.East,4)
+                stepperMotorHBotMove(PKSHBotCardinalDirections.East,5)
             } else if (joystickAngle >= 45 && joystickAngle < 135) {
-                stepperMotorHBotMove(PKSHBotCardinalDirections.North,4)
+                stepperMotorHBotMove(PKSHBotCardinalDirections.North,5)
             } else if (joystickAngle >= 135 && joystickAngle < 225) {
-                stepperMotorHBotMove(PKSHBotCardinalDirections.West,4)
+                stepperMotorHBotMove(PKSHBotCardinalDirections.West,5)
             } else if (joystickAngle >= 225 && joystickAngle < 315) {
-                stepperMotorHBotMove(PKSHBotCardinalDirections.South,4)
+                stepperMotorHBotMove(PKSHBotCardinalDirections.South,5)
             }
         } else {
             PKSDriverStepperMotorAInstance.powerOff()
