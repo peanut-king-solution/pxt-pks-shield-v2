@@ -2432,9 +2432,9 @@ namespace pksdriver {
     //Hbot follows cartesian coordinate system, x axis positive to the right, y axis positive to the top, angle is obeying cartesian coordinate system as well, 0 degree means full right, 90 degree means full up, 180 degree means full left, 270 degree means full down.
     let PKS_HBOT_x_counter = 0
     let PKS_HBOT_y_counter = 0
-    let PKS_HBOT_x_max = 2000
+    let PKS_HBOT_x_max = 500
     let PKS_HBOT_x_min = 0
-    let PKS_HBOT_y_max = 2000
+    let PKS_HBOT_y_max = 300
     let PKS_HBOT_y_min = 0
     let PKSDriverStepperMotorAInstance: StepperMotorDriver = new StepperMotorDriver(PKSMotorPorts.M1P, PKSMotorPorts.M1N, PKSMotorPorts.M2N, PKSMotorPorts.M2P)
     let PKSDriverStepperMotorBInstance: StepperMotorDriver = new StepperMotorDriver(PKSMotorPorts.M3N, PKSMotorPorts.M3P, PKSMotorPorts.M4N, PKSMotorPorts.M4P)
@@ -2535,8 +2535,10 @@ namespace pksdriver {
                 PKS_HBOT_x_counter -= 1
             }
         }
+        else {
             PKSDriverStepperMotorAInstance.powerOff()
             PKSDriverStepperMotorBInstance.powerOff()
+        }
     }
 
     /**
@@ -2547,7 +2549,7 @@ namespace pksdriver {
     //% blockId=pksdriver_stepper_motor_hbot_joystick block="Hbot drive by %joystickAngle and %joystickStrength" subcategory="Gotcha"
     //% weight=30
     export function HBotMoveByJoystick(joystickAngle: number, joystickStrength: number) {
-        if (joystickStrength > 0) {
+        while (joystickStrength > 0) {
             if (joystickAngle >= 315 || joystickAngle < 45 ) {
                 stepperMotorHBotMove(PKSHBotCardinalDirections.East,5)
             } else if (joystickAngle >= 45 && joystickAngle < 135) {
@@ -2557,10 +2559,9 @@ namespace pksdriver {
             } else if (joystickAngle >= 225 && joystickAngle < 315) {
                 stepperMotorHBotMove(PKSHBotCardinalDirections.South,5)
             }
-        } else {
-            PKSDriverStepperMotorAInstance.powerOff()
-            PKSDriverStepperMotorBInstance.powerOff()
         }
+        PKSDriverStepperMotorAInstance.powerOff()
+        PKSDriverStepperMotorBInstance.powerOff()
     }
 
     /**
@@ -2595,7 +2596,9 @@ namespace pksdriver {
         }
         //extra step to ensure fully reset, in case of any mechanical issues
         stepperMotorHBotMove(PKSHBotCardinalDirections.West,30)
-        stepperMotorHBotMove(PKSHBotCardinalDirections.South,30)
+        stepperMotorHBotMove(PKSHBotCardinalDirections.South, 30)
+        PKSDriverStepperMotorAInstance.powerOff()
+        PKSDriverStepperMotorBInstance.powerOff()
 
     }
 
