@@ -2549,7 +2549,7 @@ namespace pksdriver {
     //% blockId=pksdriver_stepper_motor_hbot_joystick block="Hbot drive by %joystickAngle and %joystickStrength" subcategory="Gotcha"
     //% weight=30
     export function HBotMoveByJoystick(joystickAngle: number, joystickStrength: number) {
-        while (joystickStrength > 0) {
+        if (joystickStrength > 0) {
             if (joystickAngle >= 315 || joystickAngle < 45 ) {
                 stepperMotorHBotMove(PKSHBotCardinalDirections.East,5)
             } else if (joystickAngle >= 45 && joystickAngle < 135) {
@@ -2560,8 +2560,10 @@ namespace pksdriver {
                 stepperMotorHBotMove(PKSHBotCardinalDirections.South,5)
             }
         }
-        PKSDriverStepperMotorAInstance.powerOff()
-        PKSDriverStepperMotorBInstance.powerOff()
+        else {
+            PKSDriverStepperMotorAInstance.powerOff()
+            PKSDriverStepperMotorBInstance.powerOff()
+        }
     }
 
     /**
