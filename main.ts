@@ -1750,23 +1750,23 @@ namespace pksdriver {
 
     /**
      * Check if button is pressed  
-     * @param Buttoncheck B1 - B3
+     * @param buttonCheck B1 - B3
      */
-    //% blockId=pksdriver_getbutton block="get button %Buttoncheck" subcategory="Edu Kit"
+    //% blockId=pksdriver_getbutton block="button %buttonCheck is pressed" subcategory="Edu Kit"
     //% group="Button"
     //% weight=70
-    export function checkButton(Buttoncheck: PKSDriverButton): boolean {
+    export function checkButton(buttonCheck: PKSDriverButton): boolean {
         let buttonvalue = pins.analogReadPin(AnalogPin.P0);
         let button = 0;
         let x = 0;
         let ans = 0;
-        if (Buttoncheck == PKSDriverButton.B1) {
+        if (buttonCheck == PKSDriverButton.B1) {
             x = 0b100
         }
-        else if (Buttoncheck == PKSDriverButton.B2) {
+        else if (buttonCheck == PKSDriverButton.B2) {
             x = 0b010
         }
-        else if (Buttoncheck == PKSDriverButton.B3) {
+        else if (buttonCheck == PKSDriverButton.B3) {
             x = 0b001
         }
         if (buttonvalue > 912) {
@@ -2533,32 +2533,33 @@ namespace pksdriver {
         West,
     }
 
-    export function _stepperMotorHBotMove(direction: PKSHBotCardinalDirections, steps: number = 1) {
+    export function _stepperMotorHBotMove(direction: PKSHBotCardinalDirections, steps: number = 1, LimitBreak: boolean = false) {
         ensurePCA9685Freq(STEPPER_FREQ)
         let step_count = 0
-        if (direction == PKSHBotCardinalDirections.North && PKS_HBOT_y_counter < PKS_HBOT_y_max) {
-            while (step_count < steps) {
+        //break limit if LimitBreak is true, otherwise limit the movement to the defined min/max values
+        if (direction == PKSHBotCardinalDirections.North &&  (PKS_HBOT_y_counter <= PKS_HBOT_y_max || LimitBreak)) {
+            while (step_count < steps && (PKS_HBOT_y_counter <= PKS_HBOT_y_max || LimitBreak)) {
                 PKSDriverStepperMotorAInstance.steps(pksdriver.PKSDriverDirection.Clockwise)
                 PKSDriverStepperMotorBInstance.steps(pksdriver.PKSDriverDirection.Counterclockwise)
                 step_count += 1
                 PKS_HBOT_y_counter += 1
             }
-        } else if (direction == PKSHBotCardinalDirections.East && PKS_HBOT_x_counter < PKS_HBOT_x_max) {
-            while (step_count < steps) {
+        } else if (direction == PKSHBotCardinalDirections.East && (PKS_HBOT_x_counter <= PKS_HBOT_x_max || LimitBreak)) {
+            while (step_count < steps && (PKS_HBOT_x_counter <= PKS_HBOT_x_max || LimitBreak)) {
                 PKSDriverStepperMotorAInstance.steps(pksdriver.PKSDriverDirection.Counterclockwise)
                 PKSDriverStepperMotorBInstance.steps(pksdriver.PKSDriverDirection.Counterclockwise)
                 step_count += 1
                 PKS_HBOT_x_counter += 1
             }
-        } else if (direction == PKSHBotCardinalDirections.South && PKS_HBOT_y_counter > PKS_HBOT_y_min) {
-            while (step_count < steps) {
+        } else if (direction == PKSHBotCardinalDirections.South && (PKS_HBOT_y_counter >= PKS_HBOT_y_min || LimitBreak)) {
+            while (step_count < steps && (PKS_HBOT_y_counter >= PKS_HBOT_y_min || LimitBreak)) {
                 PKSDriverStepperMotorAInstance.steps(pksdriver.PKSDriverDirection.Counterclockwise)
                 PKSDriverStepperMotorBInstance.steps(pksdriver.PKSDriverDirection.Clockwise)
                 step_count += 1
                 PKS_HBOT_y_counter -= 1
             }
-        } else if (direction == PKSHBotCardinalDirections.West && PKS_HBOT_x_counter > PKS_HBOT_x_min) {
-            while (step_count < steps) {
+        } else if (direction == PKSHBotCardinalDirections.West && (PKS_HBOT_x_counter >= PKS_HBOT_x_min || LimitBreak)) {
+            while (step_count < steps && (PKS_HBOT_x_counter >= PKS_HBOT_x_min || LimitBreak)) {
                 PKSDriverStepperMotorAInstance.steps(pksdriver.PKSDriverDirection.Clockwise)
                 PKSDriverStepperMotorBInstance.steps(pksdriver.PKSDriverDirection.Clockwise)
                 step_count += 1
@@ -2574,13 +2575,15 @@ namespace pksdriver {
     * This function controls two stepper motors in a coordinated way to move a robot in the specified cardinal direction for a certain number of steps. The direction parameter determines the sequence of steps for each motor to achieve the desired movement direction. 
     * @param direction The cardinal direction to move the robot (e.g. North, East, South, West)
     * @param steps The number of steps to move in the specified direction (default is 1)
+    * @param LimitBreak Whether to bypass the movement limits (default false, for testing and error recovery)
     */
-    //% blockId=pksdriver_stepper_motor_hbot_step block="Hbot drive in %direction for %steps steps" subcategory="Gotcha"
+    //% blockId=pksdriver_stepper_motor_hbot_step block="Hbot drive in %direction for %steps steps with LimitBreak %LimitBreak" subcategory="Gotcha"
     //% group="Stepper Motor"
     //% steps.defl=1
+    //% LimitBreak.defl=false
     //% weight=40
-    export function stepperMotorHBotMove(direction: PKSHBotCardinalDirections, steps: number = 1) {
-        _stepperMotorHBotMove(direction, steps)
+    export function stepperMotorHBotMove(direction: PKSHBotCardinalDirections, steps: number = 1, LimitBreak: boolean = false) {
+        _stepperMotorHBotMove(direction, steps, LimitBreak)
         PKSDriverStepperMotorAInstance.powerOff()
         PKSDriverStepperMotorBInstance.powerOff()
     }
