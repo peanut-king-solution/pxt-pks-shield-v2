@@ -2260,9 +2260,6 @@ namespace pksdriver {
     //% group="Joystick"
     //% weight=70
     export function JoystickAngle() {
-        if (!PKSDriverJoystickInitialized) {
-            startJoystick(AnalogPin.P1, AnalogPin.P2)
-        }
         return PKSDriverJoystickInstance.Angle()
     }
 
@@ -2282,11 +2279,12 @@ namespace pksdriver {
                 PKSDriverStepperMotorAInstance.powerOff()
                 PKSDriverStepperMotorBInstance.powerOff()
                 return strength
+            }else {
+                return strength
             }
         }
         return PKSDriverJoystickInstance.strength()
     }
-
 
     enum StepStage {
         //% block="step 1"
@@ -2579,13 +2577,13 @@ namespace pksdriver {
     export function HBotMoveByJoystick(joystickAngle: number, joystickStrength: number) {
         if (joystickStrength > 0) {
             if (joystickAngle >= 315 || joystickAngle < 45 ) {
-                stepperMotorHBotMove(PKSHBotCardinalDirections.East,4)
+                _stepperMotorHBotMove(PKSHBotCardinalDirections.East,4)
             } else if (joystickAngle >= 45 && joystickAngle < 135) {
-                stepperMotorHBotMove(PKSHBotCardinalDirections.North,4)
+                _stepperMotorHBotMove(PKSHBotCardinalDirections.North,4)
             } else if (joystickAngle >= 135 && joystickAngle < 225) {
-                stepperMotorHBotMove(PKSHBotCardinalDirections.West,4)
+                _stepperMotorHBotMove(PKSHBotCardinalDirections.West,4)
             } else if (joystickAngle >= 225 && joystickAngle < 315) {
-                stepperMotorHBotMove(PKSHBotCardinalDirections.South,4)
+                _stepperMotorHBotMove(PKSHBotCardinalDirections.South,4)
             }
         }
         else {
@@ -2619,17 +2617,14 @@ namespace pksdriver {
     //% weight=20
     export function resetHBotCounter() { 
         while (PKS_HBOT_x_counter > 0) {
-            stepperMotorHBotMove(PKSHBotCardinalDirections.West)
+            _stepperMotorHBotMove(PKSHBotCardinalDirections.West)
         }
         while (PKS_HBOT_y_counter > 0) {
-            stepperMotorHBotMove(PKSHBotCardinalDirections.South)
+            _stepperMotorHBotMove(PKSHBotCardinalDirections.South)
         }
         //extra step to ensure fully reset, in case of any mechanical issues
         stepperMotorHBotMove(PKSHBotCardinalDirections.West,30)
         stepperMotorHBotMove(PKSHBotCardinalDirections.South, 30)
-        PKSDriverStepperMotorAInstance.powerOff()
-        PKSDriverStepperMotorBInstance.powerOff()
-
     }
 
 }
