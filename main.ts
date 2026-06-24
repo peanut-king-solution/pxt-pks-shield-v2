@@ -2589,6 +2589,31 @@ namespace pksdriver {
     }
 
     /**
+    * This function takes the angle of the joystick deflection and maps it to one of the 8 cardinal directions (N, NE, E, SE, S, SW, W, NW) to control the movement of a robot. The joystick angle is typically measured in degrees, where 0 degrees corresponds to the right (east) direction and increases counterclockwise. The function determines which cardinal direction the joystick is pointing to based on the angle and then calls the stepper motor control function to move the robot in that direction. This function is similar to HBotMoveByJoystick, but it bypasses the defined movement limits, allowing the robot to move beyond the specified min/max values. This can be useful for testing, error recovery, or situations where you want to allow more freedom of movement without being constrained by the limits.
+    * @param joystickAngle The angle of the joystick deflection in degrees (0-360)
+    * @param joystickStrength The strength of the joystick deflection (0-100)
+    */
+    //% blockId=pksdriver_stepper_motor_hbot_joystick block="Hbot drive by %joystickAngle and %joystickStrength and break the limit" subcategory="Gotcha"
+    //% weight=20
+    export function HBotMoveByJoystickWithoutLimit(joystickAngle: number, joystickStrength: number) {
+        if (joystickStrength > 0) {
+            if (joystickAngle >= 315 || joystickAngle < 45 ) {
+                _stepperMotorHBotMove(PKSHBotCardinalDirections.East,4, true)
+            } else if (joystickAngle >= 45 && joystickAngle < 135) {
+                _stepperMotorHBotMove(PKSHBotCardinalDirections.North,4, true)
+            } else if (joystickAngle >= 135 && joystickAngle < 225) {
+                _stepperMotorHBotMove(PKSHBotCardinalDirections.West,4, true)
+            } else if (joystickAngle >= 225 && joystickAngle < 315) {
+                _stepperMotorHBotMove(PKSHBotCardinalDirections.South,4, true)
+            }
+        }
+        else {
+            PKSDriverStepperMotorAInstance.powerOff()
+            PKSDriverStepperMotorBInstance.powerOff()
+        }
+    }
+
+    /**
     * This function takes the angle of the joystick deflection and maps it to one of the 8 cardinal directions (N, NE, E, SE, S, SW, W, NW) to control the movement of a robot. The joystick angle is typically measured in degrees, where 0 degrees corresponds to the right (east) direction and increases counterclockwise. The function determines which cardinal direction the joystick is pointing to based on the angle and then calls the stepper motor control function to move the robot in that direction.
     * @param joystickAngle The angle of the joystick deflection in degrees (0-360)
     * @param joystickStrength The strength of the joystick deflection (0-100)
