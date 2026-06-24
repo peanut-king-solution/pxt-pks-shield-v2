@@ -2593,7 +2593,7 @@ namespace pksdriver {
     * @param joystickAngle The angle of the joystick deflection in degrees (0-360)
     * @param joystickStrength The strength of the joystick deflection (0-100)
     */
-    //% blockId=pksdriver_stepper_motor_hbot_joystick block="Hbot drive by %joystickAngle and %joystickStrength and break the limit" subcategory="Gotcha"
+    //% blockId=pksdriver_stepper_motor_hbot_joystick_without_limit block="Hbot drive by %joystickAngle and %joystickStrength and break the limit" subcategory="Gotcha"
     //% weight=20
     export function HBotMoveByJoystickWithoutLimit(joystickAngle: number, joystickStrength: number) {
         if (joystickStrength > 0) {
