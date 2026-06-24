@@ -2170,14 +2170,16 @@ namespace pksdriver {
     export class Joystick {
         pinX: AnalogPin;
         pinY: AnalogPin;
+        pinPress: DigitalPin;
         centerX: number;
         centerY: number;
         maxDeflection: number;
         blindZonePercent: number;
 
-        public constructor(pinX: AnalogPin, pinY: AnalogPin, centerX: number = 512, centerY: number = 512, maxDeflection: number = 512, blindZonePercent: number = 10) {
+        public constructor(pinX: AnalogPin, pinY: AnalogPin, pinPress: DigitalPin, centerX: number = 512, centerY: number = 512, maxDeflection: number = 512, blindZonePercent: number = 10) {
             this.pinX = pinX;
             this.pinY = pinY;
+            this.pinPress = pinPress;
             this.centerX = centerX;
             this.centerY = centerY;
             this.maxDeflection = maxDeflection;
@@ -2227,7 +2229,16 @@ namespace pksdriver {
             let { x: dx, y: dy } = this.read()
             let strength = Math.sqrt(dx * dx + dy * dy)
             strength = Math.min(1, strength)
+            if (strength == 0) {
+                //saftey power off all motor
+                PKSDriverStepperMotorAInstance.powerOff()
+                PKSDriverStepperMotorBInstance.powerOff()
+            }
             return strength
+        }
+
+        public isPressed() {
+            return pins.digitalReadPin(this.pinPress) == 0
         }
     }
 
@@ -2235,7 +2246,7 @@ namespace pksdriver {
     let PKSDriverJoystickInitialized = false;
 
     /**
-     * Joystick initialization, specify the x and y axis pins, the center value for x and y (default 512 for most joysticks), the max deflection value (default 512 for most joysticks), and the blind zone percentage (default 10%, adjust based on your joystick's sensitivity and noise)
+     * Joystick initialization, specify the x and y axis pins, the press button pin, the center value for x and y (default 512 for most joysticks), the max deflection value (default 512 for most joysticks), and the blind zone percentage (default 10%, adjust based on your joystick's sensitivity and noise)
      * @param pinX 
      * @param pinY 
      * @param centerX 
@@ -2243,12 +2254,13 @@ namespace pksdriver {
      * @param maxDeflection 
      * @param blindZonePercent 
      */
-    //% blockId=pksdriver_createjoystick block="create joystick with |x axis %pinX|y axis %pinY|centerX %centerX centerY %centerY max deflection %maxDeflection blind zone %blindZonePercent" subcategory="Gotcha"
+    //% blockId=pksdriver_createjoystick block="create joystick with |x axis %pinX|y axis %pinY|press button %pinPress|centerX %centerX centerY %centerY max deflection %maxDeflection blind zone %blindZonePercent" subcategory="Gotcha"
     //% group="Joystick"
+    //% pinX.defl=AnalogPin.P1 pinY.defl=AnalogPin.P2 pinPress.defl=DigitalPin.P8
     //% centerX.defl=512 centerY.defl=512 maxDeflection.defl=512 blindZonePercent.defl=10
     //% weight=90
-    export function startJoystick(pinX: AnalogPin, pinY: AnalogPin, centerX: number = 512, centerY: number = 512, maxDeflection: number = 512, blindZonePercent: number = 10) {
-        PKSDriverJoystickInstance = new Joystick(pinX, pinY, centerX, centerY, maxDeflection, blindZonePercent)
+    export function startJoystick(pinX: AnalogPin, pinY: AnalogPin, pinPress: DigitalPin, centerX: number = 512, centerY: number = 512, maxDeflection: number = 512, blindZonePercent: number = 10) {
+        PKSDriverJoystickInstance = new Joystick(pinX, pinY, pinPress, centerX, centerY, maxDeflection, blindZonePercent)
         PKSDriverJoystickInitialized = true;
     }
 
@@ -2260,7 +2272,23 @@ namespace pksdriver {
     //% group="Joystick"
     //% weight=70
     export function JoystickAngle() {
+        if (!PKSDriverJoystickInitialized) {
+            startJoystick(AnalogPin.P1, AnalogPin.P2, DigitalPin.P8)
+        }
         return PKSDriverJoystickInstance.Angle()
+    }
+
+    /**
+    * Check if the joystick button is pressed (returns true if pressed, false if not pressed)
+    */
+    //% blockId=pksdriver_joystickpressed block="joystick pressed" subcategory="Gotcha"
+    //% group="Joystick"
+    //% weight=70
+    export function JoystickPressed(): boolean {
+        if (!PKSDriverJoystickInitialized) {
+            startJoystick(AnalogPin.P1, AnalogPin.P2, DigitalPin.P8)
+        }
+        return PKSDriverJoystickInstance.isPressed()
     }
 
     /**
@@ -2271,17 +2299,7 @@ namespace pksdriver {
     //% weight=70
     export function JoystickStrength() {
         if (!PKSDriverJoystickInitialized) {
-            startJoystick(AnalogPin.P1, AnalogPin.P2)
-        } else {
-            let strength = PKSDriverJoystickInstance.strength()
-            if (strength == 0) {
-                //saftey power off all motor
-                PKSDriverStepperMotorAInstance.powerOff()
-                PKSDriverStepperMotorBInstance.powerOff()
-                return strength
-            }else {
-                return strength
-            }
+            startJoystick(AnalogPin.P1, AnalogPin.P2, DigitalPin.P8)
         }
         return PKSDriverJoystickInstance.strength()
     }
@@ -2453,9 +2471,9 @@ namespace pksdriver {
     //Hbot follows cartesian coordinate system, x axis positive to the right, y axis positive to the top, angle is obeying cartesian coordinate system as well, 0 degree means full right, 90 degree means full up, 180 degree means full left, 270 degree means full down.
     let PKS_HBOT_x_counter = 0
     let PKS_HBOT_y_counter = 0
-    let PKS_HBOT_x_max = 500
+    let PKS_HBOT_x_max = 550
     let PKS_HBOT_x_min = 0
-    let PKS_HBOT_y_max = 300
+    let PKS_HBOT_y_max = 550
     let PKS_HBOT_y_min = 0
     let PKSDriverStepperMotorAInstance: StepperMotorDriver = new StepperMotorDriver(PKSMotorPorts.M1P, PKSMotorPorts.M1N, PKSMotorPorts.M2N, PKSMotorPorts.M2P)
     let PKSDriverStepperMotorBInstance: StepperMotorDriver = new StepperMotorDriver(PKSMotorPorts.M3N, PKSMotorPorts.M3P, PKSMotorPorts.M4N, PKSMotorPorts.M4P)
