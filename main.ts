@@ -2210,6 +2210,12 @@ namespace pksdriver {
 
         public Angle() {
             let { x: dx, y: dy } = this.read()
+            // case no angle, return 0
+            if (dx == 0 && dy == 0) {
+                PKSDriverStepperMotorAInstance.powerOff()
+                PKSDriverStepperMotorBInstance.powerOff()
+                return 0
+            }
             let angle = Math.atan2(dy, 0 - dx) * 180 / Math.PI
             if (angle < 0) {
                 angle += 360
@@ -2225,7 +2231,8 @@ namespace pksdriver {
         }
     }
 
-    let PKSDriverJoystickInstance: Joystick = new Joystick(AnalogPin.P1, AnalogPin.P2)
+    let PKSDriverJoystickInstance: Joystick;
+    let PKSDriverJoystickInitialized = false;
 
     /**
      * Joystick initialization, specify the x and y axis pins, the center value for x and y (default 512 for most joysticks), the max deflection value (default 512 for most joysticks), and the blind zone percentage (default 10%, adjust based on your joystick's sensitivity and noise)
@@ -2242,6 +2249,7 @@ namespace pksdriver {
     //% weight=90
     export function startJoystick(pinX: AnalogPin, pinY: AnalogPin, centerX: number = 512, centerY: number = 512, maxDeflection: number = 512, blindZonePercent: number = 10) {
         PKSDriverJoystickInstance = new Joystick(pinX, pinY, centerX, centerY, maxDeflection, blindZonePercent)
+        PKSDriverJoystickInitialized = true;
     }
 
     /**
@@ -2252,6 +2260,9 @@ namespace pksdriver {
     //% group="Joystick"
     //% weight=70
     export function JoystickAngle() {
+        if (!PKSDriverJoystickInitialized) {
+            startJoystick(AnalogPin.P1, AnalogPin.P2)
+        }
         return PKSDriverJoystickInstance.Angle()
     }
 
@@ -2262,6 +2273,17 @@ namespace pksdriver {
     //% group="Joystick"
     //% weight=70
     export function JoystickStrength() {
+        if (!PKSDriverJoystickInitialized) {
+            startJoystick(AnalogPin.P1, AnalogPin.P2)
+        } else {
+            let strength = PKSDriverJoystickInstance.strength()
+            if (strength == 0) {
+                //saftey power off all motor
+                PKSDriverStepperMotorAInstance.powerOff()
+                PKSDriverStepperMotorBInstance.powerOff()
+                return strength
+            }
+        }
         return PKSDriverJoystickInstance.strength()
     }
 
@@ -2419,6 +2441,7 @@ namespace pksdriver {
             pksdriver.setPwm(this.dp_Bp, 0, 0)
             pksdriver.setPwm(this.dp_Bn, 0, 0)
         }
+
         public steps(order: PKSDriverDirection, steps: number = 1) {
             let i = 1
             this.state_init(order)
@@ -2494,16 +2517,7 @@ namespace pksdriver {
         West,
     }
 
-    /**
-    * This function controls two stepper motors in a coordinated way to move a robot in the specified cardinal direction for a certain number of steps. The direction parameter determines the sequence of steps for each motor to achieve the desired movement direction. 
-    * @param direction The cardinal direction to move the robot (e.g. North, East, South, West)
-    * @param steps The number of steps to move in the specified direction (default is 1)
-    */
-    //% blockId=pksdriver_stepper_motor_hbot_step block="Hbot drive in %direction for %steps steps" subcategory="Gotcha"
-    //% group="Stepper Motor"
-    //% steps.defl=1
-    //% weight=40
-    export function stepperMotorHBotMove(direction: PKSHBotCardinalDirections, steps: number = 1) {
+    export function _stepperMotorHBotMove(direction: PKSHBotCardinalDirections, steps: number = 1) {
         ensurePCA9685Freq(STEPPER_FREQ)
         let step_count = 0
         if (direction == PKSHBotCardinalDirections.North && PKS_HBOT_y_counter < PKS_HBOT_y_max) {
@@ -2534,11 +2548,25 @@ namespace pksdriver {
                 step_count += 1
                 PKS_HBOT_x_counter -= 1
             }
-        }
-        else {
+        } else {
             PKSDriverStepperMotorAInstance.powerOff()
             PKSDriverStepperMotorBInstance.powerOff()
         }
+    }
+
+    /**
+    * This function controls two stepper motors in a coordinated way to move a robot in the specified cardinal direction for a certain number of steps. The direction parameter determines the sequence of steps for each motor to achieve the desired movement direction. 
+    * @param direction The cardinal direction to move the robot (e.g. North, East, South, West)
+    * @param steps The number of steps to move in the specified direction (default is 1)
+    */
+    //% blockId=pksdriver_stepper_motor_hbot_step block="Hbot drive in %direction for %steps steps" subcategory="Gotcha"
+    //% group="Stepper Motor"
+    //% steps.defl=1
+    //% weight=40
+    export function stepperMotorHBotMove(direction: PKSHBotCardinalDirections, steps: number = 1) {
+        _stepperMotorHBotMove(direction, steps)
+        PKSDriverStepperMotorAInstance.powerOff()
+        PKSDriverStepperMotorBInstance.powerOff()
     }
 
     /**
@@ -2551,13 +2579,13 @@ namespace pksdriver {
     export function HBotMoveByJoystick(joystickAngle: number, joystickStrength: number) {
         if (joystickStrength > 0) {
             if (joystickAngle >= 315 || joystickAngle < 45 ) {
-                stepperMotorHBotMove(PKSHBotCardinalDirections.East,5)
+                stepperMotorHBotMove(PKSHBotCardinalDirections.East,4)
             } else if (joystickAngle >= 45 && joystickAngle < 135) {
-                stepperMotorHBotMove(PKSHBotCardinalDirections.North,5)
+                stepperMotorHBotMove(PKSHBotCardinalDirections.North,4)
             } else if (joystickAngle >= 135 && joystickAngle < 225) {
-                stepperMotorHBotMove(PKSHBotCardinalDirections.West,5)
+                stepperMotorHBotMove(PKSHBotCardinalDirections.West,4)
             } else if (joystickAngle >= 225 && joystickAngle < 315) {
-                stepperMotorHBotMove(PKSHBotCardinalDirections.South,5)
+                stepperMotorHBotMove(PKSHBotCardinalDirections.South,4)
             }
         }
         else {
