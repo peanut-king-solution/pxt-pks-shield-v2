@@ -61,27 +61,27 @@ namespace pksdriver {
         M4 = 0x4
     }
 
-    export const enum PKSMotorPorts {
+    export enum PKSMotorPorts {
         //% block="M0+"
-        M0P = (0x0 - 1) * 2 + 8,
+        M0P = 6,
         //% block="M0-"
-        M0N = (0x0 - 1) * 2 + 8 + 1,
+        M0N = 7,
         //% block="M1+"
-        M1P = (0x1 - 1) * 2 + 8,
+        M1P = 8,
         //% block="M1-"
-        M1N = (0x1 - 1) * 2 + 8 + 1,
+        M1N = 9,
         //% block="M2+"
-        M2P = (0x2 - 1) * 2 + 8,
+        M2P = 10,
         //% block="M2-"
-        M2N = (0x2 - 1) * 2 + 8 + 1,
+        M2N = 11,
         //% block="M3+"
-        M3P = (0x3 - 1) * 2 + 8,
+        M3P = 12,
         //% block="M3-"
-        M3N = (0x3 - 1) * 2 + 8 + 1,
+        M3N = 13,
         //% block="M4+"
-        M4P = (0x4 - 1) * 2 + 8,
+        M4P = 14,
         //% block="M4-"
-        M4N = (0x4 - 1) * 2 + 8 + 1,
+        M4N = 15,
     }
 
     /**
