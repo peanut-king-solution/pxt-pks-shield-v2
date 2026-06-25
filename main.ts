@@ -2496,8 +2496,8 @@ namespace pksdriver {
     //% group="Stepper Motor"
     //% stepperCoilAPlus.defl=pksdriver.PKSMotorPorts.M1P
     //% stepperCoilAMinus.defl=pksdriver.PKSMotorPorts.M1N
-    //% stepperCoilBPlus.defl=pksdriver.PKSMotorPorts.M2P
-    //% stepperCoilBMinus.defl=pksdriver.PKSMotorPorts.M2N
+    //% stepperCoilBPlus.defl=pksdriver.PKSMotorPorts.M2N
+    //% stepperCoilBMinus.defl=pksdriver.PKSMotorPorts.M2P
     //% weight=50
     export function createStepperMotorA(stepperCoilAPlus: PKSMotorPorts, stepperCoilAMinus: PKSMotorPorts, stepperCoilBPlus: PKSMotorPorts, stepperCoilBMinus: PKSMotorPorts): void {
         PKSDriverStepperMotorAInstance = new StepperMotorDriver(stepperCoilAPlus, stepperCoilAMinus, stepperCoilBPlus, stepperCoilBMinus)
@@ -2514,8 +2514,8 @@ namespace pksdriver {
     //% group="Stepper Motor"
     //% stepperCoilAPlus.defl=pksdriver.PKSMotorPorts.M3P 
     //% stepperCoilAMinus.defl=pksdriver.PKSMotorPorts.M3N
-    //% stepperCoilBPlus.defl=pksdriver.PKSMotorPorts.M4P
-    //% stepperCoilBMinus.defl=pksdriver.PKSMotorPorts.M4N
+    //% stepperCoilBPlus.defl=pksdriver.PKSMotorPorts.M4N
+    //% stepperCoilBMinus.defl=pksdriver.PKSMotorPorts.M4P
     //% weight=50
     export function createStepperMotorB(stepperCoilAPlus: PKSMotorPorts, stepperCoilAMinus: PKSMotorPorts, stepperCoilBPlus: PKSMotorPorts, stepperCoilBMinus: PKSMotorPorts): void {
         PKSDriverStepperMotorBInstance = new StepperMotorDriver(stepperCoilAPlus, stepperCoilAMinus, stepperCoilBPlus, stepperCoilBMinus)
@@ -2606,6 +2606,8 @@ namespace pksdriver {
             } else if (joystickAngle >= 225 && joystickAngle < 315) {
                 _stepperMotorHBotMove(PKSHBotCardinalDirections.South,4, true)
             }
+            PKS_HBOT_x_counter = 0
+            PKS_HBOT_y_counter = 0
         }
         else {
             PKSDriverStepperMotorAInstance.powerOff()
