@@ -2270,12 +2270,25 @@ namespace pksdriver {
     */
     //% blockId=pksdriver_getorientation block="joystick angle" subcategory="Gotcha"
     //% group="Joystick"
-    //% weight=70
+    //% weight=80
     export function JoystickAngle() {
         if (!PKSDriverJoystickInitialized) {
             startJoystick(AnalogPin.P1, AnalogPin.P2, DigitalPin.P8)
         }
         return PKSDriverJoystickInstance.Angle()
+    }
+
+    /**
+    * Get the strength of the joystick deflection based on the x and y values, range from 0 to 1.
+    */
+    //% blockId=pksdriver_getstrength block="joystick strength" subcategory="Gotcha"
+    //% group="Joystick"
+    //% weight=80
+    export function JoystickStrength() {
+        if (!PKSDriverJoystickInitialized) {
+            startJoystick(AnalogPin.P1, AnalogPin.P2, DigitalPin.P8)
+        }
+        return PKSDriverJoystickInstance.strength()
     }
 
     /**
@@ -2289,19 +2302,6 @@ namespace pksdriver {
             startJoystick(AnalogPin.P1, AnalogPin.P2, DigitalPin.P8)
         }
         return PKSDriverJoystickInstance.isPressed()
-    }
-
-    /**
-    * Get the strength of the joystick deflection based on the x and y values, range from 0 to 1.
-    */
-    //% blockId=pksdriver_getstrength block="joystick strength" subcategory="Gotcha"
-    //% group="Joystick"
-    //% weight=70
-    export function JoystickStrength() {
-        if (!PKSDriverJoystickInitialized) {
-            startJoystick(AnalogPin.P1, AnalogPin.P2, DigitalPin.P8)
-        }
-        return PKSDriverJoystickInstance.strength()
     }
 
     enum StepStage {
@@ -2494,10 +2494,10 @@ namespace pksdriver {
     */
     //% blockId=pksdriver_createstepper block="create stepper motor A with |coil A+ %stepperCoilAPlus |coil A- %stepperCoilAMinus |coil B+ %stepperCoilBPlus |coil B- %stepperCoilBMinus" subcategory="Gotcha"
     //% group="Stepper Motor"
-    //% stepperCoilAPlus.defl=PKSMotorPorts.M1P
-    //% stepperCoilAMinus.defl=PKSMotorPorts.M1N
-    //% stepperCoilBPlus.defl=PKSMotorPorts.M2P
-    //% stepperCoilBMinus.defl=PKSMotorPorts.M2N
+    //% stepperCoilAPlus.defl=pksdriver.PKSMotorPorts.M1P
+    //% stepperCoilAMinus.defl=pksdriver.PKSMotorPorts.M1N
+    //% stepperCoilBPlus.defl=pksdriver.PKSMotorPorts.M2P
+    //% stepperCoilBMinus.defl=pksdriver.PKSMotorPorts.M2N
     //% weight=50
     export function createStepperMotorA(stepperCoilAPlus: PKSMotorPorts, stepperCoilAMinus: PKSMotorPorts, stepperCoilBPlus: PKSMotorPorts, stepperCoilBMinus: PKSMotorPorts): void {
         PKSDriverStepperMotorAInstance = new StepperMotorDriver(stepperCoilAPlus, stepperCoilAMinus, stepperCoilBPlus, stepperCoilBMinus)
@@ -2512,10 +2512,10 @@ namespace pksdriver {
     */
     //% blockId=pksdriver_createstepperB block="create stepper motor B with |coil A+ %stepperCoilAPlus |coil A- %stepperCoilAMinus |coil B+ %stepperCoilBPlus |coil B- %stepperCoilBMinus" subcategory="Gotcha"
     //% group="Stepper Motor"
-    //% stepperCoilAPlus.defl=PKSMotorPorts.M3P 
-    //% stepperCoilAMinus.defl=PKSMotorPorts.M3N
-    //% stepperCoilBPlus.defl=PKSMotorPorts.M4P
-    //% stepperCoilBMinus.defl=PKSMotorPorts.M4N
+    //% stepperCoilAPlus.defl=pksdriver.PKSMotorPorts.M3P 
+    //% stepperCoilAMinus.defl=pksdriver.PKSMotorPorts.M3N
+    //% stepperCoilBPlus.defl=pksdriver.PKSMotorPorts.M4P
+    //% stepperCoilBMinus.defl=pksdriver.PKSMotorPorts.M4N
     //% weight=50
     export function createStepperMotorB(stepperCoilAPlus: PKSMotorPorts, stepperCoilAMinus: PKSMotorPorts, stepperCoilBPlus: PKSMotorPorts, stepperCoilBMinus: PKSMotorPorts): void {
         PKSDriverStepperMotorBInstance = new StepperMotorDriver(stepperCoilAPlus, stepperCoilAMinus, stepperCoilBPlus, stepperCoilBMinus)
@@ -2593,7 +2593,7 @@ namespace pksdriver {
     * @param joystickAngle The angle of the joystick deflection in degrees (0-360)
     * @param joystickStrength The strength of the joystick deflection (0-100)
     */
-    //% blockId=pksdriver_stepper_motor_hbot_joystick_without_limit block="Hbot drive by %joystickAngle and %joystickStrength and break the limit" subcategory="Gotcha"
+    //% blockId=pksdriver_stepper_motor_hbot_joystick_without_limit block="Hbot drive by angle %joystickAngle and strength %joystickStrength and break the limit" subcategory="Gotcha"
     //% weight=20
     export function HBotMoveByJoystickWithoutLimit(joystickAngle: number, joystickStrength: number) {
         if (joystickStrength > 0) {
@@ -2618,7 +2618,7 @@ namespace pksdriver {
     * @param joystickAngle The angle of the joystick deflection in degrees (0-360)
     * @param joystickStrength The strength of the joystick deflection (0-100)
     */
-    //% blockId=pksdriver_stepper_motor_hbot_joystick block="Hbot drive by %joystickAngle and %joystickStrength" subcategory="Gotcha"
+    //% blockId=pksdriver_stepper_motor_hbot_joystick block="Hbot drive by angle %joystickAngle and strength %joystickStrength" subcategory="Gotcha"
     //% weight=30
     export function HBotMoveByJoystick(joystickAngle: number, joystickStrength: number) {
         if (joystickStrength > 0) {
