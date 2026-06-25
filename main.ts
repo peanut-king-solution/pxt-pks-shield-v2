@@ -2537,29 +2537,29 @@ namespace pksdriver {
         ensurePCA9685Freq(STEPPER_FREQ)
         let step_count = 0
         //break limit if LimitBreak is true, otherwise limit the movement to the defined min/max values
-        if (direction == PKSHBotCardinalDirections.North &&  (PKS_HBOT_y_counter <= PKS_HBOT_y_max || LimitBreak)) {
-            while (step_count < steps && (PKS_HBOT_y_counter <= PKS_HBOT_y_max || LimitBreak)) {
+        if (direction == PKSHBotCardinalDirections.North &&  (PKS_HBOT_y_counter < PKS_HBOT_y_max || LimitBreak)) {
+            while (step_count < steps && (PKS_HBOT_y_counter < PKS_HBOT_y_max || LimitBreak)) {
                 PKSDriverStepperMotorAInstance.steps(pksdriver.PKSDriverDirection.Clockwise)
                 PKSDriverStepperMotorBInstance.steps(pksdriver.PKSDriverDirection.Counterclockwise)
                 step_count += 1
                 PKS_HBOT_y_counter += 1
             }
-        } else if (direction == PKSHBotCardinalDirections.East && (PKS_HBOT_x_counter <= PKS_HBOT_x_max || LimitBreak)) {
-            while (step_count < steps && (PKS_HBOT_x_counter <= PKS_HBOT_x_max || LimitBreak)) {
+        } else if (direction == PKSHBotCardinalDirections.East && (PKS_HBOT_x_counter < PKS_HBOT_x_max || LimitBreak)) {
+            while (step_count < steps && (PKS_HBOT_x_counter < PKS_HBOT_x_max || LimitBreak)) {
                 PKSDriverStepperMotorAInstance.steps(pksdriver.PKSDriverDirection.Counterclockwise)
                 PKSDriverStepperMotorBInstance.steps(pksdriver.PKSDriverDirection.Counterclockwise)
                 step_count += 1
                 PKS_HBOT_x_counter += 1
             }
-        } else if (direction == PKSHBotCardinalDirections.South && (PKS_HBOT_y_counter >= PKS_HBOT_y_min || LimitBreak)) {
-            while (step_count < steps && (PKS_HBOT_y_counter >= PKS_HBOT_y_min || LimitBreak)) {
+        } else if (direction == PKSHBotCardinalDirections.South && (PKS_HBOT_y_counter > PKS_HBOT_y_min || LimitBreak)) {
+            while (step_count < steps && (PKS_HBOT_y_counter > PKS_HBOT_y_min || LimitBreak)) {
                 PKSDriverStepperMotorAInstance.steps(pksdriver.PKSDriverDirection.Counterclockwise)
                 PKSDriverStepperMotorBInstance.steps(pksdriver.PKSDriverDirection.Clockwise)
                 step_count += 1
                 PKS_HBOT_y_counter -= 1
             }
-        } else if (direction == PKSHBotCardinalDirections.West && (PKS_HBOT_x_counter >= PKS_HBOT_x_min || LimitBreak)) {
-            while (step_count < steps && (PKS_HBOT_x_counter >= PKS_HBOT_x_min || LimitBreak)) {
+        } else if (direction == PKSHBotCardinalDirections.West && (PKS_HBOT_x_counter > PKS_HBOT_x_min || LimitBreak)) {
+            while (step_count < steps && (PKS_HBOT_x_counter > PKS_HBOT_x_min || LimitBreak)) {
                 PKSDriverStepperMotorAInstance.steps(pksdriver.PKSDriverDirection.Clockwise)
                 PKSDriverStepperMotorBInstance.steps(pksdriver.PKSDriverDirection.Clockwise)
                 step_count += 1
@@ -2606,8 +2606,6 @@ namespace pksdriver {
             } else if (joystickAngle >= 225 && joystickAngle < 315) {
                 _stepperMotorHBotMove(PKSHBotCardinalDirections.South,4, true)
             }
-            PKS_HBOT_x_counter = 0
-            PKS_HBOT_y_counter = 0
         }
         else {
             PKSDriverStepperMotorAInstance.powerOff()
@@ -2671,8 +2669,10 @@ namespace pksdriver {
             _stepperMotorHBotMove(PKSHBotCardinalDirections.South)
         }
         //extra step to ensure fully reset, in case of any mechanical issues
-        stepperMotorHBotMove(PKSHBotCardinalDirections.West,30)
-        stepperMotorHBotMove(PKSHBotCardinalDirections.South, 30)
+        stepperMotorHBotMove(PKSHBotCardinalDirections.West,50)
+        stepperMotorHBotMove(PKSHBotCardinalDirections.South, 50)
+        PKS_HBOT_x_counter = 0
+        PKS_HBOT_y_counter = 0
     }
 
 }
