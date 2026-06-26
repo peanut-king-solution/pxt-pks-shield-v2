@@ -1788,7 +1788,6 @@ namespace pksdriver {
         }
         ans = (button & x)
 
-
         return ans != 0;
     }
 
@@ -2677,8 +2676,15 @@ namespace pksdriver {
         //extra step to ensure fully reset, in case of any mechanical issues
         stepperMotorHBotMove(PKSHBotCardinalDirections.West,50)
         stepperMotorHBotMove(PKSHBotCardinalDirections.South, 50)
+    }
+
+    /**
+     * Set the current position of the HBot as the origin (0,0) without moving the robot.
+     */
+    //% blockId=pksdriver_hbot_set_origin block="set Hbot origin" subcategory="Gotcha"
+    //% weight=20
+    export function setHBotOrigin() {
         PKS_HBOT_x_counter = 0
         PKS_HBOT_y_counter = 0
     }
-
 }
