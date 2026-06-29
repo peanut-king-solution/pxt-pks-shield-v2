@@ -2674,8 +2674,8 @@ namespace pksdriver {
             _stepperMotorHBotMove(PKSHBotCardinalDirections.South)
         }
         //extra step to ensure fully reset, in case of any mechanical issues
-        stepperMotorHBotMove(PKSHBotCardinalDirections.West,50)
-        stepperMotorHBotMove(PKSHBotCardinalDirections.South, 50)
+        stepperMotorHBotMove(PKSHBotCardinalDirections.West,150)
+        stepperMotorHBotMove(PKSHBotCardinalDirections.South, 150)
     }
 
     /**
