@@ -467,10 +467,27 @@ function testIOT()  {
     basic.showNumber(fanState)
 }
 
+function testStepperMotor() {
+    //default configuration for stepper motor A
+    pksdriver.createStepperMotorA(pksdriver.PKSMotorPorts.M1P, pksdriver.PKSMotorPorts.M1N, pksdriver.PKSMotorPorts.M2N, pksdriver.PKSMotorPorts.M2P)
+    pksdriver.createStepperMotorB(pksdriver.PKSMotorPorts.M3N, pksdriver.PKSMotorPorts.M3P, pksdriver.PKSMotorPorts.M4N, pksdriver.PKSMotorPorts.M4P)
+    pksdriver.startJoystick(AnalogPin.P2, AnalogPin.P1, DigitalPin.P8, 512, 512, 512, 10)
+    basic.showString(pksdriver.JoystickAngle().toString())
+    basic.showString(pksdriver.JoystickStrength().toString())
+    basic.showString(pksdriver.JoystickPressed().toString())
+    basic.pause(500)
+    pksdriver.stepperMotorHBotMove(pksdriver.PKSHBotCardinalDirections.North, 50, false)
+    basic.pause(500)
+    pksdriver.stepperMotorHBotMove(pksdriver.PKSHBotCardinalDirections.South, 50, false)
+    basic.pause(500)
+    pksdriver.stepperMotorHBotMove(pksdriver.PKSHBotCardinalDirections.East, 50, false)
+    basic.pause(500)
+    pksdriver.stepperMotorHBotMove(pksdriver.PKSHBotCardinalDirections.West, 50, false)
+}
+
 // Run all tests
 basic.forever(function () {
     pksdriver.motorStopAll()
-    
     testMotorRun()
     testMotorRunAll()
     testMotorStop()
@@ -515,6 +532,8 @@ basic.forever(function () {
     testAht20ReadTemperatureF()
     testAht20ReadHumidity()
     testDS1302()
+    testIOT()
+    testStepperMotor()
     
     basic.pause(30000)
 })

@@ -176,6 +176,36 @@ basic.forever(function () {
 })
 ```
 
+## Example Gotcha 
+
+It is design to drive two stepper motors and provide a H-bot structure control x-y movement by joystick
+
+```blocks
+
+// Setting the configuration of stepper motors
+// Default setting
+pksdriver.createStepperMotorA(pksdriver.PKSMotorPorts.M1P, pksdriver.PKSMotorPorts.M1N, pksdriver.PKSMotorPorts.M2N, pksdriver.PKSMotorPorts.M2P)
+pksdriver.createStepperMotorB(pksdriver.PKSMotorPorts.M3N, pksdriver.PKSMotorPorts.M3P, pksdriver.PKSMotorPorts.M4N, pksdriver.PKSMotorPorts.M4P)
+
+// Configurate Joystick
+pksdriver.startJoystick(
+    AnalogPin.P2,
+    AnalogPin.P1,
+    DigitalPin.P8,
+    512,
+    512,
+    512,
+    10
+)
+
+basic.forever(function(){
+    //control the x-y movement by joystick
+    while (pksdriver.JoystickStrength() != 0) {
+        pksdriver.HBotMoveByJoystick(pksdriver.JoystickAngle(), pksdriver.JoystickStrength())
+    }
+})
+
+
 ## License
 This project is licensed under the **MIT License**.
 
