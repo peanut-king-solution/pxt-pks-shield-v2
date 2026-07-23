@@ -354,7 +354,7 @@ namespace pksdriver {
     //% blockId=pksdriver_fan_fanon block="fan on|%index" subcategory="Smart Living"
     //% group="Fan"
     export function fanOn(index: PKSDriverMotors): void {
-        motorRun(index, -1, 255);
+        motorRun(index, PKSDriverDirection.Counterclockwise, 255);
     }
 
     /**
