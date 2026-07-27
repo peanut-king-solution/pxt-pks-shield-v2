@@ -55,9 +55,6 @@ function testServo() {
     basic.pause(300)
     pksdriver.servo(pksdriver.PKSDriverServos.S6, 90)
     basic.pause(300)
-    pksdriver.servo(pksdriver.PKSDriverServos.S7, 90)
-    basic.pause(300)
-    pksdriver.servo(pksdriver.PKSDriverServos.S8, 90)
 }
 
 function testSmartServo() {

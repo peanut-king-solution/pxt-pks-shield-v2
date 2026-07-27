@@ -1,7 +1,7 @@
 {
-    "name": "PKS Driver",
+    "name": "pxt-pks-shield-v2",
     "version": "1.0.0",
-    "description": "This is a library for Peanut KING Micro:bit Robot Shield",
+    "description": "This is a library for Peanut KING Micro:bit Robot Shield V2",
     "license": "MIT",
     "dependencies": {
         "core": "*"

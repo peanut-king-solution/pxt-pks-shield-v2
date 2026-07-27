@@ -1381,7 +1381,7 @@ namespace pksdriver {
       * @param axis select X, Y or Z axis
       * @param sensitivity select sensitivity of gyroscope (250, 500, 1000 or 2000 dps)
       */
-    //% block="gyroscope value of %axis axis with %sensitivity sensitivity (unit: rad/s)"
+    //% block="gyroscope value of %axis axis with %sensitivity sensitivity (rad/s)"
     //% group="MPU6050 gyroscope and accelerometer sensor"
     //% weight=95
     export function gyroscope(axis: AxisXYZ, sensitivity: GyroSen): number {
@@ -1402,7 +1402,7 @@ namespace pksdriver {
      * @param axis select X, Y or Z axis
      * @param sensitivity select sensitivity of accelerometer (2, 4, 8 or 16 g)
      */
-    //% block="angle of %axis axis with %sensitivity sensitivity (unit: degrees)"
+    //% block="angle of %axis axis with %sensitivity sensitivity (degrees)"
     //% group="MPU6050 gyroscope and accelerometer sensor"
     //% weight=90
     export function axisRotation(axis: AxisXYZ, sensitivity: AccelSen): number {
@@ -1430,7 +1430,7 @@ namespace pksdriver {
      * @param axis select X, Y or Z axis
      * @param sensitivity select sensitivity of accelerometer (2, 4, 8 or 16 g)
      */
-    //% block="acceleration of %axis axis with %sensitivity sensitivity (unit: g)"
+    //% block="acceleration of %axis axis with %sensitivity sensitivity (g)"
     //% group="MPU6050 gyroscope and accelerometer sensor"
     //% weight=85
     export function axisAcceleration(axis: AxisXYZ, sensitivity: AccelSen): number {
@@ -1450,7 +1450,7 @@ namespace pksdriver {
     /**
      * Get temperature in degree Celsius from MPU6050
      */
-    //% block="temperature (unit: Celsius)"
+    //% block="temperature (Celsius)"
     //% group="MPU6050 gyroscope and accelerometer sensor"
     //% weight=80
     export function readTemperature(): number {
@@ -1486,7 +1486,7 @@ namespace pksdriver {
     /**
      * Get ultrasonic distance in mm
      */
-    //% block="distance (unit: mm)" subcategory="Maze Car"
+    //% block="distance (mm)" subcategory="Maze Car"
     //% group="Ultrasound"
     //% weight=70
     export function ultrasoundDistance(): number {
@@ -1502,7 +1502,7 @@ namespace pksdriver {
     /**
     * Compass read function, to get the yaw angle
     */
-    //% block="yaw (unit: degree)" subcategory="Soccer Robot"
+    //% block="yaw (degree)" subcategory="Soccer Robot"
     //% group="Compass"
     //% weight=70
     export function compassGetYaw(): number {
@@ -2491,7 +2491,7 @@ namespace pksdriver {
     * @param stepperCoilBPlus The pin connected to coil B+
     * @param stepperCoilBMinus The pin connected to coil B-
     */
-    //% blockId=pksdriver_createstepper block="create stepper motor A with |coil A+ %stepperCoilAPlus |coil A- %stepperCoilAMinus |coil B+ %stepperCoilBPlus |coil B- %stepperCoilBMinus" subcategory="Gotcha"
+    //% blockId=pksdriver_createstepper block="create stepper motor A with|coil A+ %stepperCoilAPlus|coil A- %stepperCoilAMinus|coil B+ %stepperCoilBPlus|coil B- %stepperCoilBMinus" subcategory="Gotcha"
     //% group="Stepper Motor"
     //% stepperCoilAPlus.defl=pksdriver.PKSMotorPorts.M1P
     //% stepperCoilAMinus.defl=pksdriver.PKSMotorPorts.M1N
@@ -2509,7 +2509,7 @@ namespace pksdriver {
     * @param stepperCoilBPlus The pin connected to coil B+
     * @param stepperCoilBMinus The pin connected to coil B-
     */
-    //% blockId=pksdriver_createstepperB block="create stepper motor B with |coil A+ %stepperCoilAPlus |coil A- %stepperCoilAMinus |coil B+ %stepperCoilBPlus |coil B- %stepperCoilBMinus" subcategory="Gotcha"
+    //% blockId=pksdriver_createstepperB block="create stepper motor B with|coil A+ %stepperCoilAPlus|coil A- %stepperCoilAMinus|coil B+ %stepperCoilBPlus|coil B- %stepperCoilBMinus" subcategory="Gotcha"
     //% group="Stepper Motor"
     //% stepperCoilAPlus.defl=pksdriver.PKSMotorPorts.M3P 
     //% stepperCoilAMinus.defl=pksdriver.PKSMotorPorts.M3N
@@ -2582,7 +2582,7 @@ namespace pksdriver {
     * @param steps The number of steps to move in the specified direction (default is 1)
     * @param LimitBreak Whether to bypass the movement limits (default false, for testing and error recovery)
     */
-    //% blockId=pksdriver_stepper_motor_hbot_step block="Hbot drive in %direction for %steps steps with LimitBreak %LimitBreak" subcategory="Gotcha"
+    //% blockId=pksdriver_stepper_motor_hbot_step block="Hbot drive in %direction for %steps steps with limit break %LimitBreak" subcategory="Gotcha"
     //% group="Stepper Motor"
     //% steps.defl=1
     //% LimitBreak.defl=false

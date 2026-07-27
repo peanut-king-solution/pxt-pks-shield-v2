@@ -21,7 +21,7 @@ It includes APIs for:
 - I2C channel switching for the different shield configurations
 
 ```package
-pksdriver=github:peanut-king-solution/pxt-pks-shield-v2
+pxt-pks-shield-v2=github:peanut-king-solution/pxt-pks-shield-v2
 ```
 
 ## Example: Drive Two Motors
@@ -32,13 +32,13 @@ Use `motorRun` to drive each motor independently, then stop everything with `mot
 ```blocks
 basic.forever(function () {
     // Drive M1 and M2 forward at moderate speed.
-    pksdriver.motorRun(pksdriver.PKSDriverMotors.M1, pksdriver.PKSDriverDirection.CLOCKWISE, 80)
-    pksdriver.motorRun(pksdriver.PKSDriverMotors.M2, pksdriver.PKSDriverDirection.CLOCKWISE, 80)
+    pksdriver.motorRun(pksdriver.PKSDriverMotors.M1, pksdriver.PKSDriverDirection.Clockwise, 80)
+    pksdriver.motorRun(pksdriver.PKSDriverMotors.M2, pksdriver.PKSDriverDirection.Clockwise, 80)
     basic.pause(1500)
 
     // Reverse both motors to back away.
-    pksdriver.motorRun(pksdriver.PKSDriverMotors.M1, pksdriver.PKSDriverDirection.COUNTERCLOCKWISE, 80)
-    pksdriver.motorRun(pksdriver.PKSDriverMotors.M2, pksdriver.PKSDriverDirection.COUNTERCLOCKWISE, 80)
+    pksdriver.motorRun(pksdriver.PKSDriverMotors.M1, pksdriver.PKSDriverDirection.Counterclockwise, 80)
+    pksdriver.motorRun(pksdriver.PKSDriverMotors.M2, pksdriver.PKSDriverDirection.Counterclockwise, 80)
     basic.pause(1500)
 
     // Stop all motor outputs before the next cycle.
@@ -77,10 +77,10 @@ pksdriver.initMPU6050()
 
 basic.forever(function () {
     // Read yaw rate on the Z axis in radians per second.
-    let gyroZ = pksdriver.gyroscope(pksdriver.AxisXYZ.Z, pksdriver.GyroSen.Range_250_dps)
+    let gyroZ = pksdriver.gyroscope(pksdriver.AxisXYZ.Z, pksdriver.GyroSen.Range250dps)
 
     // Read acceleration on the X axis in g.
-    let accelX = pksdriver.axisAcceleration(pksdriver.AxisXYZ.X, pksdriver.AccelSen.Range_2_g)
+    let accelX = pksdriver.axisAcceleration(pksdriver.AxisXYZ.X, pksdriver.AccelSen.Range2g)
 
     serial.writeLine("gyroZ=" + gyroZ + ", accelX=" + accelX)
     basic.pause(200)
@@ -142,7 +142,7 @@ basic.forever(function () {
 Create the DS1302 instance once, then use the helper blocks exposed by this package.
 
 ```blocks
-let rtc = pksdriver.create(DigitalPin.P13, DigitalPin.P14, DigitalPin.P15)
+let rtc = pksdriver.createDS1302(DigitalPin.P13, DigitalPin.P14, DigitalPin.P15)
 
 // Set the RTC to 2026-05-11 Tuesday 08:30:00.
 rtc.dateTime(2026, 5, 11, 2, 8, 30, 0)
@@ -167,11 +167,8 @@ basic.forever(function () {
     let tempC = pksdriver.aht20ReadTemperatureC()
     let humidity = pksdriver.aht20ReadHumidity()
 
-    // Read ultrasonic distance
-    let distance = pksdriver.ultrasonic(DigitalPin.P2, DigitalPin.P1)
-
     // Send data via serial to ESP32
-    serial.writeLine("TEMP:" + tempC + ",HUM:" + humidity + ",DIST:" + distance)
+    serial.writeLine("TEMP:" + tempC + ",HUM:" + humidity)
     basic.pause(1000)
 })
 ```
@@ -207,8 +204,6 @@ basic.forever(function(){
 ```
 
 ## License
-MIT
-
 This project is licensed under the **MIT License**.
 
 This software incorporates portions of several third-party libraries. In accordance with the MIT License, the original copyright notices and permissions for these dependencies are acknowledged:
@@ -216,6 +211,7 @@ This software incorporates portions of several third-party libraries. In accorda
 - **pxt-DHT11_DHT22**: [alankrantas/pxt-dht11_dht22](https://github.com/alankrantas/pxt-dht11_dht22)
 - **SEN-MPU6050**: [joy-it/sen-mpu6050](https://github.com/joy-it/sen-mpu6050)
 - **DS1302**: [makecode-extensions/ds1302](https://github.com/makecode-extensions/ds1302)
+See [ACKNOWLEDGEMENTS.md](ACKNOWLEDGEMENTS.md) for full copyright notices and credits.
 
 ## Supported targets
 - for PXT/microbit
