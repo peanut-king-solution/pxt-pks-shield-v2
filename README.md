@@ -208,6 +208,7 @@ basic.forever(function(){
 
 ## License
 MIT
+
 This project is licensed under the **MIT License**.
 
 This software incorporates portions of several third-party libraries. In accordance with the MIT License, the original copyright notices and permissions for these dependencies are acknowledged:
