@@ -1,6 +1,6 @@
 #include "pxt.h"
 
-namespace customI2C {
+namespace pksdriver {
      //%
     void setI2CSpeedShim(int speed) {
 #if MICROBIT_CODAL

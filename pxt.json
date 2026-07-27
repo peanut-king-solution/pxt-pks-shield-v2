@@ -9,7 +9,7 @@
     "files": [
         "README.md",
         "main.ts",
-        "customI2C.cpp"
+        "pksdriver.cpp"
     ],
     "testFiles": [
         "test.ts"

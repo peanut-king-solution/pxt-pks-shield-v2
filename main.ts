@@ -18,13 +18,13 @@ namespace pksdriver {
      */
     export enum MazeCarDirection {
         //% block="front"
-        FRONT,
+        Front,
         //% block="back"
-        BACK,
+        Back,
         //% block="left"
-        LEFT,
+        Left,
         //% block="right"
-        RIGHT
+        Right
     }
 
     /**
@@ -956,7 +956,7 @@ namespace pksdriver {
         /**
          * get Year
          */
-        //% blockId="pksdriver_DS1302_get_year" block="%ds|get year" subcategory="Smart Living"
+        //% blockId="pksdriver_DS1302_get_year" block="%ds|year" subcategory="Smart Living"
         //% group="Real time clock"
         //% weight=70 blockGap=8
         //% parts="DS1302"
@@ -979,7 +979,7 @@ namespace pksdriver {
         /**
          * get Month
          */
-        //% blockId="pksdriver_DS1302_get_month" block="%ds|get month" subcategory="Smart Living"
+        //% blockId="pksdriver_DS1302_get_month" block="%ds|month" subcategory="Smart Living"
         //% weight=69 blockGap=8
         //% parts="DS1302"
         //% group="Real time clock"
@@ -1003,7 +1003,7 @@ namespace pksdriver {
         /**
          * get Day
          */
-        //% blockId="pksdriver_DS1302_get_day" block="%ds|get day" subcategory="Smart Living"
+        //% blockId="pksdriver_DS1302_get_day" block="%ds|day" subcategory="Smart Living"
         //% group="Real time clock"
         //% weight=68 blockGap=8
         //% parts="DS1302"
@@ -1027,7 +1027,7 @@ namespace pksdriver {
         /**
          * get Week Day
          */
-        //% blockId="pksdriver_DS1302_get_weekday" block="%ds|get weekday" subcategory="Smart Living"
+        //% blockId="pksdriver_DS1302_get_weekday" block="%ds|weekday" subcategory="Smart Living"
         //% group="Real time clock"
         //% weight=67 blockGap=8
         //% parts="DS1302"
@@ -1051,7 +1051,7 @@ namespace pksdriver {
         /**
          * get Hour
          */
-        //% blockId="pksdriver_DS1302_get_hour" block="%ds|get hour" subcategory="Smart Living"
+        //% blockId="pksdriver_DS1302_get_hour" block="%ds|hour" subcategory="Smart Living"
         //% group="Real time clock"
         //% weight=66 blockGap=8
         //% parts="DS1302"
@@ -1075,7 +1075,7 @@ namespace pksdriver {
         /**
          * get Minute
          */
-        //% blockId="pksdriver_DS1302_get_minute" block="%ds|get minute" subcategory="Smart Living"
+        //% blockId="pksdriver_DS1302_get_minute" block="%ds|minute" subcategory="Smart Living"
         //% group="Real time clock"
         //% weight=65 blockGap=8
         //% parts="DS1302"
@@ -1099,7 +1099,7 @@ namespace pksdriver {
         /**
          * get Second
          */
-        //% blockId="pksdriver_DS1302_get_second" block="%ds|get second" subcategory="Smart Living"
+        //% blockId="pksdriver_DS1302_get_second" block="%ds|second" subcategory="Smart Living"
         //% group="Real time clock"
         //% weight=64 blockGap=8
         //% parts="DS1302"
@@ -1792,12 +1792,10 @@ namespace pksdriver {
     }
 
     //*****************************************************************************************************//
-    // IOT related code                                                                                     //
+    // IOT related code                                                                                    //
     //*****************************************************************************************************//
 
-
-
-
+    //
 
     /**
      * Rounds a number to the specified number of decimal places (returns a string with the requested decimals, similar to toFixed).
@@ -2048,7 +2046,7 @@ namespace pksdriver {
         setI2CSpeedShim(finalSpeed);
     }
 
-    //% shim=customI2C::setI2CSpeedShim
+    //% shim=pksdriver::setI2CSpeedShim
     function setI2CSpeedShim(speed: number): void {
         return;
     }
@@ -2265,7 +2263,7 @@ namespace pksdriver {
     //% blockId=pksdriver_getorientation block="joystick angle" subcategory="Gotcha"
     //% group="Joystick"
     //% weight=80
-    export function JoystickAngle() {
+    export function joystickAngle() {
         if (!PKSDriverJoystickInitialized) {
             startJoystick(AnalogPin.P1, AnalogPin.P2, DigitalPin.P8)
         }
@@ -2278,7 +2276,7 @@ namespace pksdriver {
     //% blockId=pksdriver_getstrength block="joystick strength" subcategory="Gotcha"
     //% group="Joystick"
     //% weight=80
-    export function JoystickStrength() {
+    export function joystickStrength() {
         if (!PKSDriverJoystickInitialized) {
             startJoystick(AnalogPin.P1, AnalogPin.P2, DigitalPin.P8)
         }
@@ -2291,7 +2289,7 @@ namespace pksdriver {
     //% blockId=pksdriver_joystickpressed block="joystick pressed" subcategory="Gotcha"
     //% group="Joystick"
     //% weight=70
-    export function JoystickPressed(): boolean {
+    export function joystickPressed(): boolean {
         if (!PKSDriverJoystickInitialized) {
             startJoystick(AnalogPin.P1, AnalogPin.P2, DigitalPin.P8)
         }
@@ -2372,7 +2370,7 @@ namespace pksdriver {
             }
         }
 
-        public state_init(order: PKSDriverDirection = PKSDriverDirection.Clockwise) {
+        public stateInit(order: PKSDriverDirection = PKSDriverDirection.Clockwise) {
             if (this.power_flag == null || !this.power_flag) {
                 this.power_flag = true
             } else if (!this.power_flag) {
@@ -2381,10 +2379,10 @@ namespace pksdriver {
                 }
             }
             this.match_stage(this.next_step_state)
-            this.step_count(order)
+            this.stepCount(order)
         }
 
-        private next_state(order: PKSDriverDirection) {
+        private nextState(order: PKSDriverDirection) {
             switch (this.next_step_state) {
                 case (StepStage.StepStage1):
                     if (order > 0) {
@@ -2432,9 +2430,9 @@ namespace pksdriver {
                     break;
             }
             control.waitMicros(this.delay)
-            this.step_count(order)
+            this.stepCount(order)
         }
-        private step_count(order: PKSDriverDirection) {
+        private stepCount(order: PKSDriverDirection) {
             this.current_step_state = this.next_step_state
             this.next_step_state = this.current_step_state + order
             if (this.next_step_state > 3) {
@@ -2454,9 +2452,9 @@ namespace pksdriver {
 
         public steps(order: PKSDriverDirection, steps: number = 1) {
             let i = 1
-            this.state_init(order)
+            this.stateInit(order)
             while (i < steps) {
-                this.next_state(order)
+                this.nextState(order)
                 i++
             }
         }
@@ -2526,7 +2524,7 @@ namespace pksdriver {
         West,
     }
 
-    export function _stepperMotorHBotMove(direction: PKSHBotCardinalDirections, steps: number = 1, LimitBreak: boolean = false) {
+    function baseStepperMotorHBotMove(direction: PKSHBotCardinalDirections, steps: number = 1, LimitBreak: boolean = false) {
         ensurePCA9685Freq(STEPPER_FREQ)
         let step_count = 0
         let moved = false 
@@ -2571,7 +2569,7 @@ namespace pksdriver {
     }
 
     /**
-    * This function controls two stepper motors in a coordinated way to move a robot in the specified cardinal direction for a certain number of steps. The direction parameter determines the sequence of steps for each motor to achieve the desired movement direction. 
+    * Moves the H-Bot in a cardinal direction for a set number of steps.
     * @param direction The cardinal direction to move the robot (e.g. North, East, South, West)
     * @param steps The number of steps to move in the specified direction (default is 1)
     * @param LimitBreak Whether to bypass the movement limits (default false, for testing and error recovery)
@@ -2582,13 +2580,13 @@ namespace pksdriver {
     //% LimitBreak.defl=false
     //% weight=40
     export function stepperMotorHBotMove(direction: PKSHBotCardinalDirections, steps: number = 1, LimitBreak: boolean = false) {
-        _stepperMotorHBotMove(direction, steps, LimitBreak)
+        baseStepperMotorHBotMove(direction, steps, LimitBreak)
         PKSDriverStepperMotorAInstance.powerOff()
         PKSDriverStepperMotorBInstance.powerOff()
     }
 
     /**
-    * This function takes the angle of the joystick deflection and maps it to one of the 8 cardinal directions (N, NE, E, SE, S, SW, W, NW) to control the movement of a robot. The joystick angle is typically measured in degrees, where 0 degrees corresponds to the right (east) direction and increases counterclockwise. The function determines which cardinal direction the joystick is pointing to based on the angle and then calls the stepper motor control function to move the robot in that direction. This function is similar to HBotMoveByJoystick, but it bypasses the defined movement limits, allowing the robot to move beyond the specified min/max values. This can be useful for testing, error recovery, or situations where you want to allow more freedom of movement without being constrained by the limits.
+    * Drives the H-Bot using a joystick, ignoring movement limits.
     * @param joystickAngle The angle of the joystick deflection in degrees (0-360)
     * @param joystickStrength The strength of the joystick deflection (0-100)
     */
@@ -2597,13 +2595,13 @@ namespace pksdriver {
     export function HBotMoveByJoystickWithoutLimit(joystickAngle: number, joystickStrength: number) {
         if (joystickStrength > 0) {
             if (joystickAngle >= 315 || joystickAngle < 45 ) {
-                _stepperMotorHBotMove(PKSHBotCardinalDirections.East,4, true)
+                baseStepperMotorHBotMove(PKSHBotCardinalDirections.East,4, true)
             } else if (joystickAngle >= 45 && joystickAngle < 135) {
-                _stepperMotorHBotMove(PKSHBotCardinalDirections.North,4, true)
+                baseStepperMotorHBotMove(PKSHBotCardinalDirections.North,4, true)
             } else if (joystickAngle >= 135 && joystickAngle < 225) {
-                _stepperMotorHBotMove(PKSHBotCardinalDirections.West,4, true)
+                baseStepperMotorHBotMove(PKSHBotCardinalDirections.West,4, true)
             } else if (joystickAngle >= 225 && joystickAngle < 315) {
-                _stepperMotorHBotMove(PKSHBotCardinalDirections.South,4, true)
+                baseStepperMotorHBotMove(PKSHBotCardinalDirections.South,4, true)
             }
         }
         else {
@@ -2613,7 +2611,8 @@ namespace pksdriver {
     }
 
     /**
-    * This function takes the angle of the joystick deflection and maps it to one of the 8 cardinal directions (N, NE, E, SE, S, SW, W, NW) to control the movement of a robot. The joystick angle is typically measured in degrees, where 0 degrees corresponds to the right (east) direction and increases counterclockwise. The function determines which cardinal direction the joystick is pointing to based on the angle and then calls the stepper motor control function to move the robot in that direction.
+    * Drives the H-Bot using a joystick within set movement limits. 
+    * Converts the angle (0-360°) into continuous North, South, East, or West movement.
     * @param joystickAngle The angle of the joystick deflection in degrees (0-360)
     * @param joystickStrength The strength of the joystick deflection (0-100)
     */
@@ -2622,13 +2621,13 @@ namespace pksdriver {
     export function HBotMoveByJoystick(joystickAngle: number, joystickStrength: number) {
         if (joystickStrength > 0) {
             if (joystickAngle >= 315 || joystickAngle < 45 ) {
-                _stepperMotorHBotMove(PKSHBotCardinalDirections.East,4)
+                baseStepperMotorHBotMove(PKSHBotCardinalDirections.East,4)
             } else if (joystickAngle >= 45 && joystickAngle < 135) {
-                _stepperMotorHBotMove(PKSHBotCardinalDirections.North,4)
+                baseStepperMotorHBotMove(PKSHBotCardinalDirections.North,4)
             } else if (joystickAngle >= 135 && joystickAngle < 225) {
-                _stepperMotorHBotMove(PKSHBotCardinalDirections.West,4)
+                baseStepperMotorHBotMove(PKSHBotCardinalDirections.West,4)
             } else if (joystickAngle >= 225 && joystickAngle < 315) {
-                _stepperMotorHBotMove(PKSHBotCardinalDirections.South,4)
+                baseStepperMotorHBotMove(PKSHBotCardinalDirections.South,4)
             }
         }
         else {
@@ -2662,10 +2661,10 @@ namespace pksdriver {
     //% weight=20
     export function resetHBotCounter() { 
         while (PKS_HBOT_x_counter > 0) {
-            _stepperMotorHBotMove(PKSHBotCardinalDirections.West)
+            baseStepperMotorHBotMove(PKSHBotCardinalDirections.West)
         }
         while (PKS_HBOT_y_counter > 0) {
-            _stepperMotorHBotMove(PKSHBotCardinalDirections.South)
+            baseStepperMotorHBotMove(PKSHBotCardinalDirections.South)
         }
         //extra step to ensure fully reset, in case of any mechanical issues
         stepperMotorHBotMove(PKSHBotCardinalDirections.West,100, true)

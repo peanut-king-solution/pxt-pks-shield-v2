@@ -116,16 +116,16 @@ function testFanOff() {
 
 // Maze direction function
 function testChooseDirection() {
-    let d1 = pksdriver.chooseDirection(pksdriver.MazeCarDirection.FRONT)
+    let d1 = pksdriver.chooseDirection(pksdriver.MazeCarDirection.Front)
     basic.showNumber(d1)
     basic.pause(300)
-    let d2 = pksdriver.chooseDirection(pksdriver.MazeCarDirection.BACK)
+    let d2 = pksdriver.chooseDirection(pksdriver.MazeCarDirection.Back)
     basic.showNumber(d2)
     basic.pause(300)
-    let d3 = pksdriver.chooseDirection(pksdriver.MazeCarDirection.LEFT)
+    let d3 = pksdriver.chooseDirection(pksdriver.MazeCarDirection.Left)
     basic.showNumber(d3)
     basic.pause(300)
-    let d4 = pksdriver.chooseDirection(pksdriver.MazeCarDirection.RIGHT)
+    let d4 = pksdriver.chooseDirection(pksdriver.MazeCarDirection.Right)
     basic.showNumber(d4)
     basic.clearScreen()
 }
@@ -469,9 +469,9 @@ function testStepperMotor() {
     pksdriver.createStepperMotorA(pksdriver.PKSMotorPorts.M1P, pksdriver.PKSMotorPorts.M1N, pksdriver.PKSMotorPorts.M2N, pksdriver.PKSMotorPorts.M2P)
     pksdriver.createStepperMotorB(pksdriver.PKSMotorPorts.M3N, pksdriver.PKSMotorPorts.M3P, pksdriver.PKSMotorPorts.M4N, pksdriver.PKSMotorPorts.M4P)
     pksdriver.startJoystick(AnalogPin.P2, AnalogPin.P1, DigitalPin.P8, 512, 512, 512, 10)
-    basic.showString(pksdriver.JoystickAngle().toString())
-    basic.showString(pksdriver.JoystickStrength().toString())
-    basic.showString(pksdriver.JoystickPressed().toString())
+    basic.showString(pksdriver.joystickAngle().toString())
+    basic.showString(pksdriver.joystickStrength().toString())
+    basic.showString(pksdriver.joystickPressed().toString())
     basic.pause(500)
     pksdriver.stepperMotorHBotMove(pksdriver.PKSHBotCardinalDirections.North, 50, false)
     basic.pause(500)
