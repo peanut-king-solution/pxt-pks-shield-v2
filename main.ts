@@ -1792,8 +1792,12 @@ namespace pksdriver {
     }
 
     //*****************************************************************************************************//
-    //IOT related code                                                                                     //
+    // IOT related code                                                                                     //
     //*****************************************************************************************************//
+
+
+
+
 
     /**
      * Rounds a number to the specified number of decimal places (returns a string with the requested decimals, similar to toFixed).
@@ -1847,10 +1851,7 @@ namespace pksdriver {
 
     let esp32I2CAddress = 0x22;
 
-    /**
-     * devices to toggle from ESP client
-     */
-    //% block
+    //devices to toggle from ESP client
     export enum ESPDevices {
         //% block="light"
         Light = 0x00,
@@ -1860,10 +1861,7 @@ namespace pksdriver {
         Door = 0x02
     }
 
-    /**
-     * sensors to read from ESP client
-     */
-    //% block
+    //sensors to read from ESP client
     export enum ESPSensors {
         //% block="temperature"
         Temperature = 0x00,
@@ -2018,11 +2016,8 @@ namespace pksdriver {
     //IIC test related code                                                                                //
     //*****************************************************************************************************//
 
-    /**
-     * I2C speed options for testing I2C communication beta
-     * Note: the actual speed may be affected by the hardware and may not be exactly as specified
-     */
-    //% block
+    // I2C speed options for testing I2C communication beta
+    // Note: the actual speed may be affected by the hardware and may not be exactly as specified
     export enum I2CSpeed {
         //% block="standard mode (100 kHz)"
         Standard = 100000,
@@ -2520,7 +2515,6 @@ namespace pksdriver {
         PKSDriverStepperMotorBInstance = new StepperMotorDriver(stepperCoilAPlus, stepperCoilAMinus, stepperCoilBPlus, stepperCoilBMinus)
     }
 
-    //% block
     export enum PKSHBotCardinalDirections {
         //% block="north (0°)"
         North,
