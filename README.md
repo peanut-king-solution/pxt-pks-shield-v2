@@ -25,7 +25,7 @@ It includes APIs for:
 - I2C channel switching for the different shield configurations
 
 ## Basic Tutorial
-
+[microbit shield V2.1](https://github.com/peanut-king-solution/pxt-pks-shield-v2/blob/main/microbit_shield_V2.1.pdf)
 
 ## Example: Drive Two Motors
 
