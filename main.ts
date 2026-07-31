@@ -2031,7 +2031,7 @@ namespace pksdriver {
 
     //% block="set I2C %speed" 
     //% group="I2C speed"
-    //% speed.defl=I2CSpeed.Standard
+    //% speed.defl=pksdriver.I2CSpeed.Standard
     export function setI2CSpeed(speed: I2CSpeed): void {
         let finalSpeed = speed;
 

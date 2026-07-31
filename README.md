@@ -5,6 +5,7 @@ Peanut King micro:bit Shield V2 extension for motors, servos, sensors, and I2C m
 ## ~ reminder
 
 ### Works with micro:bit V2 ONLY
+The function of I2C speed setting can only fully function on micro:bit V2 hardware
 
 ## Product URL
 
@@ -25,7 +26,7 @@ It includes APIs for:
 - I2C channel switching for the different shield configurations
 
 ## Basic Tutorial
-[microbit shield V2.1](https://github.com/peanut-king-solution/pxt-pks-shield-v2/blob/main/microbit_shield_V2.1.pdf)
+[micro:bit shield V2.1](https://github.com/peanut-king-solution/pxt-pks-shield-v2/blob/main/microbit_shield_V2.1.pdf)
 
 ## Example: Drive Two Motors
 
