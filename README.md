@@ -5,7 +5,7 @@ Peanut King micro:bit Shield V2 extension for motors, servos, sensors, and I2C m
 ## ~ reminder
 
 ### Works with micro:bit V2 ONLY
-The function of I2C speed setting can only fully function on micro:bit V2 hardware
+If you include this extension in a project for a micro:bit V1 board, you will see the 927 error code on the screen.
 
 ## Product URL
 

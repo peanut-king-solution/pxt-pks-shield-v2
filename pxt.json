@@ -1,7 +1,7 @@
 {
     "name": "pxt-pks-shield-v2",
-    "version": "1.0.3",
-    "description": "This is a library for Peanut KING Micro:bit Robot Shield V2",
+    "version": "1.0.4",
+    "description": "This is a library for Peanut KING micro:bit Shield V2. micro:bit (V2) only.",
     "license": "MIT",
     "dependencies": {
         "core": "*"
